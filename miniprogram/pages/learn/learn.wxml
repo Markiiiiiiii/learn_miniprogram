@@ -1,0 +1,18 @@
+<!--miniprogram/pages/learn/learn.wxml-->
+<view>
+<button class="btn" type="primary" loading="{{loading}}" disabled="{{disabled}}" bindtap="query">
+    查询
+</button>
+<button class="btn" type="primary" loading="{{loading}}" disabled="{{disabled}}" bindtap="queryField">
+    字段查询
+</button>
+<button class="btn" type="primary" loading="{{loading}}" disabled="{{disabled}}" bindtap="queryRegExp">
+    正则查询
+</button>
+<button class="btn" type="primary" loading="{{loading}}" disabled="{{disabled}}" bindtap="addLoction">
+    新增地点
+</button>
+<button class="btn" type="primary" loading="{{loading}}" disabled="{{disabled}}" bindtap="loctionQuery">
+    地点查询
+</button>
+</view>
