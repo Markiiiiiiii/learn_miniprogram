@@ -15,4 +15,4 @@
 <button class="btn" type="primary" loading="{{loading}}" disabled="{{disabled}}" bindtap="loctionQuery">
     地点查询
 </button>
-</view>
+</view> 

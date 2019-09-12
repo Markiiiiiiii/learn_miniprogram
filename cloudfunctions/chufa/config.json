@@ -1,0 +1,9 @@
+{
+    "triggers":[
+        {
+            "name":"chufa",
+            "type":"timer",
+            "config":"* * * * * * *"
+        }
+    ]
+}

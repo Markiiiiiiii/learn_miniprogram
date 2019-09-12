@@ -14,7 +14,10 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-
+    wx.cloud.getTempFileURL({
+      fileList:['cloud://biggoose-d92594.6269-biggoose-d92594-1300127504/下载 (2).jpeg'],
+        success:res=>{console.log(res.fileList[0])} /**生成文件临时链接 */
+    })
   },
 
   /**
