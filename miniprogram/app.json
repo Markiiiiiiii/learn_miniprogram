@@ -11,8 +11,8 @@
     "navigationBarTextStyle": "black"
   },
   "usingComponents": {
-    "van-button": "miniprogram_npm/vant-weapp/button",
-    "van-cell": "miniprogram_npm/vant-weapp/cell",
-    "van-cell-group": "miniprogram_npm/vant-weapp/cell-group"
+    "wux-button": "miniprogram_npm/wux-weapp/button",
+    "wux-cell": "miniprogram_npm/wux-weapp/cell",
+    "wux-cell-group": "miniprogram_npm/wux-weapp/cell-group"
   }
   }

@@ -20,25 +20,23 @@ Page({
   /**下拉刷新 */
   onPullDownRefresh: function(){
     this.getData(res => {
-      wx.stopPullDownRefresh();
-    } );
-    
+       wx.stopPullDownRefresh();
+      });
   },
 
 /**数据刷新函数 */
   getData: function(callback){
     if(!callback){
-      callback = res=>{} /**如果callback不是一个函数则赋予它一个函数 */
+      callback = res=>{} /**如果callback不是一个函数则使用箭头函数构造一个空函数 */
     }
     wx.showLoading({
           title: '加载中...',
         });
-    gamesSignUp.get().then(res => {
+    gamesSignUp.get().then(res => { /**then是在执行完前面get()之后执行then之内的语句 */
       this.setData({
       playerName : res.data
-    }),res => {
-      callback();
-    }
+    }),/**这里的逗号起到连接作用，和之前的语句形成一个语句串 */
+    res => {callback();}/**构建一个箭头函数把callbcak作为返回值，实现了可以空值调用getData函数也有返回值的目的 */
     wx.hideLoading();
     })
   },
