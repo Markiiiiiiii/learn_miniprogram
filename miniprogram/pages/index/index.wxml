@@ -11,3 +11,18 @@
         <wux-button form-type="submit">提交</wux-button>
     </form>
 </view>
+<wux-tabbar backgroundColor="#333" position="bottom" safeArea>
+    <wux-tabbar-item key="tab1" title="报名">
+      <wux-icon type="ios-checkmark" size="32" slot="icon-on"/>
+        <wux-icon type="ios-checkmark" size="32" slot="icon-off"/>
+    </wux-tabbar-item>
+        <wux-tabbar-item key="tab2" title="刷新">
+        <wux-icon type="ios-refresh" size="32" slot="icon-on"/>
+        <wux-icon type="ios-refresh" size="32" slot="icon-off"/>
+    </wux-tabbar-item>
+    <wux-tabbar-item key="tab3" title="退出">
+        <wux-icon type="ios-close" size="32" slot="icon-on"/>
+        <wux-icon type="ios-close" size="32" slot="icon-off"/>
+    </wux-tabbar-item>
+
+</wux-tabbar>
