@@ -11,8 +11,9 @@
     "navigationBarTextStyle": "black"
   },
   "usingComponents": {
-    "wux-button": "miniprogram_npm/wux-weapp/button",
-    "wux-cell": "miniprogram_npm/wux-weapp/cell",
-    "wux-cell-group": "miniprogram_npm/wux-weapp/cell-group"
-  }
-  }
+    "wux-button": "miniprogram_npm/wux-weapp/button/index",
+    "wux-cell": "miniprogram_npm/wux-weapp/cell/index",
+    "wux-cell-group": "miniprogram_npm/wux-weapp/cell-group/index"
+  },
+  "sitemapLocation": "sitemap34.json"
+}
