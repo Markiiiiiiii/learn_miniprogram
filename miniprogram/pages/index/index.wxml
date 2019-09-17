@@ -1,7 +1,9 @@
 <view class="container">
-    <wux-cell-group style='opacity:0.9'>
+<view style='opacity:0.85'>
+    <wux-cell-group >
          <block wx:for="{{playInfo}}" wx:key="key">
         <wux-cell title="比赛场地：" extra="{{item.footballfield}}"/>
+        <wux-cell title="报名截止：" extra="{{item.cutofftime}}" />
          <wux-cell title="开始时间：" extra="{{item.starttime}}"/>
          <wux-cell title="结束时间：" extra="{{item.endtime}}"/>
          <wux-cell title="比赛性质：" extra="{{item.gametype}}"/>
@@ -24,8 +26,11 @@
          /></wux-cell>
         </block>
     </wux-cell-group>
+    </view>
+ <view >
+  <wux-button size="small" block disable type="balanced" wx:if="{{canIUse}}" openType="getUserInfo" bindgetuserinfo="bindGetUserInfo">
+  <wux-icon type="ios-football" size="16" />
+  开始报名</wux-button>
+ </view>
 </view>
 
- <view class="">
-  <wux-button wx:if="{{canIUse}}" openType="getUserInfo" bindgetuserinfo="bindGetUserInfo">授权</wux-button>
- </view>

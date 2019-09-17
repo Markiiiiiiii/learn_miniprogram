@@ -47,6 +47,7 @@ Page({
           title: '加载中...',
         });
     gamesSignUp.get().then(res => { /**then是在执行完前面get()之后执行then之内的语句 */
+      res.data[0].cutofftime = res.data[0].cutofftime.toLocaleString();
       res.data[0].starttime = res.data[0].starttime.toLocaleString();
       res.data[0].endtime = res.data[0].endtime.toLocaleString(); /**将数据库中的date格式输出为字符串 */
       res.data[0].latitude = res.data[0].fieldgeoinfo.latitude; 
