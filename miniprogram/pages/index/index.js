@@ -8,14 +8,28 @@ Page({
    */
   data: {
     playInfo:null,
+    canIUse: wx.canIUse('button.open-type.getUserInfo'),
     },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    this.getData();
-  },
+    this.getData();/**读取数据 */
+    wx.getSetting({
+      success: (result)=>{
+        if (result.authSetting['scope.userInfo']){
+          wx.getUserInfo({
+            withCredentials: 'false',
+            lang: 'zh_CN',
+            timeout:10000,
+            success: (result)=>{
+              console.log(result.userInfo)
+            }
+        })
+      }}
+    })
+  },/**先判断是否是登录，然后点击button，获取用户头像 */
 
   /**下拉刷新 */
   onPullDownRefresh: function(){
@@ -66,8 +80,10 @@ Page({
         
   //   })
   // },
+  bindGetUserInfo(e){
+    console.log(e)
+  },
   onRefresh:function(){
     this.getData();
   }
-
 })

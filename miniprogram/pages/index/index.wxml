@@ -1,5 +1,5 @@
 <view class="container">
-    <wux-cell-group>
+    <wux-cell-group style='opacity:0.9'>
          <block wx:for="{{playInfo}}" wx:key="key">
         <wux-cell title="比赛场地：" extra="{{item.footballfield}}"/>
          <wux-cell title="开始时间：" extra="{{item.starttime}}"/>
@@ -7,14 +7,16 @@
          <wux-cell title="比赛性质：" extra="{{item.gametype}}"/>
          <wux-cell title="费用：" extra="{{item.cost}}"/>
          <wux-cell title="已报名：" >
-            <wux-avatar size="default" shape="circle" src=""></wux-avatar>
+            <wux-avatar size="default" shape="circle" src="{{item.playname.avatarurl}}"></wux-avatar>
          </wux-cell>
          <wux-cell title="球场地理位置：">
          <map 
             id="map"
             longitude="{{item.longitude}}"
             latitude="{{item.latitude}}" 
-            scale="14"
+            scale="17"
+            enable-zoom="false"
+            enable-scroll="false"
             markers="{{item.fieldgeoinfo}}"
             subkey="TLPBZ-XWJCW-LSQRL-OOPG2-3TMDZ-DUB3G"
             enable-traffic="ture"	
@@ -23,18 +25,7 @@
         </block>
     </wux-cell-group>
 </view>
-<wux-tabbar backgroundColor="#333" position="bottom" safeArea>
-    <wux-tabbar-item key="tab1" title="报名">
-      <wux-icon type="ios-checkmark" size="32" slot="icon-on"/>
-        <wux-icon type="ios-checkmark" size="32" slot="icon-off"/>
-    </wux-tabbar-item>
-        <wux-tabbar-item key="tab2" title="刷新" bind:click="onRefresh">
-        <wux-icon type="ios-refresh" size="32" slot="icon-on"/>
-        <wux-icon type="ios-refresh" size="32" slot="icon-off"/>
-    </wux-tabbar-item>
-    <wux-tabbar-item key="tab3" title="退出">
-        <wux-icon type="ios-close" size="32" slot="icon-on"/>
-        <wux-icon type="ios-close" size="32" slot="icon-off"/>
-    </wux-tabbar-item>
 
-</wux-tabbar>
+ <view class="">
+  <wux-button wx:if="{{canIUse}}" openType="getUserInfo" bindgetuserinfo="bindGetUserInfo">授权</wux-button>
+ </view>
