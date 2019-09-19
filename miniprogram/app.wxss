@@ -21,6 +21,6 @@
 
 view, text, input, textarea, .text-input {
  font-family: 微软雅黑;
- font-size: 12px;
+ font-size: 14px;
 }
 

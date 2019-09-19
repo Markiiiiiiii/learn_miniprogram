@@ -3,6 +3,7 @@
     "wux-field":"../../miniprogram_npm/wux-weapp/field/index",
     "wux-form":"../../miniprogram_npm/wux-weapp/form/index",
     "wux-input":"../../miniprogram_npm/wux-weapp/input/index",
-    "wux-date-picker":"../../miniprogram_npm/wux-weapp/date-picker/index"
+    "wux-date-picker":"../../miniprogram_npm/wux-weapp/date-picker/index",
+    "wux-icon":"../../miniprogram_npm/wux-weapp/icon/index"
   }
 }

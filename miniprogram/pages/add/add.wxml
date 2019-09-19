@@ -17,6 +17,14 @@
                         <wux-input label="比赛场地：" placeholder="场地名称" type="text" />
                     </wux-field>
             </wux-cell>
+             <wux-cell title="地图位置：" hover-class="none">
+                     <wux-field name="fieldaddress" >
+                        <wux-button size="small" type="balanced" bind:click="chooseLocation"><wux-icon type="ios-pin" size="16" />打开地图</wux-button>
+                        <block wx:if="{{footballFileAddress}}">
+                        <text> {{ footballFileAddress }} </text>
+                        </block>
+                    </wux-field>
+            </wux-cell>
                     <wux-field name="starttime">
                         <wux-date-picker minDate="{{ nowTime }}" mode="datetime" value="{{ value1 }}" lang="{{ lang }}" data-index="1" data-mode="datetime" bind:confirm="onConfirmStart">
                           <wux-cell title="比赛开始时间：" is-link extra="{{ displayValue1 }}"></wux-cell>
