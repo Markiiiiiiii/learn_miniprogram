@@ -1,4 +1,6 @@
 // miniprogram/pages/add/add.js
+import{$wuxForm} from '../../miniprogram_npm/wux-weapp/index'
+
 Page({
 
   /**
@@ -62,5 +64,10 @@ Page({
    */
   onShareAppMessage: function () {
 
+  },
+
+  onSubmit: function(event){
+    console.log(event)
   }
+
 })

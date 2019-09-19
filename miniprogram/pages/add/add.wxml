@@ -1,2 +1,25 @@
-<!--miniprogram/pages/add/add.wxml-->
-<text>miniprogram/pages/add/add.wxml</text>
+<view  class="container">
+    <view style='opacity:0.85'>
+        <form bindsubmit="onSubmit">
+        <wux-cell-group>
+            <wux-cell hover-class="none">
+                <wux-field name="title">
+                    <wux-input label="比赛主题：" placeholder="队内训练赛" type="text" />
+                </wux-field>
+            </wux-cell>
+            <wux-cell hover-class="none">
+                 <wux-field name="maxnum" >
+                     <wux-input label="限定人数：" placeholder="请输入人数上限" type="number" />
+                </wux-field>
+            </wux-cell>
+                <wux-cell hover-class="none">
+                     <wux-field name="footballfield" >
+                        <wux-input label="比赛场地：" placeholder="场地名称" type="text" />
+                    </wux-field>
+            </wux-cell>
+         </wux-cell-group>
+        <wux-button size="small" type="balanced" formType="submit" block >发起比赛</wux-button>
+        <button form-type="submit">提交</button>
+        </form>
+     </view>
+</view>

@@ -1,3 +1,7 @@
 {
-  "usingComponents": {}
+  "usingComponents": {
+    "wux-field":"../../miniprogram_npm/wux-weapp/field/index",
+    "wux-form":"../../miniprogram_npm/wux-weapp/form/index",
+    "wux-input":"../../miniprogram_npm/wux-weapp/input/index"
+  }
 }

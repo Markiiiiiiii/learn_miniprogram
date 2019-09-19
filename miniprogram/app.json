@@ -1,14 +1,15 @@
 {
   "pages": [
     "pages/index/index",
+    "pages/info/info",
     "pages/learn/learn",
-    "pages/list",
+    "pages/list/list",
     "pages/add/add"
   ],
   "window": {
     "backgroundColor": "#F6F6F6",
     "backgroundTextStyle": "light",
-    "navigationBarBackgroundColor": "#F6F6F6",
+    "navigationBarBackgroundColor": "#6da25a",
     "navigationBarTitleText": "大鹅队内活动报名",
     "navigationBarTextStyle": "black"
   },

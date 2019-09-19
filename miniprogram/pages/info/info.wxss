@@ -1,0 +1,6 @@
+/* miniprogram/pages/index/index.wxss */
+.reversebutton{
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
+}

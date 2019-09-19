@@ -1,0 +1,9 @@
+{
+  "enablePullDownRefresh":true,
+  "usingComponents": {
+    "wux-tabbar":"../../miniprogram_npm/wux-weapp/tabbar/index",
+    "wux-tabbar-item":"../../miniprogram_npm/wux-weapp/tabbar-item/index",
+    "wux-icon":"../../miniprogram_npm/wux-weapp/icon/index",
+    "wux-avatar":"../../miniprogram_npm/wux-weapp/avatar/index"
+  }
+}
