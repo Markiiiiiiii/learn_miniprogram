@@ -12,14 +12,29 @@
                      <wux-input label="限定人数：" placeholder="请输入人数上限" type="number" />
                 </wux-field>
             </wux-cell>
-                <wux-cell hover-class="none">
+             <wux-cell hover-class="none">
                      <wux-field name="footballfield" >
                         <wux-input label="比赛场地：" placeholder="场地名称" type="text" />
                     </wux-field>
             </wux-cell>
+                    <wux-field name="starttime">
+                        <wux-date-picker minDate="{{ nowTime }}" mode="datetime" value="{{ value1 }}" lang="{{ lang }}" data-index="1" data-mode="datetime" bind:confirm="onConfirmStart">
+                          <wux-cell title="比赛开始时间：" is-link extra="{{ displayValue1 }}"></wux-cell>
+                         </wux-date-picker>
+                    </wux-field>
+                      <wux-field name="endtime">
+                        <wux-date-picker minDate="{{ endTimeStart }}" mode="datetime" value="{{ value2 }}" lang="{{ lang }}" data-index="2" data-mode="datetime" bind:confirm="onConfirm">
+                          <wux-cell title="比赛结束时间：" is-link extra="{{ displayValue2}}"></wux-cell>
+                         </wux-date-picker>
+                    </wux-field>
+                     <wux-field name="cutofftime">
+                        <wux-date-picker minDate="{{ nowTime }}" maxDate="{{ endTimeStart }}" mode="datetime" value="{{ value3 }}" lang="{{ lang }}" data-index="3" data-mode="datetime" bind:confirm="onConfirm">
+                          <wux-cell title="报名截止时间：" is-link extra="{{ displayValue3 }}"></wux-cell>
+                         </wux-date-picker>
+                    </wux-field>
          </wux-cell-group>
         <wux-button size="small" type="balanced" formType="submit" block >发起比赛</wux-button>
-        <button form-type="submit">提交</button>
+        <button formType="submit">提交</button>
         </form>
      </view>
 </view>

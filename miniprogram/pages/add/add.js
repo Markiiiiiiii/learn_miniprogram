@@ -1,73 +1,66 @@
 // miniprogram/pages/add/add.js
 import{$wuxForm} from '../../miniprogram_npm/wux-weapp/index'
+var util = require('../../utils/utils.js');
 
 Page({
-
-  /**
-   * 页面的初始数据
-   */
   data: {
-
+      value1:[],
+      value2:[],
+      value3:[],
+      displayValue1:'请选择比赛开始时间',
+      displayValue2:'请选择比赛结束时间',
+      displayValue3:'请选择报名截止时间',
+      lang:'zh_CN',
+      endTimeStart:null,
+      nowTime:null
   },
 
-  /**
-   * 生命周期函数--监听页面加载
-   */
   onLoad: function (options) {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady: function () {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow: function () {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide: function () {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload: function () {
-
-  },
-
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh: function () {
-
-  },
-
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom: function () {
-
-  },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage: function () {
-
+    var time = util.formatTime(new Date());  
+    this.setData({
+      nowTime : time
+    });
   },
 
   onSubmit: function(event){
     console.log(event)
-  }
+  },/**提交按钮 */
+/**时间选择 */
+  onChange(e) {
+    console.log(e)
+    const { key, values } = e.detail
+    const lang = values[key]
+
+    this.setData({
+        lang,
+    })
+},
+setValue(values, key, mode) {
+    this.setData({
+        [`value${key}`]: values.value,
+        [`displayValue${key}`]: values.label,
+        // [`displayValue${key}`]: values.displayValue.join(' '),
+    })
+},
+onConfirmStart(e) {
+    const { index, mode } = e.currentTarget.dataset
+    this.setValue(e.detail, index, mode)
+    this.setData({
+      endTimeStart: e.detail.label
+    })
+    console.log(`onConfirm${index}`, e.detail)
+},
+onConfirm(e) {
+  const { index, mode } = e.currentTarget.dataset
+  this.setValue(e.detail, index, mode)
+  console.log(`onConfirm${index}`, e.detail.label)
+},
+/**时间戳的连选 */
+onVisibleChange(e) {
+    this.setData({ visible: e.detail.visible })
+},
+onClick() {
+    this.setData({ visible: true })
+},
 
 })
