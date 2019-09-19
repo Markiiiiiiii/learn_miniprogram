@@ -28,9 +28,16 @@
     </wux-cell-group>
     </view>
  <view >
+ <block wx:if="{{!nickName}}">
   <wux-button size="small" block disable type="balanced" wx:if="{{canIUse}}" openType="getUserInfo" bindgetuserinfo="bindGetUserInfo">
   <wux-icon type="ios-football" size="16" />
   开始报名</wux-button>
+  </block>
+   <block wx:if="{{nickName}}">
+  <wux-button size="small" block disable type="balanced">
+  <wux-icon type="ios-football" size="16" />
+  参加比赛</wux-button>
+  </block>
  </view>
 </view>
 

@@ -9,6 +9,7 @@ Page({
   data: {
     playInfo:null,
     canIUse: wx.canIUse('button.open-type.getUserInfo'),
+    nickName:null
     },
 
   /**
@@ -16,19 +17,7 @@ Page({
    */
   onLoad: function (options) {
     this.getData();/**读取数据 */
-    wx.getSetting({
-      success: (result)=>{
-        if (result.authSetting['scope.userInfo']){
-          wx.getUserInfo({
-            withCredentials: 'false',
-            lang: 'zh_CN',
-            timeout:10000,
-            success: (result)=>{
-              console.log(result.userInfo)
-            }
-        })
-      }}
-    })
+
   },/**先判断是否是登录，然后点击button，获取用户头像 */
 
   /**下拉刷新 */
@@ -81,10 +70,28 @@ Page({
         
   //   })
   // },
-  bindGetUserInfo(e){
-    console.log(e)
+  bindGetUserInfo(){
+    wx.getSetting({
+      success: (result)=>{
+        if (result.authSetting['scope.userInfo']){
+          wx.getUserInfo({
+            withCredentials: 'false',
+            lang: 'zh_CN',
+            timeout:10000,
+            success: (result)=>{
+              this.setData({
+                nickName: result.userInfo.nickName /**获取用户名用于判断是否授权 */
+              }),console.log(this.data.nickName)
+            }
+        })
+      }}
+    })
   },
   onRefresh:function(){
     this.getData();
-  }
+  },
+  onReachBottom:function(){
+    this.getData();
+  }/**触底刷新 */
+
 })
