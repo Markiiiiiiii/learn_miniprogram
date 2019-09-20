@@ -7,9 +7,12 @@ Page({
       value1:[],
       value2:[],
       value3:[],
+      value4:[],
       displayValue1:'请选择比赛开始时间',
       displayValue2:'请选择比赛结束时间',
       displayValue3:'请选择报名截止时间',
+      displayValue4:'请选择费用类型',
+      payOption:['免费','AA','自付'],
       lang:'zh_CN',
       endTimeStart:null,
       nowTime:null,
@@ -22,7 +25,7 @@ Page({
     var time = util.formatTime(new Date());  
     this.setData({
       nowTime : time
-    });
+    })
   },
 
   onSubmit: function(event){
@@ -42,7 +45,7 @@ setValue(values, key, mode) {
     this.setData({
         [`value${key}`]: values.value,
         [`displayValue${key}`]: values.label,
-        // [`displayValue${key}`]: values.displayValue.join(' '),
+        [`displayValue${key}`]: values.displayValue.join(' '),
     })
 },
 onConfirmStart(e) {
@@ -86,5 +89,34 @@ chooseLocation: function(e){
       complete: () => {}
     });
       
-}
+},
+// onValueChange(e) {
+//   const { index } = e.currentTarget.dataset
+//   console.log('onValueChange', e.detail)
+// },
+
+onPayValueChange(e){
+  const { index } = e.currentTarget.dataset
+  // console.log('onValueChanges', e.detail)
+},
+onPayConfirm(e) {
+  const { index } = e.currentTarget.dataset
+  // console.log(index);
+  this.setPayValue(e.detail, index)
+  // console.log(`onConfirm${index}`, e.detail)
+},
+setPayValue(values, key) {
+  this.setData({
+    [`value${key}`]: values.value,
+    [`displayValue${key}`]: values.label,
+  })
+},
+
+
+// onVisibleChange(e) {
+//   this.setData({ visible: e.detail.visible })
+// },
+// onClick() {
+//   this.setData({ visible: true })
+// },/**与65~70行代码重复 */
 })

@@ -4,6 +4,7 @@
     "wux-form":"../../miniprogram_npm/wux-weapp/form/index",
     "wux-input":"../../miniprogram_npm/wux-weapp/input/index",
     "wux-date-picker":"../../miniprogram_npm/wux-weapp/date-picker/index",
-    "wux-icon":"../../miniprogram_npm/wux-weapp/icon/index"
+    "wux-icon":"../../miniprogram_npm/wux-weapp/icon/index",
+    "wux-picker": "../../miniprogram_npm/wux-weapp/picker/index"
   }
 }

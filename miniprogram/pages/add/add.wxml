@@ -4,25 +4,17 @@
         <wux-cell-group>
             <wux-cell hover-class="none">
                 <wux-field name="title">
-                    <wux-input label="比赛主题：" placeholder="队内训练赛" type="text" />
+                    <wux-input label="活动主题：" placeholder="训练赛,友谊赛" type="text" />
                 </wux-field>
             </wux-cell>
             <wux-cell hover-class="none">
                  <wux-field name="maxnum" >
-                     <wux-input label="限定人数：" placeholder="请输入人数上限" type="number" />
+                     <wux-input label="限定人数：" placeholder="最大人数上限" type="number" />
                 </wux-field>
             </wux-cell>
              <wux-cell hover-class="none">
                      <wux-field name="footballfield" >
-                        <wux-input label="比赛场地：" placeholder="场地名称" type="text" />
-                    </wux-field>
-            </wux-cell>
-             <wux-cell title="地图位置：" hover-class="none">
-                     <wux-field name="fieldaddress" >
-                        <wux-button size="small" type="balanced" bind:click="chooseLocation"><wux-icon type="ios-pin" size="16" />打开地图</wux-button>
-                        <block wx:if="{{footballFileAddress}}">
-                        <text> {{ footballFileAddress }} </text>
-                        </block>
+                        <wux-input label="活动场地：" placeholder="球场名称" type="text" />
                     </wux-field>
             </wux-cell>
                     <wux-field name="starttime">
@@ -40,9 +32,26 @@
                           <wux-cell title="报名截止时间：" is-link extra="{{ displayValue3 }}"></wux-cell>
                          </wux-date-picker>
                     </wux-field>
+                    <wux-field name="paytype">
+                        <wux-picker options="{{ payOption }}" value="{{ value4 }}" data-index="4" bind:valueChange="onPayValueChange" bind:confirm="onPayConfirm">
+                            <wux-cell title="费用：" is-link  extra="{{ displayValue4 }}"></wux-cell>
+                        </wux-picker>
+                    </wux-field>
+                    <wux-field name="fieldaddress" >
+                        <wux-cell title="地图位置：" hover-class="none">
+                        <wux-button size="small" type="balanced" bind:click="chooseLocation"><wux-icon type="ios-pin" size="16" />打开地图</wux-button>
+                            <block wx:if="{{footballFileAddress}}">
+                                <text> {{ footballFileAddress }} </text>
+                            </block>
+                        </wux-cell>
+                    </wux-field>
+                    <wux-field name="footballtext">
+                        <wux-cell title="活动说明："hover-class="none">
+                            <wux-input placeholder="请输入注意事项" type="text" />
+                        </wux-cell>
+                    </wux-field>
          </wux-cell-group>
-        <wux-button size="small" type="balanced" formType="submit" block >发起比赛</wux-button>
-        <button formType="submit">提交</button>
+        <button class="addsubmit" formType="submit">提交</button>
         </form>
      </view>
 </view>
