@@ -47,7 +47,7 @@
                     </wux-field>
                     <wux-field name="footballtext">
                         <wux-cell title="活动说明："hover-class="none">
-                            <wux-input placeholder="请输入注意事项" type="text" />
+                            <wux-textarea hasCount rows="3" cursorSpacing="80" placeholder="备注事项..." />
                         </wux-cell>
                     </wux-field>
          </wux-cell-group>
