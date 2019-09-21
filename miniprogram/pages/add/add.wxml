@@ -37,14 +37,14 @@
                             <wux-cell title="费用：" is-link  extra="{{ displayValue4 }}"></wux-cell>
                         </wux-picker>
                     </wux-field>
-                    <wux-field name="fieldaddress" >
+                    
                         <wux-cell title="地图位置：" hover-class="none">
                         <wux-button size="small" type="balanced" bind:click="chooseLocation"><wux-icon type="ios-pin" size="16" />打开地图</wux-button>
                             <block wx:if="{{footballFileAddress}}">
                                 <text> {{ footballFileAddress }} </text>
                             </block>
                         </wux-cell>
-                    </wux-field>
+                    
                     <wux-field name="footballtext">
                         <wux-cell title="活动说明："hover-class="none">
                             <wux-textarea hasCount rows="3" cursorSpacing="80" placeholder="备注事项..." />

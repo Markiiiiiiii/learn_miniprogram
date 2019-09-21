@@ -1,2 +1,3 @@
-<!--miniprogram/pages/list.wxml-->
-<text>miniprogram/pages/list.wxml</text>
+<view  class=".container">
+
+</view>

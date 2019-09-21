@@ -1,6 +1,6 @@
 // miniprogram/pages/add/add.js
 import{$wuxForm} from '../../miniprogram_npm/wux-weapp/index'
-var util = require('../../utils/utils.js');
+var util = require('../../utils/formattime.js');
 const db = wx.cloud.database();
 const gamesSignUp = db.collection('gamesSignUp');
 
@@ -31,6 +31,8 @@ Page({
   },
 /**存储到数据库 */
   onSubmit: function(e){  
+    let _creatTime = new Date();
+    console.log(e)
     if(!e.detail.value.title || !e.detail.value.maxnum || !e.detail.value.footballfield || !e.detail.value.starttime || !e.detail.value.endtime || !e.detail.value.cutofftime)
     {
       wx.showModal({
@@ -51,7 +53,10 @@ Page({
         endtime:e.detail.value.endtime,
         cutofftime:e.detail.value.cutofftime,
         cost:e.detail.value.paytype,
-        tips:e.detail.value.footballtext
+        tips:e.detail.value.footballtext,
+        fieldgeoinfo:this.pageData.locationObj,
+        effect:"ture",
+        creattime: _creatTime
       }
       }).then(console.log)
     }
@@ -108,7 +113,8 @@ chooseLocation: function(e){
         this.pageData.locationObj = locationObj ;/**获取到地理位置信息，构建页内对象 */
         this.setData({
           footballFileAddress:res.name
-        });/**返回页面地理名称 */
+        });
+      /**返回页面地理名称 */
       },
       fail: () => {},
       complete: () => {}
