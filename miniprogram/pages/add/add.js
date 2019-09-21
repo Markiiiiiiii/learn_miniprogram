@@ -1,6 +1,8 @@
 // miniprogram/pages/add/add.js
 import{$wuxForm} from '../../miniprogram_npm/wux-weapp/index'
 var util = require('../../utils/utils.js');
+const db = wx.cloud.database();
+const gamesSignUp = db.collection('gamesSignUp');
 
 Page({
   data: {
@@ -19,7 +21,7 @@ Page({
       footballFileAddress:null
   },
   pageData:{
-      locationObj:{}
+      locationObj:{},
   },
   onLoad: function (options) {
     var time = util.formatTime(new Date());  
@@ -28,8 +30,18 @@ Page({
     })
   },
 
-  onSubmit: function(event){
-    console.log(event)
+  onSubmit: function(e){  
+    if(!e.detail.value.title || !e.detail.value.maxnum || !e.detail.value.footballfield || !e.detail.value.starttime || !e.detail.value.endtime || !e.detail.value.cutofftime)
+    {
+      wx.showModal({
+        title: '提示',
+        content: '请输入*必填内容',
+        success: (result) => {
+          if(result.confirm){
+          }
+        }
+      })
+    }
   },/**提交按钮 */
 /**时间选择 */
   onChange(e) {
@@ -111,8 +123,9 @@ setPayValue(values, key) {
     [`displayValue${key}`]: values.label,
   })
 },
-
-
+formReset: function(e){
+  console.log(e);
+}
 // onVisibleChange(e) {
 //   this.setData({ visible: e.detail.visible })
 // },
