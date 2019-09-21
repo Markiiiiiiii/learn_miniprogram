@@ -29,7 +29,7 @@ Page({
       nowTime : time
     })
   },
-
+/**存储到数据库 */
   onSubmit: function(e){  
     if(!e.detail.value.title || !e.detail.value.maxnum || !e.detail.value.footballfield || !e.detail.value.starttime || !e.detail.value.endtime || !e.detail.value.cutofftime)
     {
@@ -41,8 +41,21 @@ Page({
           }
         }
       })
+    }else{
+      gamesSignUp.add({
+        data:{
+        title:e.detail.value.title,
+        maxnum:e.detail.value.maxnum,
+        footballfield:e.detail.value.footballfield,
+        starttime:e.detail.value.starttime,
+        endtime:e.detail.value.endtime,
+        cutofftime:e.detail.value.cutofftime,
+        cost:e.detail.value.paytype,
+        tips:e.detail.value.footballtext
+      }
+      }).then(console.log)
     }
-  },/**提交按钮 */
+  },
 /**时间选择 */
   onChange(e) {
     console.log(e)
@@ -122,10 +135,8 @@ setPayValue(values, key) {
     [`value${key}`]: values.value,
     [`displayValue${key}`]: values.label,
   })
-},
-formReset: function(e){
-  console.log(e);
 }
+
 // onVisibleChange(e) {
 //   this.setData({ visible: e.detail.visible })
 // },
