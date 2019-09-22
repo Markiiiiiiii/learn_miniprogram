@@ -1,3 +1,17 @@
 <view  class=".container">
-
+    <view style='opacity:0.85'>
+    <wux-wing-blank size="default">
+    <block wx:for="{{gamelists}}" wx:key="key">
+        <wux-card title="{{item.title}}" extra="/{{item.maxnum}}">
+            <view slot="body">
+                <view>活动开始时间：{{item.cutofftime}}\n</view>
+                <view>报名截止时间：{{item.cutofftime}}\n</view>
+                <view>活动地点：{{item.fieldaddress}}</view>
+                </view>
+            <view slot="footer">点击报名</view>
+        </wux-card>
+        <wux-white-space size="default" />
+        </block>
+    </wux-wing-blank>
+    </view>
 </view>

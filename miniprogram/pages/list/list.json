@@ -1,3 +1,7 @@
 {
-  "usingComponents": {}
+  "usingComponents": {
+    "wux-white-space":"../../miniprogram_npm/wux-weapp/white-space/index",
+    "wux-wing-blank":"../../miniprogram_npm/wux-weapp/wing-blank/index",
+    "wux-card":"../../miniprogram_npm/wux-weapp/card/index"
+  }
 }
