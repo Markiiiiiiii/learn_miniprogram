@@ -23,12 +23,12 @@
                          </wux-date-picker>
                     </wux-field>
                       <wux-field name="endtime">
-                        <wux-date-picker minDate="{{ endTimeStart }}" mode="datetime" value="{{ value2 }}" lang="{{ lang }}" data-index="2" data-mode="datetime" bind:confirm="onConfirm">
+                        <wux-date-picker minDate="{{ endTimeStart }}" mode="datetime" value="{{ value2 }}" lang="{{ lang }}" data-index="2" data-mode="datetime" bind:confirm="onConfirmEnd">
                           <wux-cell title="*结束时间：" is-link extra="{{ displayValue2}}"></wux-cell>
                          </wux-date-picker>
                     </wux-field>
                      <wux-field name="cutofftime">
-                        <wux-date-picker minDate="{{ nowTime }}" maxDate="{{ endTimeStart }}" mode="datetime" value="{{ value3 }}" lang="{{ lang }}" data-index="3" data-mode="datetime" bind:confirm="onConfirm">
+                        <wux-date-picker minDate="{{ nowTime }}" maxDate="{{ endTimeStart }}" mode="datetime" value="{{ value3 }}" lang="{{ lang }}" data-index="3" data-mode="datetime" bind:confirm="onConfirmCutOff">
                           <wux-cell title="*报名截止时间：" is-link extra="{{ displayValue3 }}"></wux-cell>
                          </wux-date-picker>
                     </wux-field>
@@ -37,7 +37,9 @@
                             <wux-cell title="费用：" is-link  extra="{{ displayValue4 }}"></wux-cell>
                         </wux-picker>
                     </wux-field>
-                    
+                        <wux-cell title="您是否参加：">
+                            <wux-switch name="join" color="balanced" value="{{ value5 }}"  slot="footer" bind:change="onChangeSwitch"/>
+                        </wux-cell>
                         <wux-cell title="地图位置：" hover-class="none">
                         <wux-button size="small" type="balanced" bind:click="chooseLocation"><wux-icon type="ios-pin" size="16" />打开地图</wux-button>
                             <block wx:if="{{footballFileAddress}}">

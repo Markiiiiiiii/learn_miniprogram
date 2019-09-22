@@ -81,7 +81,7 @@ Page({
             success: (result)=>{
               this.setData({
                 nickName: result.userInfo.nickName /**获取用户名用于判断是否授权 */
-              }),console.log(this.data.nickName)
+              }),console.log(result)
             }
         })
       }}
