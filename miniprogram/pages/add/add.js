@@ -94,26 +94,25 @@ onReady:function(){
 /**用户数据库内容信息检索更新 */
 onCheckUser:function(value){
       gamesPlayer.where({
-          openid: value._openid
+          _openid: value._openid
       }).get().then(res=>{
-        console.log(res);
+        if(res.data[0].nickName !=value._nickName || res.data[0].avatarUrl != value._avatarUrl)
+          {
+            console.log(value._nickName);
+            gamesPlayer.doc(
+              res.data[0]._id
+            )
+            .update({
+              data:{
+              nickName:value._nickName,
+              avatarUrl:value._avatarUrl
+            },
+            })
+            .then(console.log)
+          }
         });
-          return res
-    
-
-      //  if(_userTmp.data[0].nickName != value._nickName || _userTmp.data[0].avatarUrl != value._avatarUrl ) /**判断获取的用户信息是否与数据库内保存的是否一致 */
-      //  {/**如果不一致则将传入的用户数据更新数据库中现有的数据 */
-      //   gamesPlayer.doc(_userTmp.data[0]._id)
-      //    .update({
-      //      data:{
-      //         nickName:value._nickName,
-      //         avatarUrl:value._avatarUrl
-      //      }
-      //    })
-      //    .then(
-      //       console.log('更新了数据库中已有的数据',res)
-      //    )
-      //  }else{console.log('ok')}
+        
+/**技巧：必须在数据表中设置一个_openid字段，来用于鉴权，如果没有该字段则数据库不执行更新动作 */
 },
 
 /**存储到数据库 */
