@@ -62,8 +62,8 @@ Page({
             timeout:10000,
             success: (result)=>{
               // console.log(result)
-               this.pageData._userInfo['nickName'] = result.userInfo.nickName;
-               this.pageData._userInfo['avatarUrl'] = result.userInfo.avatarUrl;
+               this.pageData._userInfo['_nickName'] = result.userInfo.nickName;
+               this.pageData._userInfo['_avatarUrl'] = result.userInfo.avatarUrl;
             },
             fail: ()=>{},
             complete: ()=>{}
@@ -80,18 +80,27 @@ Page({
      name:'login',
      data:{},
       success:res=>{
-        this.pageData._userInfo['openid'] =  res.result.openid
+        this.pageData._userInfo['_openid'] =  res.result.openid
       },fail:err=>{}
    });
-  console.log(this.pageData._userInfo.openid)/**错误点 */
+  
   },
+
+onReady:function(){
+  // console.log(this.pageData._userInfo)/**错误点 */
+  this.onCheckUser(this.pageData._userInfo)
+},
 
 /**用户数据库内容信息检索更新 */
 onCheckUser:function(value){
-      console.log(value);
       gamesPlayer.where({
-          openid :value['openid']
-      }).get().then(console.log)
+          openid: value._openid
+      }).get().then
+        (res=>{
+        console.log(res);
+      console.log(value);
+      if(res.data[0])
+       })
 
 },
 
