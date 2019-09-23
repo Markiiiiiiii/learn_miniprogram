@@ -95,13 +95,25 @@ onReady:function(){
 onCheckUser:function(value){
       gamesPlayer.where({
           openid: value._openid
-      }).get().then
-        (res=>{
+      }).get().then(res=>{
         console.log(res);
-      console.log(value);
-      if(res.data[0])
-       })
+        });
+          return res
+    
 
+      //  if(_userTmp.data[0].nickName != value._nickName || _userTmp.data[0].avatarUrl != value._avatarUrl ) /**判断获取的用户信息是否与数据库内保存的是否一致 */
+      //  {/**如果不一致则将传入的用户数据更新数据库中现有的数据 */
+      //   gamesPlayer.doc(_userTmp.data[0]._id)
+      //    .update({
+      //      data:{
+      //         nickName:value._nickName,
+      //         avatarUrl:value._avatarUrl
+      //      }
+      //    })
+      //    .then(
+      //       console.log('更新了数据库中已有的数据',res)
+      //    )
+      //  }else{console.log('ok')}
 },
 
 /**存储到数据库 */
