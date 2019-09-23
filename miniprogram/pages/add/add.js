@@ -3,6 +3,7 @@ import{$wuxForm} from '../../miniprogram_npm/wux-weapp/index'
 var util = require('../../utils/formattime.js');
 const db = wx.cloud.database();
 const gamesSignUp = db.collection('gamesSignUp');
+const gamesPlayer = db.collection('gamesPlayer');
 
 Page({
   data: {
@@ -32,6 +33,19 @@ Page({
       _userInfo:{}
   },
   onLoad: function (options) {
+    // wx.login({
+    //   timeout:10000,
+    //   success: (result)=>{
+    //     if(result.code){
+    //         console.log(result)
+    //     }else{
+    //       console.log(result.errMsg)
+    //     }
+    //   },
+    //   fail: ()=>{},
+    //   complete: ()=>{}
+    // });
+    /**登陆鉴权 */
     let _tmp = new Date();
     var time = util.formatTime(new Date());  
     this.setData({
@@ -39,21 +53,50 @@ Page({
     });/**传递当前时间给页面复用 */
 
     /**获得用户名和信息 */
-    wx.getUserInfo({
-      withCredentials: 'false',
-      lang: 'zh_CN',
-      timeout:10000,
+    wx.getSetting({
       success: (result)=>{
-        // console.log(result)
-         this.pageData._userInfo['nickName'] = result.userInfo.nickName;
-         this.pageData._userInfo['avatarUrl'] = result.userInfo.avatarUrl;
+        if(result.authSetting['scope.userInfo']){
+          wx.getUserInfo({
+            withCredentials: 'false',
+            lang: 'zh_CN',
+            timeout:10000,
+            success: (result)=>{
+              // console.log(result)
+               this.pageData._userInfo['nickName'] = result.userInfo.nickName;
+               this.pageData._userInfo['avatarUrl'] = result.userInfo.avatarUrl;
+            },
+            fail: ()=>{},
+            complete: ()=>{}
+          })
+        }
       },
       fail: ()=>{},
       complete: ()=>{}
     });
+
+
+   /**使用云函数调用openid */
+   wx.cloud.callFunction({
+     name:'login',
+     data:{},
+      success:res=>{
+        this.pageData._userInfo['openid'] =  res.result.openid
+      },fail:err=>{}
+   });
+  console.log(this.pageData._userInfo.openid)/**错误点 */
   },
+
+/**用户数据库内容信息检索更新 */
+onCheckUser:function(value){
+      console.log(value);
+      gamesPlayer.where({
+          openid :value['openid']
+      }).get().then(console.log)
+
+},
+
 /**存储到数据库 */
-  onSubmit: function(e){  
+onSubmit: function(e){  
     let _creatTime = new Date();
     // console.log(e);
     // console.log(this.pageData._userInfo);
@@ -101,7 +144,7 @@ Page({
           fieldgeoinfo:this.pageData._fieldGeoInfo,
           fieldname:this.pageData._fieldName,
           fieldaddress:this.pageData._fieldAddress,
-          playname:this.pageData._userInfo,
+          playerlist:[this.pageData._userInfo.openid],/**活动创建者本身也参加活动 */
           effect:"true"
         }
         }).then(console.log)
@@ -109,8 +152,10 @@ Page({
      
     }
   },
+
+
 /**时间选择 */
-  onChange(e) {
+onChange(e) {
     // console.log(e)
     const { key, values } = e.detail
     const lang = values[key]
