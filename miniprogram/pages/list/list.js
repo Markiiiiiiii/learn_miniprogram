@@ -22,7 +22,7 @@ Page({
     gamesSignUp.where({effect:"true"}).orderBy('creattime','desc')
     .get()
     .then(res => { /**then是在执行完前面get()之后执行then之内的语句 */
-      console.log(res);
+      // console.log(res);
       this.data.gamelists=res.data;
 
       for(var i=0 ; i<res.data.length ; i++){
@@ -43,7 +43,13 @@ Page({
     })
   },
 
-test:function(options){
-  console.log(options.currentTarget.dataset.id)
+toInfopage:function(options){
+   wx.navigateTo({
+    url: "../info/info?id="+options.currentTarget.dataset.id,
+    success: (result)=>{
+    },
+    fail: ()=>{},
+    complete: ()=>{}
+  });
 }
 })

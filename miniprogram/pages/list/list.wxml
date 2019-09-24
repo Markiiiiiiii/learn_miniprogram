@@ -9,8 +9,7 @@
        <view class="infolist"><wux-icon type="ios-pin" size="16" />\n活动地点：{{item.fieldaddress}}</view>
        <view class="infolist"><wux-icon type="ios-person-add" size="16" />\n报名人数：{{item.nowplayernums}}\n/\n{{item.maxnum}}</view>
     </view>
- <view class="cardcontainer" bindtap="test" data-id="{{item._id}}"> 查看详情</view>
-
+ <view class="cardcontainer" bindtap="toInfopage" data-id="{{item._id}}"> 查看详情</view>
  </view>
   </block>
 </view>
