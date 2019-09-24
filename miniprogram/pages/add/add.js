@@ -98,7 +98,6 @@ onCheckUser:function(value){
       }).get().then(res=>{
         if(res.data[0].nickName !=value._nickName || res.data[0].avatarUrl != value._avatarUrl)
           {
-            console.log(value._nickName);
             gamesPlayer.doc(
               res.data[0]._id
             )

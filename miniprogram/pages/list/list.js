@@ -29,7 +29,7 @@ Page({
         this.data.gamelists[i].starttime = util.formatTime(res.data[i].starttime);
         this.data.gamelists[i].endtime = util.formatTime(res.data[i].endtime);
         this.data.gamelists[i].cutofftime = util.formatTime(res.data[i].cutofftime);
-        this.data.gamelists[i].nowplayernums = res.data[i].playname.length;
+        this.data.gamelists[i].nowplayernums = res.data[i].playerlist.length;
         console.log(res.data[i])};
         this.setData({
           gamelists:res.data
@@ -43,10 +43,7 @@ Page({
     })
   },
 
-
-  onPullDownRefresh: function () {
-
-  },
-
-
+test:function(options){
+  console.log(options.currentTarget.dataset.id)
+}
 })
