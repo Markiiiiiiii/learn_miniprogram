@@ -1,18 +1,19 @@
 <view class="container">
 <view style='opacity:0.85'>
     <wux-cell-group >
-         <block wx:for="{{playInfo}}" wx:key="key">
-         <wux-cell title="活动主题：" extra="{{item.title}}"/>
-        <wux-cell title="比赛场地：" extra="{{item.footballfield}}"/>
-        <wux-cell title="报名截止：" extra="{{item.cutofftime}}" />
-         <wux-cell title="开始时间：" extra="{{item.starttime}}"/>
-         <wux-cell title="结束时间：" extra="{{item.endtime}}"/>
-         <wux-cell title="比赛性质：" extra="{{item.gametype}}"/>
-         <wux-cell title="费用：" extra="{{item.cost}}"/>
+         <block wx:for="{{playInfo}}" wx:for-item="gameInfoItem" wx:key="{{gameInfoItem.id}}">
+         <wux-cell title="活动主题：" extra="{{gameInfoItem.title}}"/>
+        <wux-cell title="比赛场地：" extra="{{gameInfoItem.footballfield}}"/>
+        <wux-cell title="报名截止：" extra="{{gameInfoItem.cutofftime}}" />
+         <wux-cell title="开始时间：" extra="{{gameInfoItem.starttime}}"/>
+         <wux-cell title="结束时间：" extra="{{gameInfoItem.endtime}}"/>
+         <wux-cell title="比赛性质：" extra="{{gameInfoItem.gametype}}"/>
+         <wux-cell title="费用：" extra="{{gameInfoItem.cost}}"/>
          <wux-cell title="已报名：" >
-            <wux-avatar size="default" shape="circle" src="{{item.playname.avatarurl}}"></wux-avatar>
-         </wux-cell>
-
+         <block wx:for="{{gameInfoItem.playerAvatars}}" wx:for-item="playerInfoItem" wx:key="{{playerInfoItem.id}}}">
+            <wux-avatar size="default" shape="circle" src="{{playerInfoItem.avatarUrl}}"></wux-avatar>
+        </block>
+        </wux-cell>
         </block>
     </wux-cell-group>
     </view>

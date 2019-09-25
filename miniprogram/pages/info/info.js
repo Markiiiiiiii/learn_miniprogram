@@ -11,18 +11,15 @@ Page({
     playInfo:null,
     canIUse: wx.canIUse('button.open-type.getUserInfo'),
     nickName:null,
-    playernames:[]
+    playernames:null,
 
     },
   pageData:{
       indexId:null,
   },
-  /**
-   * 生命周期函数--监听页面加载
-   */
+
   onLoad: function (options) {
-    console.log(options.id);
-    // this.pageData.indexId = options.id;
+  
     this.getData(options.id);/**读取数据 */
 
   },/**先判断是否是登录，然后点击button，获取用户头像 */
@@ -39,7 +36,7 @@ Page({
     if(!value){
       value = res=>{} /**如果callback不是一个函数则使用箭头函数构造一个空函数 */
     }
-    console.log(value);
+  
     wx.showLoading({
           title: '加载中...',
         });
@@ -61,15 +58,18 @@ Page({
       //       height:30
       // }]
       /**构建地点marker坐标 */
-      for(var i=0 ; i< res.data[0].playerlist.length ; i++){
-            gamesPlayer.where({_openid:res.data[0].playerlist[i]})
-              .get().then(list => {
-                console.log(list);
-                this.data.playernames[i] = list.data[0].nickName;
-                console.log(this.data.playernames)
-              })
-      }
-      console.log(res.data[0]);
+      res.data[0].playerAvatars = {};
+      var _playerlists = res.data[0].playerlist;
+      const _ = db.command;
+      gamesPlayer.where({
+        _openid:_.in(_playerlists)
+      })
+      .get()
+      .then(
+        rest=>(
+          console.log(rest),
+          res.data[0].playerAvatars = rest.data
+          ))
       this.setData({
         playInfo:res.data
       }),/**这里的逗号起到连接作用，和之前的语句形成一个语句串 */
