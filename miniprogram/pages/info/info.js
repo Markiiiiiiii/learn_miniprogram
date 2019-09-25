@@ -1,6 +1,7 @@
 // miniprogram/pages/index/index.js
 const db = wx.cloud.database();
 const gamesSignUp = db.collection('gamesSignUp');
+const gamesPlayer = db.collection('gamesPlayer');
 Page({
 
   /**
@@ -9,7 +10,9 @@ Page({
   data: {
     playInfo:null,
     canIUse: wx.canIUse('button.open-type.getUserInfo'),
-    nickName:null
+    nickName:null,
+    playernames:[]
+
     },
   pageData:{
       indexId:null,
@@ -40,7 +43,8 @@ Page({
     wx.showLoading({
           title: '加载中...',
         });
-    gamesSignUp.where({_id:value})
+    gamesSignUp
+    .where({_id:value})
     .get().then(res => { 
       /**then是在执行完前面get()之后执行then之内的语句 */
       res.data[0].cutofftime = res.data[0].cutofftime.toLocaleString();
@@ -48,15 +52,24 @@ Page({
       res.data[0].endtime = res.data[0].endtime.toLocaleString(); /**将数据库中的date格式输出为字符串 */
       res.data[0].latitude = res.data[0].fieldgeoinfo.latitude; 
       res.data[0].longitude = res.data[0].fieldgeoinfo.longitude;  /**构建map需要的经纬度 */
-      res.data[0].fieldgeoinfo = [{
-            id : 0,
-            iconPath: "../../images/icons/gps.png",
-            latitude:  res.data[0].fieldgeoinfo.latitude,
-            longitude:  res.data[0].fieldgeoinfo.longitude,
-            width:30,
-            height:30
-      }]
-      console.log(res.data[0]);/**构建地点marker坐标 */
+      // res.data[0].fieldgeoinfo = [{
+      //       id : 0,
+      //       iconPath: "../../images/icons/gps.png",
+      //       latitude:  res.data[0].fieldgeoinfo.latitude,
+      //       longitude:  res.data[0].fieldgeoinfo.longitude,
+      //       width:30,
+      //       height:30
+      // }]
+      /**构建地点marker坐标 */
+      for(var i=0 ; i< res.data[0].playerlist.length ; i++){
+            gamesPlayer.where({_openid:res.data[0].playerlist[i]})
+              .get().then(list => {
+                console.log(list);
+                this.data.playernames[i] = list.data[0].nickName;
+                console.log(this.data.playernames)
+              })
+      }
+      console.log(res.data[0]);
       this.setData({
         playInfo:res.data
       }),/**这里的逗号起到连接作用，和之前的语句形成一个语句串 */

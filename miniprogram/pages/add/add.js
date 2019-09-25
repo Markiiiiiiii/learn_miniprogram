@@ -5,6 +5,9 @@ const db = wx.cloud.database();
 const gamesSignUp = db.collection('gamesSignUp');
 const gamesPlayer = db.collection('gamesPlayer');
 
+
+
+
 Page({
   data: {
       thumb: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAC4AAAAuCAMAAABgZ9sFAAAAVFBMVEXx8fHMzMzr6+vn5+fv7+/t7e3d3d2+vr7W1tbHx8eysrKdnZ3p6enk5OTR0dG7u7u3t7ejo6PY2Njh4eHf39/T09PExMSvr6+goKCqqqqnp6e4uLgcLY/OAAAAnklEQVRIx+3RSRLDIAxE0QYhAbGZPNu5/z0zrXHiqiz5W72FqhqtVuuXAl3iOV7iPV/iSsAqZa9BS7YOmMXnNNX4TWGxRMn3R6SxRNgy0bzXOW8EBO8SAClsPdB3psqlvG+Lw7ONXg/pTld52BjgSSkA3PV2OOemjIDcZQWgVvONw60q7sIpR38EnHPSMDQ4MjDjLPozhAkGrVbr/z0ANjAF4AcbXmYAAAAASUVORK5CYII=',
@@ -83,20 +86,31 @@ Page({
         this.pageData._userInfo['_openid'] =  res.result.openid
       },fail:err=>{}
    });
-  
+
   },
 
 onReady:function(){
-  // console.log(this.pageData._userInfo)/**错误点 */
-  this.onCheckUser(this.pageData._userInfo)
+  this.onCheckUser(this.pageData._userInfo)  
 },
 
 /**用户数据库内容信息检索更新 */
 onCheckUser:function(value){
       gamesPlayer.where({
           _openid: value._openid
-      }).get().then(res=>{
-        if(res.data[0].nickName !=value._nickName || res.data[0].avatarUrl != value._avatarUrl)
+      }).get().then(
+       
+        res=>{
+         if(res.data.length == 0){
+           console.log(value);
+          gamesPlayer.add({
+            data:{
+              nickName:value._nickName,
+              avatarUrl:value._avatarUrl,
+              _openid:value._openid
+            }/**不能添加数据 */
+          }).then(console.log)
+         }else{
+          if(res.data[0].nickName !=value._nickName || res.data[0].avatarUrl != value._avatarUrl)
           {
             gamesPlayer.doc(
               res.data[0]._id
@@ -108,8 +122,9 @@ onCheckUser:function(value){
             },
             })
             .then(console.log)
-          }
-        });
+         } 
+         }
+      });
         
 /**技巧：必须在数据表中设置一个_openid字段，来用于鉴权，如果没有该字段则数据库不执行更新动作 */
 },
@@ -163,13 +178,16 @@ onSubmit: function(e){
           fieldgeoinfo:this.pageData._fieldGeoInfo,
           fieldname:this.pageData._fieldName,
           fieldaddress:this.pageData._fieldAddress,
-          playerlist:[this.pageData._userInfo.openid],/**活动创建者本身也参加活动 */
+          playerlist:[this.pageData._userInfo._openid],/**活动创建者本身也参加活动 */
           effect:"true"
         }
         }).then(console.log)
-      }
-     
+      };
+      // wx.redirectTo({
+      //   url: '../list/list',
+      //   success: (result)=>{},});
     }
+
   },
 
 

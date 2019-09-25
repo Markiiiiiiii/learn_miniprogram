@@ -2,6 +2,7 @@
 <view style='opacity:0.85'>
     <wux-cell-group >
          <block wx:for="{{playInfo}}" wx:key="key">
+         <wux-cell title="活动主题：" extra="{{item.title}}"/>
         <wux-cell title="比赛场地：" extra="{{item.footballfield}}"/>
         <wux-cell title="报名截止：" extra="{{item.cutofftime}}" />
          <wux-cell title="开始时间：" extra="{{item.starttime}}"/>
@@ -11,19 +12,7 @@
          <wux-cell title="已报名：" >
             <wux-avatar size="default" shape="circle" src="{{item.playname.avatarurl}}"></wux-avatar>
          </wux-cell>
-         <wux-cell title="球场地理位置：">
-         <map 
-            id="map"
-            longitude="{{item.longitude}}"
-            latitude="{{item.latitude}}" 
-            scale="17"
-            enable-zoom="false"
-            enable-scroll="false"
-            markers="{{item.fieldgeoinfo}}"
-            subkey="TLPBZ-XWJCW-LSQRL-OOPG2-3TMDZ-DUB3G"
-            enable-traffic="ture"	
-            show-location
-         /></wux-cell>
+
         </block>
     </wux-cell-group>
     </view>
