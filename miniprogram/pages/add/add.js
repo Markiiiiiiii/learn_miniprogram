@@ -102,13 +102,7 @@ onCheckUser:function(value){
         res=>{
          if(res.data.length == 0){
            console.log(value);
-          gamesPlayer.add({
-            data:{
-              nickName:value._nickName,
-              avatarUrl:value._avatarUrl,
-              _openid:value._openid
-            }/**不能添加数据 */
-          }).then(console.log)
+            this.onAddPlayer(value);/**判断用户表中是否存在当前用户，没有则添加当前用户 */
          }else{
           if(res.data[0].nickName !=value._nickName || res.data[0].avatarUrl != value._avatarUrl)
           {
@@ -128,7 +122,17 @@ onCheckUser:function(value){
         
 /**技巧：必须在数据表中设置一个_openid字段，来用于鉴权，如果没有该字段则数据库不执行更新动作 */
 },
-
+/**添加用户信息，tips：不能在添加语句中使用_openid字段，_openid必须由系统自动添加，用户添加则会出现执行错误。 */
+onAddPlayer: function(value){
+  console.log(value._nickName);
+        gamesPlayer.add({
+          data:{
+            nickName:value._nickName,
+            avatarUrl:value._avatarUrl
+            // _openid:value._openid
+          }/**不能添加数据 */
+        }).then(console.log)
+},
 /**存储到数据库 */
 onSubmit: function(e){  
     let _creatTime = new Date();
