@@ -33,6 +33,7 @@ Page({
       indexId:null,
       playerArray:[],
       _userInfo:{},
+      _alluserlists:[],
       _alluserlist:[]
   },
 
@@ -89,6 +90,7 @@ Page({
     .where({_id:value})
     .get().then(res => { 
       /**then是在执行完前面get()之后执行then之内的语句 */
+      
       res.data[0].cutofftime = res.data[0].cutofftime.toLocaleString();
       res.data[0].starttime = res.data[0].starttime.toLocaleString();
       res.data[0].endtime = res.data[0].endtime.toLocaleString(); /**将数据库中的date格式输出为字符串 */
@@ -103,9 +105,10 @@ Page({
       //       height:30
       // }]
       /**构建地点marker坐标 */
-      res.data[0].playerAvatars = {};
+      res.data[0].playerAvatars = {};/**构建一个空对象，获取用户头像 */
       _playerlists = res.data[0].playerlist;
-      const _ = db.command;
+      console.log(_playerlists)
+      const _ = db.command
       /**查询player表返回用户信息 */
       gamesPlayer.where({
         _openid:_.in(_playerlists)
@@ -113,6 +116,7 @@ Page({
       .get()
       .then(
         rest=>(  
+          console.log(rest),
           this.setData({
             playernames:rest.data
           })
@@ -157,27 +161,29 @@ Page({
       }}
     })
   },
-
+/**退出报名 */
 onCheckOut:function(e){
-    const _= db.command
-
   /**使用数组元素删除函数删除掉原所有报名者的数组，将数组重构 */
+  
     this.pageData._alluserlist.remove(e.currentTarget.dataset.userid)
-    console.log(this.pageData._alluserlist)
+    var _tmparr = []
+    for(var i=0; i <this.pageData._alluserlist.length ; i++){
+      _tmparr.push(this.pageData._alluserlist[i])
+    }/**将对象构建成一个数组_tmparr */
     /**准备回传构建的报名者用户数组更新数据库中对应的id记录 */
     gamesSignUp.doc(
       e.currentTarget.dataset.gameid
     )
     .update({
         data:{
-          playerlist:this.pageData._alluserlist,
+          playerlist:_tmparr
         }
     })
     .then(console.log)
 },
-/**退出报名机制 */
 
-onCheckIn:function(){
+
+onCheckIn:function(e){
 
 },
   // onRefresh:function(){
