@@ -10,24 +10,28 @@
          <wux-cell title="比赛性质：" extra="{{gameInfoItem.gametype}}"/>
          <wux-cell title="费用：" extra="{{gameInfoItem.cost}}"/>
          <wux-cell title="已报名：" >
-         <block wx:for="{{gameInfoItem.playerAvatars}}" wx:for-item="playerInfoItem" wx:key="{{playerInfoItem.id}}}">
-            <wux-avatar size="default" shape="circle" src="{{playerInfoItem.avatarUrl}}"></wux-avatar>
-        </block>
+       <block wx:for="{{playernames}}" wx:for-item="playerInfoItem" wx:key="{{playerInfoItem.id}}}">
+               <wux-avatar size="default" shape="circle" src="{{playerInfoItem.avatarUrl}}"></wux-avatar>
+         </block>
         </wux-cell>
         </block>
     </wux-cell-group>
     </view>
  <view >
  <block wx:if="{{!nickName}}">
-  <wux-button size="small" block disable type="balanced" wx:if="{{canIUse}}" openType="getUserInfo" bindgetuserinfo="bindGetUserInfo">
-  <wux-icon type="ios-football" size="16" />
-  开始报名</wux-button>
+  <wux-button size="small" block disable type="energized" wx:if="{{canIUse}}" openType="getUserInfo" bindgetuserinfo="bindGetUserInfo">
+  <wux-icon type="ios-football" size="16" />\t开始报名
+  </wux-button>
   </block>
-   <block wx:if="{{nickName}}">
-  <wux-button size="small" block disable type="balanced">
-  <wux-icon type="ios-football" size="16" />
-  参加比赛</wux-button>
+  <block wx:if="{{nickName == 'insider'}}">
+   <wux-button size="small" block disable type="assertive" data-gameId="{{gameid}}" data-userId="{{uopenid}}"bind:click="onCheckOut">
+  <wux-icon type="ios-log-out" size="16" />\t退出活动
+  </wux-button>
+  </block>
+   <block wx:if="{{nickName == 'nin'}}">
+   <wux-button size="small" block disable type="balanced" bind:click="onCheckIN">
+  <wux-icon type="ios-log-in" size="16" />\t报名活动
+  </wux-button>
   </block>
  </view>
 </view>
-

@@ -130,7 +130,7 @@ onAddPlayer: function(value){
             nickName:value._nickName,
             avatarUrl:value._avatarUrl
             // _openid:value._openid
-          }/**不能添加数据 */
+          }
         }).then(console.log)
 },
 /**存储到数据库 */

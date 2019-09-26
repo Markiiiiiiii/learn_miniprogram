@@ -4,13 +4,12 @@ var util = require('../../utils/formattime.js')
 Page({
   data: {
       gamelists:null
-
   },
+
 
   onLoad: function (options) {
     this.getData();
   },
-
 
   getData: function(callback){
     if(!callback){
@@ -30,13 +29,13 @@ Page({
         this.data.gamelists[i].endtime = util.formatTime(res.data[i].endtime);
         this.data.gamelists[i].cutofftime = util.formatTime(res.data[i].cutofftime);
         this.data.gamelists[i].nowplayernums = res.data[i].playerlist.length;
-        console.log(res.data[i])};
+       };
         this.setData({
           gamelists:res.data
         }),
       // res.data[0].cutofftime = res.data[0].cutofftime.toLocaleString();
       // res.data[0].starttime = res.data[0].starttime.toLocaleString();
-      // res.data[0].endtime = res.data[0].endtime.toLocaleString(); /**将数据库中的date格式输出为字符串 */
+      // res.data[0]. bvcx     5e4837™endtime = res.data[0].endtime.toLocaleString(); /**将数据库中的date格式输出为字符串 */
 /**这里的逗号起到连接作用，和之前的语句形成一个语句串 */
      res => {callback();}/**构建一个箭头函数把callbcak作为返回值，实现了可以空值调用getData函数也有返回值的目的 */
       wx.hideLoading();
