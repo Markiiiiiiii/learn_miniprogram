@@ -4,7 +4,8 @@
     "pages/info/info",
     "pages/learn/learn",
     "pages/list/list",
-    "pages/add/add"
+    "pages/add/add",
+    "pages/goto/goto"
   ],
   "window": {
     "backgroundColor": "#F6F6F6",
@@ -20,7 +21,7 @@
   },
   "permission": {
     "scope.userLocation": {
-      "desc": "你的位置信息将用于比赛位置的设定" 
+      "desc": "你的位置信息将用于比赛位置的设定"
     }
   },
   "sitemapLocation": "sitemap34.json"
