@@ -168,30 +168,19 @@ getData: function(value,uid){
 
 /**退出报名 */
 onCheckOut:function(e){
-  /**使用数组元素删除函数删除掉原所有报名者的数组，将数组重构 */
-   _tmparr = this.onCleanUser(this.userData._openid,e.currentTarget.dataset.userid);
-   /**错误点 */
-    // this.userData._openid.remove(e.currentTarget.dataset.userid);
-    // var _tmparr = [];
-    // for(var i=0; i <this.userData._openid.length ; i++){
-    //   _tmparr.push(this.userData._openid[i])
-    // };
-    
-    console.log(_tmparr)
-    // this.onDelPlayer(e.currentTarget.dataset.gameid,_tmparr)
-},
-
-/**数据清洗 */
-onCleanUser:function(str,id){
-    var _arr=[];
-    str.remove(id)
-    for(var i=0 ;i<str.length ; i++){
-      _arr.push(str._openid[i])
+  /**清洗现有的已报名用户数组，将符合的id剔除后重构已报名用户数组 */
+    var _tmparr=[]
+    for(let i of this.userData._openid)
+      {
+        if (i !== e.currentTarget.dataset.userid){
+          _tmparr.push(i)
         }
-      return _arr
+      }
 
+    this.onDelPlayer(e.currentTarget.dataset.gameid,_tmparr)
 },
 
+/**s数据库中更新playerlist字段 */
 onDelPlayer:function(id,arr){
     /**将对象构建成一个数组_tmparr */
     /**准备回传构建的报名者用户数组更新数据库中对应的id记录 */

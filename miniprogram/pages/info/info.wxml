@@ -24,9 +24,10 @@
   </wux-button>
   </block>
   <block wx:if="{{nickName == 'insider'}}">
-   <wux-button size="small" block disable type="assertive" data-gameId="{{gameid}}" data-userId="{{uopenid}}"bind:click="onCheckOut">
+   <wux-button size="small" block disable type="assertive" data-gameId="{{gameid}}" data-userId="{{uopenid}}" bind:click="onCheckOut">
   <wux-icon type="ios-log-out" size="16" />\t退出活动
   </wux-button>
+
   </block>
    <block wx:if="{{nickName == 'nin'}}">
    <wux-button size="small" block disable type="balanced" bind:click="onCheckIN">
