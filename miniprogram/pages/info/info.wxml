@@ -3,13 +3,16 @@
     <wux-cell-group >
          <block wx:for="{{playInfo}}" wx:for-item="gameInfoItem" wx:key="{{gameInfoItem.id}}">
          <wux-cell title="活动主题：" extra="{{gameInfoItem.title}}"/>
-        <wux-cell title="比赛场地：" extra="{{gameInfoItem.footballfield}}"/>
+        <wux-cell title="活动场地：" extra="{{gameInfoItem.footballfield}}"/>
+        <wux-cell title="限定人数" extra="{{gameInfoItem.maxnum}}" />
         <wux-cell title="报名截止：" extra="{{gameInfoItem.cutofftime}}" />
-         <wux-cell title="开始时间：" extra="{{gameInfoItem.starttime}}"/>
-         <wux-cell title="结束时间：" extra="{{gameInfoItem.endtime}}"/>
-         <wux-cell title="比赛性质：" extra="{{gameInfoItem.gametype}}"/>
-         <wux-cell title="费用：" extra="{{gameInfoItem.cost}}"/>
-         <wux-cell title="已报名：" >
+        <wux-cell title="开始时间：" extra="{{gameInfoItem.starttime}}"/>
+        <wux-cell title="结束时间：" extra="{{gameInfoItem.endtime}}"/>
+        <wux-cell title="费用：" extra="{{gameInfoItem.cost}}"/>
+        <wux-cell title="场地名称：" extra="{{gameInfoItem.fieldname}}"/>
+        <wux-cell title="场地地址：" extra=""/>
+        <wux-cell  extra="{{gameInfoItem.fieldaddress}}"/>
+         <wux-cell title="已报名：" extra="">
        <block wx:for="{{playernames}}" wx:for-item="playerInfoItem" wx:key="{{playerInfoItem.id}}}">
                <wux-avatar size="default" shape="circle" src="{{playerInfoItem.avatarUrl}}"></wux-avatar>
          </block>
@@ -30,7 +33,7 @@
 
   </block>
    <block wx:if="{{nickName == 'nin'}}">
-   <wux-button size="small" block disable type="balanced" bind:click="onCheckIN">
+   <wux-button size="small" block disable type="balanced" data-gameId="{{gameid}}" data-userId="{{uopenid}}" bind:click="onCheckIN">
   <wux-icon type="ios-log-in" size="16" />\t报名活动
   </wux-button>
   </block>

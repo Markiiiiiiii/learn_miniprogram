@@ -2,12 +2,7 @@
 import{$wuxForm} from '../../miniprogram_npm/wux-weapp/index'
 var util = require('../../utils/formattime.js');
 const db = wx.cloud.database();
-const gamesSignUp = db.collection('gamesSignUp');
-const gamesPlayer = db.collection('gamesPlayer');
-
-
-
-
+const _ = db.command;
 Page({
   data: {
       thumb: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAC4AAAAuCAMAAABgZ9sFAAAAVFBMVEXx8fHMzMzr6+vn5+fv7+/t7e3d3d2+vr7W1tbHx8eysrKdnZ3p6enk5OTR0dG7u7u3t7ejo6PY2Njh4eHf39/T09PExMSvr6+goKCqqqqnp6e4uLgcLY/OAAAAnklEQVRIx+3RSRLDIAxE0QYhAbGZPNu5/z0zrXHiqiz5W72FqhqtVuuXAl3iOV7iPV/iSsAqZa9BS7YOmMXnNNX4TWGxRMn3R6SxRNgy0bzXOW8EBO8SAClsPdB3psqlvG+Lw7ONXg/pTld52BjgSSkA3PV2OOemjIDcZQWgVvONw60q7sIpR38EnHPSMDQ4MjDjLPozhAkGrVbr/z0ANjAF4AcbXmYAAAAASUVORK5CYII=',
@@ -35,20 +30,9 @@ Page({
       _cutofft:null,/**构建三个页面变量存储格式化后的时间 */
       _userInfo:{}
   },
+
+
   onLoad: function (options) {
-    // wx.login({
-    //   timeout:10000,
-    //   success: (result)=>{
-    //     if(result.code){
-    //         console.log(result)
-    //     }else{
-    //       console.log(result.errMsg)
-    //     }
-    //   },
-    //   fail: ()=>{},
-    //   complete: ()=>{}
-    // });
-    /**登陆鉴权 */
     let _tmp = new Date();
     var time = util.formatTime(new Date());  
     this.setData({
@@ -95,7 +79,7 @@ onReady:function(){
 
 /**用户数据库内容信息检索更新 */
 onCheckUser:function(value){
-      gamesPlayer.where({
+  db.collection('gamesPlayer').where({
           _openid: value._openid
       }).get().then(
        
@@ -106,7 +90,7 @@ onCheckUser:function(value){
          }else{
           if(res.data[0].nickName !=value._nickName || res.data[0].avatarUrl != value._avatarUrl)
           {
-            gamesPlayer.doc(
+            db.collection('gamesPlayer').doc(
               res.data[0]._id
             )
             .update({
@@ -125,7 +109,7 @@ onCheckUser:function(value){
 /**添加用户信息，tips：不能在添加语句中使用_openid字段，_openid必须由系统自动添加，用户添加则会出现执行错误。 */
 onAddPlayer: function(value){
   console.log(value._nickName);
-        gamesPlayer.add({
+  db.collection('gamesPlayer').add({
           data:{
             nickName:value._nickName,
             avatarUrl:value._avatarUrl
@@ -150,7 +134,7 @@ onSubmit: function(e){
       })
     }else{
       if(!e.detail.value.join){
-        gamesSignUp.add({
+        db.collection('gamesSignUp').add({
           data:{
           creattime: _creatTime,
           title:e.detail.value.title,
@@ -168,7 +152,7 @@ onSubmit: function(e){
         }
         }).then(console.log)
       }else{
-        gamesSignUp.add({
+        db.collection('gamesSignUp').add({
           data:{
           creattime: _creatTime,
           title:e.detail.value.title,

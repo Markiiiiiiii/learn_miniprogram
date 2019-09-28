@@ -38,8 +38,10 @@ Page({
       _userInfo:{}
   },
   userData:{
-    _openid:[]
+    _openid:[],
+    uid:null
   },
+
 onLoad: function (options) {
     wx.getSetting({
     success: (result)=>{
@@ -125,6 +127,7 @@ getData: function(value,uid){
           //               playernames:rest.data
           //             })
           //             ))
+          console.log(res.data)
             this.setData({
               playInfo:res.data
             }),
@@ -178,9 +181,31 @@ onCheckOut:function(e){
       }
 
     this.onDelPlayer(e.currentTarget.dataset.gameid,_tmparr)
+    this.onRefresh()
+},
+/**报名活动 */
+onCheckIN:function(e){
+  var _tmparr=[]
+  wx.cloud.callFunction({
+    name:'login',
+    data:{},
+    success:res=>{
+
+      for(let i of this.userData._openid)
+      {
+        if (i !== res.result.openid){
+          _tmparr.push(i)
+        }
+      }
+      _tmparr.push(res.result.openid)
+    
+      this.onDelPlayer(this.data.playInfo[0]._id,_tmparr)
+    }
+    })
+  this.onRefresh()
 },
 
-/**s数据库中更新playerlist字段 */
+/**s数据库中将更新后的报名用户数组更新到playerlist字段 */
 onDelPlayer:function(id,arr){
     /**将对象构建成一个数组_tmparr */
     /**准备回传构建的报名者用户数组更新数据库中对应的id记录 */
@@ -198,12 +223,13 @@ onDelPlayer:function(id,arr){
     return
 },
 
-onCheckIn:function(e){
-
-},
 
 onRefresh:function(){
-    this.getData();
+  wx.cloud.callFunction({
+    name:'login',
+    data:{},
+    success:res=>{
+    this.getData(this.data.playInfo[0]._id,res.result.openid);}})
   },
   // onReachBottom:function(){
   //   this.getData();
