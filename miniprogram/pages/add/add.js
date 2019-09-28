@@ -1,4 +1,5 @@
 // miniprogram/pages/add/add.js
+var app = getApp();
 import{$wuxForm} from '../../miniprogram_npm/wux-weapp/index'
 var util = require('../../utils/formattime.js');
 const db = wx.cloud.database();
@@ -27,12 +28,15 @@ Page({
       _fieldAddress:null,/**地理位置对象，保存地图选择后的值 */
       _startt:null,
       _endt:null,
-      _cutofft:null,/**构建三个页面变量存储格式化后的时间 */
+      _cutofft:null,/**构建三个变量存储格式化后的时间 */
       _userInfo:{}
   },
 
 
   onLoad: function (options) {
+    console.log(app.globalUserData.userInfo)
+    this.pageData._userInfo['_nickName'] = options.name;
+    this.pageData._userInfo['_avatarUrl'] = options.ava;
     let _tmp = new Date();
     var time = util.formatTime(new Date());  
     this.setData({
@@ -40,26 +44,27 @@ Page({
     });/**传递当前时间给页面复用 */
 
     /**获得用户名和信息 */
-    wx.getSetting({
-      success: (result)=>{
-        if(result.authSetting['scope.userInfo']){
-          wx.getUserInfo({
-            withCredentials: 'false',
-            lang: 'zh_CN',
-            timeout:10000,
-            success: (result)=>{
-              // console.log(result)
-               this.pageData._userInfo['_nickName'] = result.userInfo.nickName;
-               this.pageData._userInfo['_avatarUrl'] = result.userInfo.avatarUrl;
-            },
-            fail: ()=>{},
-            complete: ()=>{}
-          })
-        }
-      },
-      fail: ()=>{},
-      complete: ()=>{}
-    });
+    // wx.getSetting({
+    //   success: (result)=>{
+    //     if(result.authSetting['scope.userInfo']){
+    //       wx.getUserInfo({
+    //         withCredentials: 'false',
+    //         lang: 'zh_CN',
+    //         timeout:10000,
+    //         success: (result)=>{
+    //           console.log(result)
+    //            this.pageData._userInfo['_nickName'] = result.userInfo.nickName;
+    //            this.pageData._userInfo['_avatarUrl'] = result.userInfo.avatarUrl;
+    //           //  console.log(this.pageData._userInfo)
+    //         },
+    //         fail: ()=>{},
+    //         complete: ()=>{}
+    //       })
+    //     }
+    //   },
+    //   fail: ()=>{},
+    //   complete: ()=>{}
+    // });
 
 
    /**使用云函数调用openid */
@@ -70,7 +75,7 @@ Page({
         this.pageData._userInfo['_openid'] =  res.result.openid
       },fail:err=>{}
    });
-
+   console.log(this.pageData._userInfo)
   },
 
 onReady:function(){
@@ -82,14 +87,14 @@ onCheckUser:function(value){
   db.collection('gamesPlayer').where({
           _openid: value._openid
       }).get().then(
-       
         res=>{
-         if(res.data.length == 0){
-           console.log(value);
-            this.onAddPlayer(value);/**判断用户表中是否存在当前用户，没有则添加当前用户 */
+         if(res.data.length == 0){/**判断用户表中是否存在当前用户，没有则添加当前用户 */
+            this.onAddPlayer(value);
          }else{
+           console.log(value)
           if(res.data[0].nickName !=value._nickName || res.data[0].avatarUrl != value._avatarUrl)
           {
+            console.log(res.data)
             db.collection('gamesPlayer').doc(
               res.data[0]._id
             )

@@ -32,3 +32,11 @@
     text-align: center;
     height: 50rpx;
     }
+
+.addsubmit{
+    width: 200rpx;
+    height: 60rpx;
+    font-size: 24rpx;
+    background-color:#3BC65E;
+    color: #ffffff;
+}

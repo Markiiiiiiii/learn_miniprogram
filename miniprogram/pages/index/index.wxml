@@ -1,11 +1,6 @@
 <view  class="container">
 <view style='opacity:0.85'>
-    <wux-wing-blank size="small">
-        <wux-card title="{{}}" thumb="">
-        <view slot="body">{{}}</view>
-        <view slot="footer">{{}}</view>
-        </wux-card>
-    </wux-wing-blank>
+    
 </view>
 </view>
 

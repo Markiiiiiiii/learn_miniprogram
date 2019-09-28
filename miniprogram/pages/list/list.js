@@ -1,13 +1,29 @@
+var app = getApp();
 const db = wx.cloud.database();
 const gamesSignUp = db.collection('gamesSignUp');
 var util = require('../../utils/formattime.js')
 Page({
   data: {
-      gamelists:null
+      gamelists:null,
+      userName:null,
+      userAvatarUrl:null,
+      canIUse: wx.canIUse('button.open-type.getUserInfo')
   },
 
 
   onLoad: function (options) {
+    wx.getSetting({
+      success (res){
+        if (res.authSetting['scope.userInfo']) {
+          // 已经授权，可以直接调用 getUserInfo 获取头像昵称
+          wx.getUserInfo({
+            success: function(res) {
+              // console.log(res.userInfo)
+            }
+          })
+        }
+      }
+    })
     this.getData();
   },
 
@@ -50,5 +66,23 @@ toInfopage:function(options){
     fail: ()=>{},
     complete: ()=>{}
   });
+},
+bindGetUserInfo (e) {
+  console.log(e.detail.userInfo)
+  app.globalUserData.userInfo = e.detail.userInfo.nickName;
+  
+
+  this.setData({
+    userName:e.detail.userInfo.nickName,
+    userAvatarUrl:e.detail.userInfo.avatarUrl
+  })
+  
+},
+goAddPage:function(options){
+  console.log(options)
+    wx.navigateTo({
+      url:"../add/add?name="+options.currentTarget.dataset.username+"&ava="+options.currentTarget.dataset.avatarurl
+    })
+
 }
 })

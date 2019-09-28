@@ -1,15 +1,20 @@
 <view  class="container">
-
-     <block wx:for="{{gamelists}}" wx:key="key">
-     <view class="card">
- <view class="cardheader" ><wux-tag style="" color="lime"  hover-class="none">进行中</wux-tag>{{item.title}}</view>
- <view class="cardinfo" >
-     <view class="infolist"><wux-icon type="ios-time" size="16" />\n活动开始时间：{{item.cutofftime}}\n</view>
-      <view class="infolist"><wux-icon type="ios-home" size="16" />\n场地名称：{{item.fieldname}}\n</view>
-       <view class="infolist"><wux-icon type="ios-pin" size="16" />\n活动地点：{{item.fieldaddress}}</view>
-       <view class="infolist"><wux-icon type="ios-person-add" size="16" />\n报名人数：{{item.nowplayernums}}\n/\n{{item.maxnum}}</view>
+  <block wx:for="{{gamelists}}" wx:key="key">
+    <view class="card">
+    <view class="cardheader" ><wux-tag style="" color="lime"  hover-class="none">进行中</wux-tag>{{item.title}}</view>
+    <view class="cardinfo" >
+    <view class="infolist"><wux-icon type="ios-time" size="16" />\n活动开始时间：{{item.cutofftime}}\n</view>
+    <view class="infolist"><wux-icon type="ios-home" size="16" />\n场地名称：{{item.fieldname}}\n</view>
+    <view class="infolist"><wux-icon type="ios-pin" size="16" />\n活动地点：{{item.fieldaddress}}</view>
+    <view class="infolist"><wux-icon type="ios-person-add" size="16" />\n报名人数：{{item.nowplayernums}}\n/\n{{item.maxnum}}</view>
     </view>
  <view class="cardcontainer" bindtap="toInfopage" data-id="{{item._id}}"> 查看详情</view>
  </view>
+  </block>
+  <block wx:if="{{!userName}}">
+  <button class="addsubmit" wx:if="{{canIUse}}" open-type="getUserInfo" bindgetuserinfo="bindGetUserInfo">授权使用</button>
+  </block>
+  <block wx:else>
+  <button class="addsubmit" open-type="getUserInfo" data-userName="{{userName}}" data-avatarUrl="{{userAvatarUrl}}" bindgetuserinfo="goAddPage">创建活动</button>
   </block>
 </view>
