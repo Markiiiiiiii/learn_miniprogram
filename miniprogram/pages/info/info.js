@@ -5,7 +5,7 @@ const db = wx.cloud.database({
 const _ = db.command;
 // const gamesSignUp = db.collection('gamesSignUp');
 // const gamesPlayer = db.collection('gamesPlayer');
-
+/**为数组增加自删功能 */
 Array.prototype.indexOf = function (val){
   for (var i = 0;i<this.length;i++){
     if (this[i] == val) return i;

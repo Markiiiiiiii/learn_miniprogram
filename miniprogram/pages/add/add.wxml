@@ -33,7 +33,7 @@
                          </wux-date-picker>
                     </wux-field>
                     <wux-field name="paytype">
-                        <wux-picker options="{{ payOption }}" value="{{ value4 }}" data-index="4" bind:valueChange="onPayValueChange" bind:confirm="onPayConfirm">
+                        <wux-picker options="{{ payOption }}" data-index="4" bind:valueChange="onPayValueChange" bind:confirm="onPayConfirm">
                             <wux-cell title="费用：" is-link  extra="{{ displayValue4 }}"></wux-cell>
                         </wux-picker>
                     </wux-field>

@@ -1,30 +1,27 @@
 var app = getApp();
 const db = wx.cloud.database();
-const gamesSignUp = db.collection('gamesSignUp');
+const _ = db.command;
 var util = require('../../utils/formattime.js')
 Page({
   data: {
       gamelists:null,
-      userName:null,
-      userAvatarUrl:null,
+      showButton:false,
       canIUse: wx.canIUse('button.open-type.getUserInfo')
   },
 
 
   onLoad: function (options) {
-    wx.getSetting({
-      success (res){
-        if (res.authSetting['scope.userInfo']) {
-          // 已经授权，可以直接调用 getUserInfo 获取头像昵称
-          wx.getUserInfo({
-            success: function(res) {
-              // console.log(res.userInfo)
-            }
-          })
-        }
-      }
-    })
+    /**调用全局userinfo变量 判断是否有获得数据没有就显示授权按钮，有就显示创建活动按钮*/
+    wx.cloud.callFunction({
+      name:'login',
+      data:{},
+       success:res=>{
+         app.globalUserData.userInfo._openid =  res.result.openid
+       },fail:err=>{}
+    });
+    
     this.getData();
+
   },
 
   getData: function(callback){
@@ -34,7 +31,7 @@ Page({
     wx.showLoading({
           title: '加载中...',
         });
-    gamesSignUp.where({effect:"true"}).orderBy('creattime','desc')
+    db.collection('gamesSignUp').where({effect:"true"}).orderBy('creattime','desc')
     .get()
     .then(res => { /**then是在执行完前面get()之后执行then之内的语句 */
       // console.log(res);
@@ -44,7 +41,7 @@ Page({
         this.data.gamelists[i].starttime = util.formatTime(res.data[i].starttime);
         this.data.gamelists[i].endtime = util.formatTime(res.data[i].endtime);
         this.data.gamelists[i].cutofftime = util.formatTime(res.data[i].cutofftime);
-        this.data.gamelists[i].nowplayernums = res.data[i].playerlist.length;
+        this.data.gamelists[i].nowplayernums = res.data[i].playerlist.length;/**待修改 */
        };
         this.setData({
           gamelists:res.data
@@ -67,21 +64,31 @@ toInfopage:function(options){
     complete: ()=>{}
   });
 },
-bindGetUserInfo (e) {
-  console.log(e.detail.userInfo)
-  app.globalUserData.userInfo = e.detail.userInfo.nickName;
-  
 
-  this.setData({
-    userName:e.detail.userInfo.nickName,
-    userAvatarUrl:e.detail.userInfo.avatarUrl
-  })
-  
+bindGetUserInfo (e) {
+    wx.getSetting({
+      success (res){
+        if (res.authSetting['scope.userInfo']) {
+          // 已经授权，可以直接调用 getUserInfo 获取头像昵称
+          wx.getUserInfo({
+            success: function(res) {
+              app.globalUserData.userInfo.nickName = res.userInfo.nickName;
+              app.globalUserData.userInfo.avatarUrl = res.userInfo.avatarUrl;
+            }
+          })
+        }
+      }
+    })
+    /**用全局用户变量是否获取到用户信息，有则显示创建活动，没有则显示授权按钮 */
+    this.setData({
+      showButton:true
+    })
+    console.log(app.globalUserData.userInfo)
 },
 goAddPage:function(options){
   console.log(options)
-    wx.navigateTo({
-      url:"../add/add?name="+options.currentTarget.dataset.username+"&ava="+options.currentTarget.dataset.avatarurl
+    wx.redirectTo({
+      url:"../add/add"
     })
 
 }

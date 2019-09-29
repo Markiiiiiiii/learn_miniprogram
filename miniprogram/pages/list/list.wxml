@@ -11,10 +11,10 @@
  <view class="cardcontainer" bindtap="toInfopage" data-id="{{item._id}}"> 查看详情</view>
  </view>
   </block>
-  <block wx:if="{{!userName}}">
-  <button class="addsubmit" wx:if="{{canIUse}}" open-type="getUserInfo" bindgetuserinfo="bindGetUserInfo">授权使用</button>
+  <block wx:if="{{!showButton}}">
+  <button class="addsubmit" wx:if="{{canIUse}}" open-type="getUserInfo" bindgetuserinfo="bindGetUserInfo">开始使用</button>
   </block>
-  <block wx:else>
-  <button class="addsubmit" open-type="getUserInfo" data-userName="{{userName}}" data-avatarUrl="{{userAvatarUrl}}" bindgetuserinfo="goAddPage">创建活动</button>
+  <block wx:else="{{showButton}}">
+  <button class="addredsubmit" open-type="getUserInfo" bindgetuserinfo="goAddPage">创建活动</button>
   </block>
 </view>

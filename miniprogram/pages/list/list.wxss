@@ -40,3 +40,10 @@
     background-color:#3BC65E;
     color: #ffffff;
 }
+.addredsubmit{
+    width: 200rpx;
+    height: 60rpx;
+    font-size: 24rpx;
+    background-color:#ffc801;
+    color: #ffffff;
+}
