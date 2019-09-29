@@ -2,8 +2,11 @@
 var app = getApp();
 import{$wuxForm} from '../../miniprogram_npm/wux-weapp/index'
 var util = require('../../utils/formattime.js');
-const db = wx.cloud.database();
+const db = wx.cloud.database({
+  env:'biggoose-d92594'
+});
 const _ = db.command;
+
 Page({
   data: {
       thumb: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAC4AAAAuCAMAAABgZ9sFAAAAVFBMVEXx8fHMzMzr6+vn5+fv7+/t7e3d3d2+vr7W1tbHx8eysrKdnZ3p6enk5OTR0dG7u7u3t7ejo6PY2Njh4eHf39/T09PExMSvr6+goKCqqqqnp6e4uLgcLY/OAAAAnklEQVRIx+3RSRLDIAxE0QYhAbGZPNu5/z0zrXHiqiz5W72FqhqtVuuXAl3iOV7iPV/iSsAqZa9BS7YOmMXnNNX4TWGxRMn3R6SxRNgy0bzXOW8EBO8SAClsPdB3psqlvG+Lw7ONXg/pTld52BjgSSkA3PV2OOemjIDcZQWgVvONw60q7sIpR38EnHPSMDQ4MjDjLPozhAkGrVbr/z0ANjAF4AcbXmYAAAAASUVORK5CYII=',
@@ -34,9 +37,10 @@ Page({
 
 
   onLoad: function (options) {
-    console.log(app.globalUserData.userInfo)
-    this.pageData._userInfo['_nickName'] = options.name;
-    this.pageData._userInfo['_avatarUrl'] = options.ava;
+    // console.log(app.globalUserData.userInfo)
+    this.pageData._userInfo['_nickName'] = app.globalUserData.userInfo.nickName;
+    this.pageData._userInfo['_avatarUrl'] = app.globalUserData.userInfo.avatarUrl;
+    this.pageData._userInfo['_openid'] = app.globalUserData.userInfo._openid;
     let _tmp = new Date();
     var time = util.formatTime(new Date());  
     this.setData({
@@ -67,15 +71,15 @@ Page({
     // });
 
 
-   /**使用云函数调用openid */
-   wx.cloud.callFunction({
-     name:'login',
-     data:{},
-      success:res=>{
-        this.pageData._userInfo['_openid'] =  res.result.openid
-      },fail:err=>{}
-   });
-   console.log(this.pageData._userInfo)
+  //  /**使用云函数调用openid */
+  //  wx.cloud.callFunction({
+  //    name:'login',
+  //    data:{},
+  //     success:res=>{
+  //       this.pageData._userInfo['_openid'] =  res.result.openid
+  //     },fail:err=>{}
+  //  });
+  //  console.log(this.pageData._userInfo)
   },
 
 onReady:function(){
@@ -91,10 +95,10 @@ onCheckUser:function(value){
          if(res.data.length == 0){/**判断用户表中是否存在当前用户，没有则添加当前用户 */
             this.onAddPlayer(value);
          }else{
-           console.log(value)
+          //  console.log(value)
           if(res.data[0].nickName !=value._nickName || res.data[0].avatarUrl != value._avatarUrl)
           {
-            console.log(res.data)
+            // console.log(res.data)
             db.collection('gamesPlayer').doc(
               res.data[0]._id
             )
@@ -113,7 +117,7 @@ onCheckUser:function(value){
 },
 /**添加用户信息，tips：不能在添加语句中使用_openid字段，_openid必须由系统自动添加，用户添加则会出现执行错误。 */
 onAddPlayer: function(value){
-  console.log(value._nickName);
+  // console.log(value._nickName);
   db.collection('gamesPlayer').add({
           data:{
             nickName:value._nickName,
@@ -124,9 +128,9 @@ onAddPlayer: function(value){
 },
 /**存储到数据库 */
 onSubmit: function(e){  
+    let that = this;
+    let costValue = e.detail.value.paytype[0]
     let _creatTime = new Date();
-    // console.log(e);
-    // console.log(this.pageData._userInfo);
     if(!e.detail.value.title || !e.detail.value.maxnum || !e.detail.value.footballfield || !e.detail.value.starttime || !e.detail.value.endtime || !e.detail.value.cutofftime)
     {
       wx.showModal({
@@ -145,14 +149,15 @@ onSubmit: function(e){
           title:e.detail.value.title,
           maxnum:e.detail.value.maxnum,
           footballfield:e.detail.value.footballfield,
-          starttime:this.pageData._startt,
-          endtime:this.pageData._endt,
-          cutofftime:this.pageData._cutofft,
-          cost:e.detail.value.paytype,
+          starttime:that.pageData._startt,
+          endtime:that.pageData._endt,
+          cutofftime:that.pageData._cutofft,
+          cost:costValue,
           tips:e.detail.value.footballtext,
-          fieldgeoinfo:this.pageData._fieldGeoInfo,
-          fieldname:this.pageData._fieldName,
-          fieldaddress:this.pageData._fieldAddress,
+          fieldgeoinfo:that.pageData._fieldGeoInfo,
+          fieldname:that.pageData._fieldName,
+          fieldaddress:that.pageData._fieldAddress,
+          playerlist:[],
           effect:"true"
         }
         }).then(console.log)
@@ -163,22 +168,19 @@ onSubmit: function(e){
           title:e.detail.value.title,
           maxnum:e.detail.value.maxnum,
           footballfield:e.detail.value.footballfield,
-          starttime:this.pageData._startt,
-          endtime:this.pageData._endt,
-          cutofftime:this.pageData._cutofft,
-          cost:e.detail.value.paytype,
+          starttime:that.pageData._startt,
+          endtime:that.pageData._endt,
+          cutofftime:that.pageData._cutofft,
+          cost:costValue,
           tips:e.detail.value.footballtext,
-          fieldgeoinfo:this.pageData._fieldGeoInfo,
-          fieldname:this.pageData._fieldName,
-          fieldaddress:this.pageData._fieldAddress,
-          playerlist:[this.pageData._userInfo._openid],/**活动创建者本身也参加活动 */
+          fieldgeoinfo:that.pageData._fieldGeoInfo,
+          fieldname:that.pageData._fieldName,
+          fieldaddress:that.pageData._fieldAddress,
+          playerlist:[that.pageData._userInfo._openid],/**活动创建者本身也参加活动 */
           effect:"true"
         }
         }).then(console.log)
       };
-      // wx.redirectTo({
-      //   url: '../list/list',
-      //   success: (result)=>{},});
     }
 
   },
@@ -250,7 +252,7 @@ onClick() {
 chooseLocation: function(e){
     wx.chooseLocation({
       success: (res) => {
-        console.log(res)
+        // console.log(res)
         this.pageData._fieldGeoInfo = new db.Geo.Point(res.longitude,res.latitude);
         this.pageData._fieldAddress= res.address;
         this.pageData._fieldName= res.name;
