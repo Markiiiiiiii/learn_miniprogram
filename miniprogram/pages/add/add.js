@@ -37,13 +37,14 @@ Page({
 
 
   onLoad: function (options) {
+    var that = this;
     // console.log(app.globalUserData.userInfo)
-    this.pageData._userInfo['_nickName'] = app.globalUserData.userInfo.nickName;
-    this.pageData._userInfo['_avatarUrl'] = app.globalUserData.userInfo.avatarUrl;
-    this.pageData._userInfo['_openid'] = app.globalUserData.userInfo._openid;
+    that.pageData._userInfo['_nickName'] = app.globalUserData.userInfo.nickName;
+    that.pageData._userInfo['_avatarUrl'] = app.globalUserData.userInfo.avatarUrl;
+    that.pageData._userInfo['_openid'] = app.globalUserData.userInfo._openid;
     let _tmp = new Date();
     var time = util.formatTime(new Date());  
-    this.setData({
+    that.setData({
       nowTime : time
     });/**传递当前时间给页面复用 */
 
@@ -83,17 +84,19 @@ Page({
   },
 
 onReady:function(){
-  this.onCheckUser(this.pageData._userInfo)  
+  var that = this;
+  that.onCheckUser(this.pageData._userInfo)  
 },
 
 /**用户数据库内容信息检索更新 */
 onCheckUser:function(value){
+  var that = this;
   db.collection('gamesPlayer').where({
           _openid: value._openid
       }).get().then(
         res=>{
          if(res.data.length == 0){/**判断用户表中是否存在当前用户，没有则添加当前用户 */
-            this.onAddPlayer(value);
+            that.onAddPlayer(value);
          }else{
           //  console.log(value)
           if(res.data[0].nickName !=value._nickName || res.data[0].avatarUrl != value._avatarUrl)
@@ -117,6 +120,7 @@ onCheckUser:function(value){
 },
 /**添加用户信息，tips：不能在添加语句中使用_openid字段，_openid必须由系统自动添加，用户添加则会出现执行错误。 */
 onAddPlayer: function(value){
+  var that = this;
   // console.log(value._nickName);
   db.collection('gamesPlayer').add({
           data:{
@@ -188,76 +192,87 @@ onSubmit: function(e){
 
 /**时间选择 */
 onChange(e) {
+  var that = this;
     // console.log(e)
     const { key, values } = e.detail
     const lang = values[key]
 
-    this.setData({
+    that.setData({
         lang,
     })
 },
 onSwitchChange(field, e) {
-  this.setData({
+  var that = this;
+  that.setData({
       [field]: e.detail.value
   })
 //  console.log('radio发生change事件，携带value值为：', e.detail.value)
 },
 
 onChangeSwitch:function(e){
-  this.onSwitchChange('value5',e)
+  var that = this;
+  that.onSwitchChange('value5',e)
 },
 
 setValue(values, key, mode) {
-    this.setData({
+  var that = this;
+    that.setData({
         [`value${key}`]: values.value,
         [`displayValue${key}`]: values.label,
         [`displayValue${key}`]: values.displayValue.join(' '),
     })
 },
 onConfirmStart(e) {
+  var that = this;
     const { index, mode } = e.currentTarget.dataset
-    this.setValue(e.detail, index, mode),
-    this.setData({endTimeStart: e.detail.label});/**显示出选择后的时间 */
-    this.pageData._startt = new Date(e.detail.date)/**将选择后的时间传递给页面变量 */
+    that.setValue(e.detail, index, mode),
+    that.setData({endTimeStart: e.detail.label});/**显示出选择后的时间 */
+    that.pageData._startt = new Date(e.detail.date)/**将选择后的时间传递给页面变量 */
     // console.log(`onConfirm${index}`, e.detail)
 },
 onConfirmEnd(e) {
+  var that = this;
   const { index, mode } = e.currentTarget.dataset 
-  this.setValue(e.detail, index, mode);
-  this.pageData._endt = new Date(e.detail.date)
+  that.setValue(e.detail, index, mode);
+  that.pageData._endt = new Date(e.detail.date)
 
   // console.log(`onConfirm${index}`, e.detail.label)
 },
 onConfirmCutOff(e) {
+  var that = this;
   const { index, mode } = e.currentTarget.dataset 
-  this.setValue(e.detail, index, mode);
-  this.pageData._cutofft = new Date(e.detail.date)
+  that.setValue(e.detail, index, mode);
+  that.pageData._cutofft = new Date(e.detail.date)
 
   // console.log(`onConfirm${index}`, e.detail.label)
 },
 onConfirm(e) {
+  var that = this;
   const { index, mode } = e.currentTarget.dataset 
-  this.setValue(e.detail, index, mode)
+  that.setValue(e.detail, index, mode)
   // console.log(`onConfirm${index}`, e.detail.label)
 },
 /**时间戳的连选 */
 onVisibleChange(e) {
-    this.setData({ visible: e.detail.visible })
+  var that = this;
+    that.setData({ visible: e.detail.visible })
 },
 onClick() {
-    this.setData({ visible: true })
+  var that = this;
+    that.setData({ visible: true })
 },
 
 /**选择地理位置 */
 chooseLocation: function(e){
+  var that = this;
     wx.chooseLocation({
       success: (res) => {
         // console.log(res)
-        this.pageData._fieldGeoInfo = new db.Geo.Point(res.longitude,res.latitude);
-        this.pageData._fieldAddress= res.address;
-        this.pageData._fieldName= res.name;
+        that.pageData._fieldGeoInfo = new db.Geo.Point(res.longitude,res.latitude);
+        that.pageData._fieldAddress= res.address;
+        that.pageData._fieldName= res.name;
         
-        this.setData({
+        that.setData({
           footballFileAddress:res.name
         });
       /**返回页面地理名称 */
@@ -269,17 +284,20 @@ chooseLocation: function(e){
 },
 
 onPayValueChange(e){
+  var that = this;
   const { index } = e.currentTarget.dataset
   // console.log('onValueChanges', e.detail)
 },
 onPayConfirm(e) {
+  var that = this;
   const { index } = e.currentTarget.dataset
   // console.log(index);
-  this.setPayValue(e.detail, index)
+  that.setPayValue(e.detail, index)
   // console.log(`onConfirm${index}`, e.detail)
 },
 setPayValue(values, key) {
-  this.setData({
+  var that = this;
+  that.setData({
     [`value${key}`]: values.value,
     [`displayValue${key}`]: values.label,
   })

@@ -11,6 +11,7 @@ Page({
 
 
   onLoad: function (options) {
+    var that = this;
     /**调用全局userinfo变量 判断是否有获得数据没有就显示授权按钮，有就显示创建活动按钮*/
     wx.cloud.callFunction({
       name:'login',
@@ -20,11 +21,12 @@ Page({
        },fail:err=>{}
     });
     
-    this.getData();
+    that.getData();
 
   },
 
   getData: function(callback){
+    var that = this;
     if(!callback){
       callback = res=>{} /**如果callback不是一个函数则使用箭头函数构造一个空函数 */
     }
@@ -35,15 +37,15 @@ Page({
     .get()
     .then(res => { /**then是在执行完前面get()之后执行then之内的语句 */
       // console.log(res);
-      this.data.gamelists=res.data;
+      that.data.gamelists=res.data;
 
       for(var i=0 ; i<res.data.length ; i++){
-        this.data.gamelists[i].starttime = util.formatTime(res.data[i].starttime);
-        this.data.gamelists[i].endtime = util.formatTime(res.data[i].endtime);
-        this.data.gamelists[i].cutofftime = util.formatTime(res.data[i].cutofftime);
-        this.data.gamelists[i].nowplayernums = res.data[i].playerlist.length;/**待修改 */
+        that.data.gamelists[i].starttime = util.formatTime(res.data[i].starttime);
+        that.data.gamelists[i].endtime = util.formatTime(res.data[i].endtime);
+        that.data.gamelists[i].cutofftime = util.formatTime(res.data[i].cutofftime);
+        that.data.gamelists[i].nowplayernums = res.data[i].playerlist.length;/**待修改 */
        };
-        this.setData({
+        that.setData({
           gamelists:res.data
         }),
       // res.data[0].cutofftime = res.data[0].cutofftime.toLocaleString();
@@ -56,6 +58,7 @@ Page({
   },
 
 toInfopage:function(options){
+  var that = this;
    wx.navigateTo({
     url: "../info/info?id="+options.currentTarget.dataset.id,
     success: (result)=>{
@@ -66,6 +69,7 @@ toInfopage:function(options){
 },
 
 bindGetUserInfo (e) {
+  var that = this;
     wx.getSetting({
       success (res){
         if (res.authSetting['scope.userInfo']) {
@@ -80,13 +84,13 @@ bindGetUserInfo (e) {
       }
     })
     /**用全局用户变量是否获取到用户信息，有则显示创建活动，没有则显示授权按钮 */
-    this.setData({
+    that.setData({
       showButton:true
     })
     console.log(app.globalUserData.userInfo)
 },
 goAddPage:function(options){
-  console.log(options)
+  // console.log(options)
     wx.redirectTo({
       url:"../add/add"
     })

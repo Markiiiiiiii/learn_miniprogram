@@ -7,15 +7,17 @@ const _ = db.command;
 // const gamesPlayer = db.collection('gamesPlayer');
 /**为数组增加自删功能 */
 Array.prototype.indexOf = function (val){
-  for (var i = 0;i<this.length;i++){
-    if (this[i] == val) return i;
+  var that = this;
+  for (var i = 0;i<that.length;i++){
+    if (that[i] == val) return i;
   }
   return -1;
 };
 Array.prototype.remove = function(val){
-  var index = this.indexOf(val);
+  var that = this;
+  var index = that.indexOf(val);
   if(index > -1){
-    this.splice(index,1);
+    that.splice(index,1);
   }
 };
 
@@ -43,6 +45,7 @@ Page({
   },
 
 onLoad: function (options) {
+  var that = this;
     wx.getSetting({
     success: (result)=>{
       if(result.authSetting['scope.userInfo']){
@@ -52,8 +55,8 @@ onLoad: function (options) {
           timeout:10000,
           success: (result)=>{
             // console.log(result)
-             this.pageData._userInfo['_nickName'] = result.userInfo.nickName;
-             this.pageData._userInfo['_avatarUrl'] = result.userInfo.avatarUrl;
+             that.pageData._userInfo['_nickName'] = result.userInfo.nickName;
+             that.pageData._userInfo['_avatarUrl'] = result.userInfo.avatarUrl;
           },
           fail: ()=>{},
           complete: ()=>{}
@@ -67,7 +70,7 @@ onLoad: function (options) {
       name:'login',
       data:{},
       success:resb=>{
-        this.getData(options.id,resb.result.openid);/**获取到用户openid后将该数据传入getdata函数获取比赛信息 */
+        that.getData(options.id,resb.result.openid);/**获取到用户openid后将该数据传入getdata函数获取比赛信息 */
       },
       fail:err=>{}
     })
@@ -77,14 +80,15 @@ onLoad: function (options) {
 
   /**下拉刷新 */
   onPullDownRefresh: function(){
-    this.getData(res => {
+    var that = this;
+    that.getData(res => {
        wx.stopPullDownRefresh();
       });
   },
 
 /**数据获取函数 */
 getData: function(value,uid){
-      
+  var that = this;
       if(!value){
         value = res=>{} /**如果callback不是一个函数则使用箭头函数构造一个空函数 */
       }
@@ -111,8 +115,8 @@ getData: function(value,uid){
           // }]
           /**构建地点marker坐标 */
           _playerlists = res.data[0].playerlist;
-          this.userData._openid =  res.data[0].playerlist;
-          this.onGetIntoPlayer(res.data[0].playerlist)
+          that.userData._openid =  res.data[0].playerlist;
+          that.onGetIntoPlayer(res.data[0].playerlist)
           /**将获取到的已报名的用户openid数组保存到pageData中 */
           // const _ = db.command
           //     /**嵌套查询用户表中符合_openid的player的用户信息 */
@@ -123,12 +127,12 @@ getData: function(value,uid){
           //         .then(
           //           rest=>(  
           //             console.log(rest),
-          //             this.setData({
+          //             that.setData({
           //               playernames:rest.data
           //             })
           //             ))
           console.log(res.data)
-            this.setData({
+            that.setData({
               playInfo:res.data
             }),
             res => {value();}
@@ -138,13 +142,13 @@ getData: function(value,uid){
               /**判断当前用户的openid是否在已报名列中，如果没有则显示“报名这个活动”，如果存在则显示“退出这个活动” */
 
             if(_playerlists.includes(uid)){
-              this.setData({
+              that.setData({
                 nickName:'insider',
                 uopenid:uid,
                 gameid:value
               })
             }else{
-              this.setData({
+              that.setData({
                 nickName:'nin'
               })
             }
@@ -153,7 +157,7 @@ getData: function(value,uid){
   },
   /**查询返回报名用户的信息 */
   onGetIntoPlayer:function(value){
-
+    var that = this;
     /**嵌套查询用户表中符合_openid的player的用户信息 */
     db.collection('gamesPlayer').where({
           _openid:_.in(value)
@@ -161,7 +165,7 @@ getData: function(value,uid){
         .get()
         .then(
           res=>(  
-            this.setData({
+            that.setData({
               playernames:res.data
             })
             ))
@@ -171,27 +175,29 @@ getData: function(value,uid){
 
 /**退出报名 */
 onCheckOut:function(e){
+  var that = this;
   /**清洗现有的已报名用户数组，将符合的id剔除后重构已报名用户数组 */
     var _tmparr=[]
-    for(let i of this.userData._openid)
+    for(let i of that.userData._openid)
       {
         if (i !== e.currentTarget.dataset.userid){
           _tmparr.push(i)
         }
       }
 
-    this.onDelPlayer(e.currentTarget.dataset.gameid,_tmparr)
-    this.onRefresh()
+    that.onDelPlayer(e.currentTarget.dataset.gameid,_tmparr)
+    that.onRefresh()
 },
 /**报名活动 */
 onCheckIN:function(e){
+  var that = this;
   var _tmparr=[]
   wx.cloud.callFunction({
     name:'login',
     data:{},
     success:res=>{
 
-      for(let i of this.userData._openid)
+      for(let i of that.userData._openid)
       {
         if (i !== res.result.openid){
           _tmparr.push(i)
@@ -199,14 +205,15 @@ onCheckIN:function(e){
       }
       _tmparr.push(res.result.openid)
     
-      this.onDelPlayer(this.data.playInfo[0]._id,_tmparr)
+      that.onDelPlayer(that.data.playInfo[0]._id,_tmparr)
     }
     })
-  this.onRefresh()
+  that.onRefresh()
 },
 
 /**s数据库中将更新后的报名用户数组更新到playerlist字段 */
 onDelPlayer:function(id,arr){
+  var that = this;
     /**将对象构建成一个数组_tmparr */
     /**准备回传构建的报名者用户数组更新数据库中对应的id记录 */
     db.collection('gamesSignUp').doc(
@@ -218,21 +225,22 @@ onDelPlayer:function(id,arr){
         }
     })
     .then(res=>{
-      // this.onRefresh()
+      // that.onRefresh()
     })
     return
 },
 
 
 onRefresh:function(){
+  var that = this;
   wx.cloud.callFunction({
     name:'login',
     data:{},
     success:res=>{
-    this.getData(this.data.playInfo[0]._id,res.result.openid);}})
+    that.getData(that.data.playInfo[0]._id,res.result.openid);}})
   },
   // onReachBottom:function(){
-  //   this.getData();
+  //   that.getData();
   // }/**触底刷新 */
 bindGetUserInfo(){
     wx.getSetting({
@@ -243,7 +251,7 @@ bindGetUserInfo(){
             lang: 'zh_CN',
             timeout:10000,
             success: (result)=>{
-              this.setData({
+              that.setData({
                 nickName: result.userInfo.nickName /**获取用户名用于判断是否授权 */
               }),console.log(result)
             }
