@@ -32,55 +32,21 @@ Page({
       _startt:null,
       _endt:null,
       _cutofft:null,/**构建三个变量存储格式化后的时间 */
-      _userInfo:{}
+      _userInfo:{},
+      _userid:[]
+
   },
 
 
   onLoad: function (options) {
     var that = this;
     // console.log(app.globalUserData.userInfo)
-    that.pageData._userInfo['_nickName'] = app.globalUserData.userInfo.nickName;
-    that.pageData._userInfo['_avatarUrl'] = app.globalUserData.userInfo.avatarUrl;
-    that.pageData._userInfo['_openid'] = app.globalUserData.userInfo._openid;
+
     let _tmp = new Date();
     var time = util.formatTime(new Date());  
     that.setData({
       nowTime : time
     });/**传递当前时间给页面复用 */
-
-    /**获得用户名和信息 */
-    // wx.getSetting({
-    //   success: (result)=>{
-    //     if(result.authSetting['scope.userInfo']){
-    //       wx.getUserInfo({
-    //         withCredentials: 'false',
-    //         lang: 'zh_CN',
-    //         timeout:10000,
-    //         success: (result)=>{
-    //           console.log(result)
-    //            this.pageData._userInfo['_nickName'] = result.userInfo.nickName;
-    //            this.pageData._userInfo['_avatarUrl'] = result.userInfo.avatarUrl;
-    //           //  console.log(this.pageData._userInfo)
-    //         },
-    //         fail: ()=>{},
-    //         complete: ()=>{}
-    //       })
-    //     }
-    //   },
-    //   fail: ()=>{},
-    //   complete: ()=>{}
-    // });
-
-
-  //  /**使用云函数调用openid */
-  //  wx.cloud.callFunction({
-  //    name:'login',
-  //    data:{},
-  //     success:res=>{
-  //       this.pageData._userInfo['_openid'] =  res.result.openid
-  //     },fail:err=>{}
-  //  });
-  //  console.log(this.pageData._userInfo)
   },
 
 onReady:function(){
@@ -91,6 +57,8 @@ onReady:function(){
 /**用户数据库内容信息检索更新 */
 onCheckUser:function(value){
   var that = this;
+  that.pageData._userInfo['_nickName'] = app.globalUserData.userInfo.nickName;
+  that.pageData._userInfo['_avatarUrl'] = app.globalUserData.userInfo.avatarUrl;
   db.collection('gamesPlayer').where({
           _openid: value._openid
       }).get().then(
@@ -133,6 +101,8 @@ onAddPlayer: function(value){
 /**存储到数据库 */
 onSubmit: function(e){  
     let that = this;
+    that.pageData._userid.push(app.globalUserData.userInfo.uid)
+    console.log(that.pageData._userid)
     let costValue = e.detail.value.paytype[0]
     let _creatTime = new Date();
     if(!e.detail.value.title || !e.detail.value.maxnum || !e.detail.value.footballfield || !e.detail.value.starttime || !e.detail.value.endtime || !e.detail.value.cutofftime)
@@ -180,7 +150,7 @@ onSubmit: function(e){
           fieldgeoinfo:that.pageData._fieldGeoInfo,
           fieldname:that.pageData._fieldName,
           fieldaddress:that.pageData._fieldAddress,
-          playerlist:[that.pageData._userInfo._openid],/**活动创建者本身也参加活动 */
+          playerlist:,/**活动创建者本身也参加活动 */
           effect:"true"
         }
         }).then(console.log)
@@ -222,29 +192,27 @@ setValue(values, key, mode) {
         [`displayValue${key}`]: values.displayValue.join(' '),
     })
 },
+/**时间选择器 */
 onConfirmStart(e) {
   var that = this;
     const { index, mode } = e.currentTarget.dataset
     that.setValue(e.detail, index, mode),
-    that.setData({endTimeStart: e.detail.label});/**显示出选择后的时间 */
-    that.pageData._startt = new Date(e.detail.date)/**将选择后的时间传递给页面变量 */
-    // console.log(`onConfirm${index}`, e.detail)
+    that.setData({
+      endTimeStart: e.detail.label
+    });/**显示出选择后的时间 */
+    that.pageData._startt = e.detail.date/**将选择后的时间传递给页面变量 */
 },
 onConfirmEnd(e) {
   var that = this;
   const { index, mode } = e.currentTarget.dataset 
   that.setValue(e.detail, index, mode);
-  that.pageData._endt = new Date(e.detail.date)
-
-  // console.log(`onConfirm${index}`, e.detail.label)
+  that.pageData._endt = e.detail.date
 },
 onConfirmCutOff(e) {
   var that = this;
   const { index, mode } = e.currentTarget.dataset 
   that.setValue(e.detail, index, mode);
-  that.pageData._cutofft = new Date(e.detail.date)
-
-  // console.log(`onConfirm${index}`, e.detail.label)
+  that.pageData._cutofft = e.detail.date
 },
 onConfirm(e) {
   var that = this;
