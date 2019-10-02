@@ -1,10 +1,11 @@
 // miniprogram/pages/index/index.js
+var app = getApp();
+var util = require('../../utils/formattime.js');
 const db = wx.cloud.database({
     env:'biggoose-d92594'
 });
 const _ = db.command;
-// const gamesSignUp = db.collection('gamesSignUp');
-// const gamesPlayer = db.collection('gamesPlayer');
+
 /**为数组增加自删功能 */
 Array.prototype.indexOf = function (val){
   var that = this;
@@ -46,35 +47,35 @@ Page({
 
 onLoad: function (options) {
   var that = this;
-    wx.getSetting({
-    success: (result)=>{
-      if(result.authSetting['scope.userInfo']){
-        wx.getUserInfo({
-          withCredentials: 'false',
-          lang: 'zh_CN',
-          timeout:10000,
-          success: (result)=>{
-            // console.log(result)
-             that.pageData._userInfo['_nickName'] = result.userInfo.nickName;
-             that.pageData._userInfo['_avatarUrl'] = result.userInfo.avatarUrl;
-          },
-          fail: ()=>{},
-          complete: ()=>{}
-        })
-      }
-    },
-    fail: ()=>{},
-    complete: ()=>{}
-  });
-    wx.cloud.callFunction({
-      name:'login',
-      data:{},
-      success:resb=>{
-        that.getData(options.id,resb.result.openid);/**获取到用户openid后将该数据传入getdata函数获取比赛信息 */
-      },
-      fail:err=>{}
-    })
-
+  //   wx.getSetting({
+  //   success: (result)=>{
+  //     if(result.authSetting['scope.userInfo']){
+  //       wx.getUserInfo({
+  //         withCredentials: 'false',
+  //         lang: 'zh_CN',
+  //         timeout:10000,
+  //         success: (result)=>{
+  //           // console.log(result)
+  //            that.pageData._userInfo['_nickName'] = result.userInfo.nickName;
+  //            that.pageData._userInfo['_avatarUrl'] = result.userInfo.avatarUrl;
+  //         },
+  //         fail: ()=>{},
+  //         complete: ()=>{}
+  //       })
+  //     }
+  //   },
+  //   fail: ()=>{},
+  //   complete: ()=>{}
+  // });
+  //   wx.cloud.callFunction({
+  //     name:'login',
+  //     data:{},
+  //     success:resb=>{
+  //       that.getData(options.id,resb.result.openid);/**获取到用户openid后将该数据传入getdata函数获取比赛信息 */
+  //     },
+  //     fail:err=>{}
+  //   })
+    that.getData(options.id,app.globalUserData.userInfo.uid)
     /**读取数据 */
   },/**先判断是否是登录，然后点击button，获取用户头像 */
 
@@ -95,42 +96,16 @@ getData: function(value,uid){
       wx.showLoading({
             title: '加载中...',
           });
-      var _playerlists=[];/**用于存储查询返回的数据库内已报名的用户openid */
+      var checkplayer={};/**用于存储查询返回的数据库内已报名的用户openid */
       db.collection('gamesSignUp').where({_id:value})
       .get().then(res => { 
           /**then是在执行完前面get()之后执行then之内的语句 */
-          
-          res.data[0].cutofftime = res.data[0].cutofftime.toLocaleString();
-          res.data[0].starttime = res.data[0].starttime.toLocaleString();
-          res.data[0].endtime = res.data[0].endtime.toLocaleString(); /**将数据库中的date格式输出为字符串 */
           res.data[0].latitude = res.data[0].fieldgeoinfo.latitude; 
           res.data[0].longitude = res.data[0].fieldgeoinfo.longitude;  /**构建map需要的经纬度 */
-          // res.data[0].fieldgeoinfo = [{
-          //       id : 0,
-          //       iconPath: "../../images/icons/gps.png",
-          //       latitude:  res.data[0].fieldgeoinfo.latitude,
-          //       longitude:  res.data[0].fieldgeoinfo.longitude,
-          //       width:30,
-          //       height:30
-          // }]
-          /**构建地点marker坐标 */
-          _playerlists = res.data[0].playerlist;
+          checkplayer : res.data[0].playerlist;/**已修改为对象 */
           that.userData._openid =  res.data[0].playerlist;
-          that.onGetIntoPlayer(res.data[0].playerlist)
-          /**将获取到的已报名的用户openid数组保存到pageData中 */
-          // const _ = db.command
-          //     /**嵌套查询用户表中符合_openid的player的用户信息 */
-          //         gamesPlayer.where({
-          //           _openid:_.in([_playerlists])
-          //         })
-          //         .get()
-          //         .then(
-          //           rest=>(  
-          //             console.log(rest),
-          //             that.setData({
-          //               playernames:rest.data
-          //             })
-          //             ))
+          that.onGetIntoPlayer(res.data[0].playerlist)/**！！！未完成！！！需要将返回的数据传递到查询 */
+    
           console.log(res.data)
             that.setData({
               playInfo:res.data
@@ -141,9 +116,9 @@ getData: function(value,uid){
             wx.hideLoading();
               /**判断当前用户的openid是否在已报名列中，如果没有则显示“报名这个活动”，如果存在则显示“退出这个活动” */
 
-            if(_playerlists.includes(uid)){
+            if(checkplayer.hasOwnProperty(uid)){
               that.setData({
-                nickName:'insider',
+                nickName:'in',
                 uopenid:uid,
                 gameid:value
               })

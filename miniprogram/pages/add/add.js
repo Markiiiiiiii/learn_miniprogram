@@ -101,10 +101,9 @@ onAddPlayer: function(value){
 /**存储到数据库 */
 onSubmit: function(e){  
     let that = this;
-    that.pageData._userid.push(app.globalUserData.userInfo.uid)
-    console.log(that.pageData._userid)
     let costValue = e.detail.value.paytype[0]
-    let _creatTime = new Date();
+    let tmp = {};
+    tmp[app.globalUserData.userInfo.nickName] = app.globalUserData.userInfo.uid
     if(!e.detail.value.title || !e.detail.value.maxnum || !e.detail.value.footballfield || !e.detail.value.starttime || !e.detail.value.endtime || !e.detail.value.cutofftime)
     {
       wx.showModal({
@@ -119,7 +118,7 @@ onSubmit: function(e){
       if(!e.detail.value.join){
         db.collection('gamesSignUp').add({
           data:{
-          creattime: _creatTime,
+          creattime: new Date(),
           title:e.detail.value.title,
           maxnum:e.detail.value.maxnum,
           footballfield:e.detail.value.footballfield,
@@ -131,14 +130,17 @@ onSubmit: function(e){
           fieldgeoinfo:that.pageData._fieldGeoInfo,
           fieldname:that.pageData._fieldName,
           fieldaddress:that.pageData._fieldAddress,
-          playerlist:[],
+          playerlist:{},
+          playernumb:0,
           effect:"true"
-        }
-        }).then(console.log)
+        },
+        success:function(res){console.log(res)},
+        fail:console.error
+        })
       }else{
         db.collection('gamesSignUp').add({
           data:{
-          creattime: _creatTime,
+          creattime: new Date(),
           title:e.detail.value.title,
           maxnum:e.detail.value.maxnum,
           footballfield:e.detail.value.footballfield,
@@ -150,10 +152,13 @@ onSubmit: function(e){
           fieldgeoinfo:that.pageData._fieldGeoInfo,
           fieldname:that.pageData._fieldName,
           fieldaddress:that.pageData._fieldAddress,
-          playerlist:,/**活动创建者本身也参加活动 */
+          playerlist:tmp,/**活动创建者本身也参加活动 */
+          playernumb:1,
           effect:"true"
-        }
-        }).then(console.log)
+        },
+        success:function(res){console.log(res)},
+        fail:console.error
+        })
       };
     }
 
