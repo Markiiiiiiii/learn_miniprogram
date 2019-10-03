@@ -4,7 +4,6 @@
     <view class="card">
     <view class="cardheader" ><wux-tag style="" color="lime"  hover-class="none">进行中</wux-tag>{{item.title}}</view>
     <view class="cardinfo" >
-    <view class="infolist"><wux-icon type="ios-time" size="16" />\n活动开始时间：{{timejs.timelog(item.creattime)}}\n</view>
     <view class="infolist"><wux-icon type="ios-time" size="16" />\n活动开始时间：{{timejs.format(item.starttime)}}\n</view>
     <view class="infolist"><wux-icon type="ios-home" size="16" />\n场地名称：{{item.fieldname}}\n</view>
     <view class="infolist"><wux-icon type="ios-pin" size="16" />\n活动地点：{{item.fieldaddress}}</view>
