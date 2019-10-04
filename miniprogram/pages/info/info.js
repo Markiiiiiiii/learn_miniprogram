@@ -139,13 +139,11 @@ onGetAllPlayer(value){
   onGetIntoPlayer:function(value){
     /**嵌套查询用户表中符合_openid的player的用户信息 */
     var that = this;
-    console.log(value)
     db.collection('gamesPlayer').where({
           _openid:_.in(value)
         })
         .get({
             success:function(res){
-              console.log(res)
               that.setData({
                 playernames:res.data
               })
@@ -163,13 +161,11 @@ onGetAllPlayer(value){
   onGetSinglePlayer:function(value){
     /**嵌套查询用户表中符合_openid的player的用户信息 */
     var that = this;
-    console.log(value)
     db.collection('gamesPlayer').where({
           _openid:value
         })
         .get({
             success:function(res){
-              console.log(res)
               that.setData({
                 playernames:res.data
               })
@@ -193,20 +189,7 @@ onCheckOut:function(e){
         delete obj[i]
       }
     } 
-         console.log(obj)
-
-
-  /**清洗现有的已报名用户数组，将符合的id剔除后重构已报名用户数组 */
-    // var _tmparr=[]
-    // console.log(that.userData._openid)
-    // for(let i of that.userData._openid)
-    //   {
-    //     if (i !== e.currentTarget.dataset.userid){
-    //       _tmparr.push(i)
-    //     }
-    //   }
-
-    that.onDelPlayer(e.currentTarget.dataset.gameid,obj)
+    that.updatePlayerList(e.currentTarget.dataset.gameid,obj)
     // that.onRefresh()
 },
 /**报名活动 */
@@ -226,17 +209,15 @@ onCheckIN:function(e){
       }
       _tmparr.push(res.result.openid)
     
-      that.onDelPlayer(that.data.playInfo[0]._id,_tmparr)
+      that.updatePlayerList(that.data.playInfo[0]._id,_tmparr)
     }
     })
   that.onRefresh()
 },
 
-/**s数据库中将更新后的报名用户数组更新到playerlist字段 */
-onDelPlayer:function(id,obj){
+/**数据库更新 */
+updatePlayerList:function(id,obj){
   var that = this;
-    console.log(id)
-    console.log(obj)
     /**准备回传构建的报名者用户数组更新数据库中对应的id记录 */
     db.collection('gamesSignUp').doc(/**c错误点 */
       id
@@ -245,7 +226,6 @@ onDelPlayer:function(id,obj){
           playerlist:obj
         },
         success:function(res){
-          console.log(res)
           wx.showToast({
             title: '您已退出了本次活动',
             icon: 'none',
@@ -261,7 +241,6 @@ onDelPlayer:function(id,obj){
     })
     
 },
-
 
 onRefresh:function(){
   var that = this;
