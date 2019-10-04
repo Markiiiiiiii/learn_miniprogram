@@ -28,26 +28,29 @@ Page({
    * 页面的初始数据
    */
   data: {
-    playInfo:null,
-    canIUse: wx.canIUse('button.open-type.getUserInfo'),
-    nickName:'nin',
-    playernames:null,
-    uopenid:null,
-    gameid:null
-    },
+      playInfo:null,
+      canIUse: wx.canIUse('button.open-type.getUserInfo'),
+      nickName:'nin',
+      playernames:null,
+      uopenid:null,
+      gameid:null
+  },
   pageData:{
       indexId:null,
       playerArray:[],
-      userObj:{}
+      userObj:{},
+      nName: null
   },
   userData:{
-    _openid:[],
-    uid:null
+      _openid:[],
+      uid:null
   },
 
 onLoad: function (options) {
   var that = this;
-    that.getData(options.id,app.globalUserData.userInfo.uid)
+  that.onGetUserInfo();
+  that.pageData.indexId = options.id
+  that.getData(that.pageData.indexId ,app.globalUserData.userInfo.uid)
     /**读取数据 */
   },/**先判断是否是登录，然后点击button，获取用户头像 */
 
@@ -183,35 +186,23 @@ onGetAllPlayer(value){
 /**退出报名 */
 onCheckOut:function(e){
   var that = this;
-  var obj = that.pageData.userObj;
+  let obj = that.pageData.userObj;
     for(var i in obj){
       if(obj[i] == e.currentTarget.dataset.userid){
         delete obj[i]
       }
     } 
     that.updatePlayerList(e.currentTarget.dataset.gameid,obj)
-    // that.onRefresh()
+    that.onRefresh()
 },
 /**报名活动 */
 onCheckIN:function(e){
   var that = this;
-  var _tmparr=[]
-  wx.cloud.callFunction({
-    name:'login',
-    data:{},
-    success:res=>{
+  let obj = that.pageData.userObj;
+  obj[that.pageData.nName]=app.globalUserData.userInfo.uid;
 
-      for(let i of that.userData._openid)
-      {
-        if (i !== res.result.openid){
-          _tmparr.push(i)
-        }
-      }
-      _tmparr.push(res.result.openid)
-    
-      that.updatePlayerList(that.data.playInfo[0]._id,_tmparr)
-    }
-    })
+  console.log(obj)
+  that.updatePlayerList(e.currentTarget.dataset.gameid,obj)
   that.onRefresh()
 },
 
@@ -219,17 +210,17 @@ onCheckIN:function(e){
 updatePlayerList:function(id,obj){
   var that = this;
     /**准备回传构建的报名者用户数组更新数据库中对应的id记录 */
-    db.collection('gamesSignUp').doc(/**c错误点 */
+    db.collection('gamesSignUp').doc(
       id
     ).update({
         data:{
-          playerlist:obj
+          playerlist:_.set(obj)/**知识点对数列或者对象局部更新 */
         },
         success:function(res){
           wx.showToast({
-            title: '您已退出了本次活动',
+            title: '正在刷新',
             icon: 'none',
-            duration:3000
+            duration:1500
           });
         },
         fail(){
@@ -244,16 +235,14 @@ updatePlayerList:function(id,obj){
 
 onRefresh:function(){
   var that = this;
-  wx.cloud.callFunction({
-    name:'login',
-    data:{},
-    success:res=>{
-    that.getData(that.data.playInfo[0]._id,res.result.openid);}})
+  that.getData(that.pageData.indexId,app.globalUserData.userInfo.uid)
   },
   // onReachBottom:function(){
   //   that.getData();
   // }/**触底刷新 */
-bindGetUserInfo(){
+  
+onGetUserInfo(){
+  var that = this;
     wx.getSetting({
       success: (result)=>{
         if (result.authSetting['scope.userInfo']){
@@ -262,9 +251,7 @@ bindGetUserInfo(){
             lang: 'zh_CN',
             timeout:10000,
             success: (result)=>{
-              that.setData({
-                nickName: result.userInfo.nickName /**获取用户名用于判断是否授权 */
-              }),console.log(result)
+              that.pageData.nName =result.userInfo.nickName/**获取用户名用于判断是否授权 */
             }
         })
       }}
