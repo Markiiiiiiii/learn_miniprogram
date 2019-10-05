@@ -1,8 +1,0 @@
-{
-  "enablePullDownRefresh":true,
-  "usingComponents": {
-    "wux-card":"../../miniprogram_npm/wux-weapp/card/index",
-    "wux-wing-blank":"../../miniprogram_npm/wux-weapp/wing-blank/index",
-    "wux-white-space":"../../miniprogram_npm/wux-weapp/white-space/index"
-  }
-}

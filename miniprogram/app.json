@@ -1,11 +1,8 @@
 {
   "pages": [
-    "pages/index/index",
-    "pages/info/info",
-    "pages/learn/learn",
     "pages/list/list",
-    "pages/add/add",
-    "pages/goto/goto"
+    "pages/info/info",
+    "pages/add/add"
   ],
   "window": {
     "backgroundColor": "#F6F6F6",

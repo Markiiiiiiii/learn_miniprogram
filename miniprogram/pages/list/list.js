@@ -87,7 +87,6 @@ bindGetUserInfo (e) {
     that.setData({
       showButton:true
     })
-    console.log(app.globalUserData.userInfo)
 },
 goAddPage:function(options){
   // console.log(options)

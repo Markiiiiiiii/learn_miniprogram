@@ -134,7 +134,12 @@ onSubmit: function(e){
           playernumb:0,
           effect:"true"
         },
-        success:function(res){console.log(res)},
+        success:function(res){
+          wx.redirectTo({
+            url: '../list/list',
+            success: (result)=>{}
+          });
+        },
         fail:console.error
         })
       }else{
@@ -156,12 +161,18 @@ onSubmit: function(e){
           playernumb:1,
           effect:"true"
         },
-        success:function(res){console.log(res)},
+        success:function(res){
+          wx.redirectTo({
+            url:'../list/list',
+            success:(result)=>{}
+          });
+        },
         fail:console.error
         })
       };
     }
 
+  
   },
 
 

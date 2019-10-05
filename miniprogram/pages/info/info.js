@@ -54,13 +54,7 @@ onLoad: function (options) {
     /**读取数据 */
   },/**先判断是否是登录，然后点击button，获取用户头像 */
 
-  /**下拉刷新 */
-  onPullDownRefresh: function(){
-    var that = this;
-    that.getData(res => {
-       wx.stopPullDownRefresh();
-      });
-  },
+ 
 
 /**数据获取函数 */
 getData: function(value,uid){
@@ -91,7 +85,7 @@ getData: function(value,uid){
             wx.hideLoading();
               /**判断当前用户的openid是否在已报名列中，如果没有则显示“报名这个活动”，如果存在则显示“退出这个活动” */
     })
-    return
+
   },
   /**判断是否已报名 */
   onCheckInUser(value,gid){
@@ -193,6 +187,7 @@ onCheckOut:function(e){
       }
     } 
     that.updatePlayerList(e.currentTarget.dataset.gameid,obj)
+    that.updateGameplayer(e.currentTarget.dataset.gameid)
     that.onRefresh()
 },
 /**报名活动 */
@@ -200,13 +195,20 @@ onCheckIN:function(e){
   var that = this;
   let obj = that.pageData.userObj;
   obj[that.pageData.nName]=app.globalUserData.userInfo.uid;
-
-  console.log(obj)
   that.updatePlayerList(e.currentTarget.dataset.gameid,obj)
+  that.updateGameplayer(e.currentTarget.dataset.gameid)
   that.onRefresh()
 },
+/**用户数据库更新 */
+updateGameplayer:function(id){
+  var that = this;
+  db.collection('gamesPlayer').doc(id).get({
+    success:function(res){console.log(res)},
+    fail:function(res){console.log('error')}
+  })
+},
 
-/**数据库更新 */
+/**活动数据库更新 */
 updatePlayerList:function(id,obj){
   var that = this;
     /**准备回传构建的报名者用户数组更新数据库中对应的id记录 */
@@ -237,10 +239,15 @@ onRefresh:function(){
   var that = this;
   that.getData(that.pageData.indexId,app.globalUserData.userInfo.uid)
   },
-  // onReachBottom:function(){
-  //   that.getData();
-  // }/**触底刷新 */
-  
+onReachBottom:function(){
+  var that = this;
+  that.getData(that.pageData.indexId,app.globalUserData.userInfo.uid)
+  },/**触底刷新 */
+   /**下拉刷新 */
+onPullDownRefresh: function(){
+    var that = this;
+    that.getData(that.pageData.indexId,app.globalUserData.userInfo.uid)
+  },
 onGetUserInfo(){
   var that = this;
     wx.getSetting({

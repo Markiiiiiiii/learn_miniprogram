@@ -27,7 +27,7 @@
 }
 .cardcontainer {
     padding: 10rpx;
-    background-color: #ccc;
+    background-color: #9DC45F;
     color:#fff;
     text-align: center;
     height: 50rpx;
