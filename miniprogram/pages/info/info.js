@@ -50,36 +50,32 @@ onLoad: function (options) {
   var that = this;
   that.onGetUserInfo();
   that.pageData.indexId = options.id
-  that.getData(that.pageData.indexId ,app.globalUserData.userInfo.uid)
-    /**读取数据 */
-  },/**先判断是否是登录，然后点击button，获取用户头像 */
-
- 
+  that.getData(options.id ,app.globalUserData.userInfo.uid)    
+  },
 
 /**数据获取函数 */
-getData: function(value,uid){
+getData: function(iid,uid){
   
   var that = this;
-      if(!value){
+      if(!iid){
         value = res=>{} /**如果callback不是一个函数则使用箭头函数构造一个空函数 */
       }
       wx.showLoading({
             title: '加载中...',
           });
-      db.collection('gamesSignUp').where({_id:value})
+      db.collection('gamesSignUp').where({_id:iid})
       .get().then(res => { 
           /**then是在执行完前面get()之后执行then之内的语句 */
-          res.data[0].latitude = res.data[0].fieldgeoinfo.latitude; 
-          res.data[0].longitude = res.data[0].fieldgeoinfo.longitude; 
+          // res.data[0].latitude = res.data[0].fieldgeoinfo.latitude; 
+          // res.data[0].longitude = res.data[0].fieldgeoinfo.longitude; 
           that.onGetAllPlayer(res.data[0].playerlist) 
-          that.onCheckInUser(res.data[0].playerlist,value)
+          // console.log(res.data[0].playerlist)
+          that.onCheckInUser(res.data[0].playerlist,uid,iid)
           that.pageData.userObj=res.data[0].playerlist
             that.setData({
               playInfo:res.data
             }),
-            res => {
-              value();
-            }
+           
               /**这里的逗号起到连接作用，和之前的语句形成一个语句串 */
               /**构建一个箭头函数把callbcak作为返回值，实现了可以空值调用getData函数也有返回值的目的 */
             wx.hideLoading();
@@ -88,23 +84,24 @@ getData: function(value,uid){
 
   },
   /**判断是否已报名 */
-  onCheckInUser(value,gid){
+  onCheckInUser(obj,uid,iId){
+    // console.log(obj,uid,iId)
     var that = this
-      for(var i in  value){
-            if(value.hasOwnProperty(i))
+      for(var i in  obj){
+            if(obj.hasOwnProperty(i))
             {
-              if(value[i]== app.globalUserData.userInfo.uid){
+              if(obj[i]==uid){
                 that.setData({
                   nickName:'in',
-                  gameid:gid,
-                  uopenid:app.globalUserData.userInfo.uid
+                  gameid:iId,
+                  uopenid:uid
                 })
                 break
               }else{
                 that.setData({
                   nickName:'nin',
-                  gameid:gid,
-                  uopenid:app.globalUserData.userInfo.uid
+                  gameid:iId,
+                  uopenid:uid
                 })
               }
             }
@@ -120,7 +117,7 @@ onGetAllPlayer(value){
           players.push(value[i])
         }
         count ++
-      }
+      }/**判断存储的已报名用户对象的长度 */
       while(count == 1){
         var singlePlayer = players[0]
         that.onGetSinglePlayer(singlePlayer)
@@ -194,7 +191,9 @@ onCheckOut:function(e){
 onCheckIN:function(e){
   var that = this;
   let obj = that.pageData.userObj;
+  that.onGetUserInfo();
   obj[that.pageData.nName]=app.globalUserData.userInfo.uid;
+  console.log(obj)
   that.updatePlayerList(e.currentTarget.dataset.gameid,obj)
   that.updateGameplayer(e.currentTarget.dataset.gameid)
   that.onRefresh()
@@ -210,43 +209,37 @@ updateGameplayer:function(id){
 
 /**活动数据库更新 */
 updatePlayerList:function(id,obj){
-  var that = this;
-    /**准备回传构建的报名者用户数组更新数据库中对应的id记录 */
-    db.collection('gamesSignUp').doc(
-      id
-    ).update({
-        data:{
-          playerlist:_.set(obj)/**知识点对数列或者对象局部更新 */
-        },
-        success:function(res){
-          wx.showToast({
-            title: '正在刷新',
-            icon: 'none',
-            duration:1500
-          });
-        },
-        fail(){
-          wx.showToast({
-            title: '获取失败',
-            icon: 'none'
-          });
-        }
+    var that = this;/**d使用云函数更新数据库 */
+    wx.cloud.callFunction({
+      name:'playerupdate',
+      data:{
+        _id:id,
+        playerobj:obj
+      },
+      success:res =>{
+        console.log(res)
+      }
     })
-    
 },
 
 onRefresh:function(){
   var that = this;
-  that.getData(that.pageData.indexId,app.globalUserData.userInfo.uid)
+  setTimeout(() => {
+    that.getData(that.pageData.indexId,app.globalUserData.userInfo.uid)
+  }, 1000);
   },
 onReachBottom:function(){
   var that = this;
-  that.getData(that.pageData.indexId,app.globalUserData.userInfo.uid)
+  setTimeout(() => {
+    that.getData(that.pageData.indexId,app.globalUserData.userInfo.uid)
+  }, 1000);
   },/**触底刷新 */
    /**下拉刷新 */
 onPullDownRefresh: function(){
     var that = this;
-    that.getData(that.pageData.indexId,app.globalUserData.userInfo.uid)
+    setTimeout(() => {
+      that.getData(that.pageData.indexId,app.globalUserData.userInfo.uid)
+    }, 1000);
   },
 onGetUserInfo(){
   var that = this;
