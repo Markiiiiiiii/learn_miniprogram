@@ -48,14 +48,13 @@ Page({
 
 onLoad: function (options) {
   var that = this;
-  that.onGetUserInfo();
+  // that.onGetUserInfo();
   that.pageData.indexId = options.id
-  that.getData(options.id ,app.globalUserData.userInfo.uid)    
+  that.getData(options.id ,app.userInfo._openid)    
   },
 
 /**数据获取函数 */
 getData: function(iid,uid){
-  
   var that = this;
       if(!iid){
         value = res=>{} /**如果callback不是一个函数则使用箭头函数构造一个空函数 */
@@ -69,7 +68,7 @@ getData: function(iid,uid){
           // res.data[0].latitude = res.data[0].fieldgeoinfo.latitude; 
           // res.data[0].longitude = res.data[0].fieldgeoinfo.longitude; 
           that.onGetAllPlayer(res.data[0].playerlist) 
-          // console.log(res.data[0].playerlist)
+          console.log(res.data[0])
           that.onCheckInUser(res.data[0].playerlist,uid,iid)
           that.pageData.userObj=res.data[0].playerlist
             that.setData({
@@ -85,8 +84,14 @@ getData: function(iid,uid){
   },
   /**判断是否已报名 */
   onCheckInUser(obj,uid,iId){
-    // console.log(obj,uid,iId)
     var that = this
+    if(JSON.stringify(obj)=='{}'){
+      that.setData({
+        nickName:'nin',
+        gameid:iId,
+        uopenid:uid
+      })
+    }else{
       for(var i in  obj){
             if(obj.hasOwnProperty(i))
             {
@@ -105,7 +110,7 @@ getData: function(iid,uid){
                 })
               }
             }
-    }
+    }}
   },
 /**获取到所有的用户组 */
 onGetAllPlayer(value){
@@ -184,28 +189,27 @@ onCheckOut:function(e){
       }
     } 
     that.updatePlayerList(e.currentTarget.dataset.gameid,obj)
-    that.updateGameplayer(e.currentTarget.dataset.gameid)
+    // that.updateGameplayer(e.currentTarget.dataset.gameid)
     that.onRefresh()
 },
 /**报名活动 */
 onCheckIN:function(e){
   var that = this;
   let obj = that.pageData.userObj;
-  that.onGetUserInfo();
-  obj[that.pageData.nName]=app.globalUserData.userInfo.uid;
-  console.log(obj)
+  // that.onGetUserInfo();
+  obj[app.userInfo.nickName]=app.userInfo._openid;
   that.updatePlayerList(e.currentTarget.dataset.gameid,obj)
-  that.updateGameplayer(e.currentTarget.dataset.gameid)
+  // that.updateGameplayer(e.currentTarget.dataset.gameid)
   that.onRefresh()
 },
-/**用户数据库更新 */
-updateGameplayer:function(id){
-  var that = this;
-  db.collection('gamesPlayer').doc(id).get({
-    success:function(res){console.log(res)},
-    fail:function(res){console.log('error')}
-  })
-},
+// /**用户数据库更新 */
+// updateGameplayer:function(id){
+//   var that = this;
+//   db.collection('gamesPlayer').doc(id).get({
+//     success:function(res){console.log(res)},
+//     fail:function(res){console.log('error')}
+//   })
+// },
 
 /**活动数据库更新 */
 updatePlayerList:function(id,obj){
@@ -225,36 +229,49 @@ updatePlayerList:function(id,obj){
 onRefresh:function(){
   var that = this;
   setTimeout(() => {
-    that.getData(that.pageData.indexId,app.globalUserData.userInfo.uid)
+    that.getData(that.pageData.indexId,app.userInfo._openid)
   }, 1000);
   },
 onReachBottom:function(){
   var that = this;
   setTimeout(() => {
-    that.getData(that.pageData.indexId,app.globalUserData.userInfo.uid)
+    that.getData(that.pageData.indexId,app.userInfo._openid)
   }, 1000);
   },/**触底刷新 */
    /**下拉刷新 */
 onPullDownRefresh: function(){
     var that = this;
     setTimeout(() => {
-      that.getData(that.pageData.indexId,app.globalUserData.userInfo.uid)
+      that.getData(that.pageData.indexId,app.userInfo._openid)
     }, 1000);
   },
-onGetUserInfo(){
-  var that = this;
-    wx.getSetting({
+
+openMap:function(e){
+    wx.openLocation({
+      latitude: e.currentTarget.dataset.latitude,
+      longitude: e.currentTarget.dataset.longitude,
+      scale: 18,
       success: (result)=>{
-        if (result.authSetting['scope.userInfo']){
-          wx.getUserInfo({
-            withCredentials: 'false',
-            lang: 'zh_CN',
-            timeout:10000,
-            success: (result)=>{
-              that.pageData.nName =result.userInfo.nickName/**获取用户名用于判断是否授权 */
-            }
-        })
-      }}
-    })
-  },
+        
+      },
+      fail: ()=>{},
+      complete: ()=>{}
+    });
+}
+// onGetUserInfo(){
+//   var that = this;
+//     wx.getSetting({
+//       success: (result)=>{
+//         if (result.authSetting['scope.userInfo']){
+//           wx.getUserInfo({
+//             withCredentials: 'false',
+//             lang: 'zh_CN',
+//             timeout:10000,
+//             success: (result)=>{
+//               that.pageData.nName =result.userInfo.nickName/**获取用户名用于判断是否授权 */
+//             }
+//         })
+//       }}
+//     })
+//   },
 })

@@ -12,10 +12,10 @@
  <view class="cardcontainer" bindtap="toInfopage" data-id="{{item._id}}"> 查看详情</view>
  </view>
   </block>
-  <block wx:if="{{!showButton}}">
-  <button class="addsubmit" wx:if="{{canIUse}}" open-type="getUserInfo" bindgetuserinfo="bindGetUserInfo">开始使用</button>
+  <block wx:if="{{showButton == -1}}">
+  <button class="addsubmit" wx:if="{{canIUse}}" open-type="getUserInfo" bindgetuserinfo="bindGetUserInfo">授权报名</button>
   </block>
-  <block wx:else="{{showButton}}">
-  <button class="addredsubmit" open-type="getUserInfo" bindgetuserinfo="goAddPage">创建活动</button>
+  <block wx:if="{{showButton == 1}}">
+  <button class="addredsubmit" bindtap="goAddPage">发起活动</button>
   </block>
 </view>

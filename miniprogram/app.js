@@ -1,9 +1,6 @@
 //app.js
 App({
-  globalUserData:{
-    userInfo:{}
-  },
-
+  userInfo:{},
   onLaunch: function () {
     
     if (!wx.cloud) {

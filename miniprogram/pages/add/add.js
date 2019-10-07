@@ -40,7 +40,7 @@ Page({
 
   onLoad: function (options) {
     var that = this;
-    // console.log(app.globalUserData.userInfo)
+    // console.log(app.userInfo)
 
     let _tmp = new Date();
     var time = util.formatTime(new Date());  
@@ -57,8 +57,8 @@ onReady:function(){
 /**用户数据库内容信息检索更新 */
 onCheckUser:function(value){
   var that = this;
-  that.pageData._userInfo['_nickName'] = app.globalUserData.userInfo.nickName;
-  that.pageData._userInfo['_avatarUrl'] = app.globalUserData.userInfo.avatarUrl;
+  that.pageData._userInfo['_nickName'] = app.userInfo.nickName;
+  that.pageData._userInfo['_avatarUrl'] = app.userInfo.avatarUrl;
   db.collection('gamesPlayer').where({
           _openid: value._openid
       }).get().then(
@@ -103,7 +103,7 @@ onSubmit: function(e){
     let that = this;
     let costValue = e.detail.value.paytype[0]
     let tmp = {};
-    tmp[app.globalUserData.userInfo.nickName] = app.globalUserData.userInfo.uid
+    tmp[app.userInfo.nickName] = app.userInfo._openid
     if(!e.detail.value.title || !e.detail.value.maxnum || !e.detail.value.footballfield || !e.detail.value.starttime || !e.detail.value.endtime || !e.detail.value.cutofftime)
     {
       wx.showModal({
@@ -131,7 +131,6 @@ onSubmit: function(e){
           fieldname:that.pageData._fieldName,
           fieldaddress:that.pageData._fieldAddress,
           playerlist:{},
-          playernumb:0,
           effect:"true"
         },
         success:function(res){
@@ -158,7 +157,6 @@ onSubmit: function(e){
           fieldname:that.pageData._fieldName,
           fieldaddress:that.pageData._fieldAddress,
           playerlist:tmp,/**活动创建者本身也参加活动 */
-          playernumb:1,
           effect:"true"
         },
         success:function(res){

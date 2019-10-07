@@ -43,7 +43,7 @@
 			"list": []
 		},
 		"miniprogram": {
-			"current": -1,
+			"current": 5,
 			"list": [
 				{
 					"id": -1,
@@ -80,10 +80,10 @@
 					"scene": null
 				},
 				{
-					"id": -1,
+					"id": 5,
 					"name": "pages/info/info",
 					"pathName": "pages/info/info",
-					"query": "id=f885cb355d8adc380433429133184da3",
+					"query": "id=075734515d9993410c130bc9277d03c7",
 					"scene": null
 				}
 			]
