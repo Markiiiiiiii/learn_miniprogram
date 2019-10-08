@@ -68,7 +68,6 @@ getData: function(iid,uid){
           // res.data[0].latitude = res.data[0].fieldgeoinfo.latitude; 
           // res.data[0].longitude = res.data[0].fieldgeoinfo.longitude; 
           that.onGetAllPlayer(res.data[0].playerlist) 
-          console.log(res.data[0])
           that.onCheckInUser(res.data[0].playerlist,uid,iid)
           that.pageData.userObj=res.data[0].playerlist
             that.setData({
@@ -117,6 +116,11 @@ onGetAllPlayer(value){
       var that = this
       let players=[]
       let count = 0
+      if(JSON.stringify(value) == '{}'){
+        that.setData({
+          playernames:{}
+        })
+      }else{
       for(var i in value){
         if(value.hasOwnProperty(i)){
           players.push(value[i])
@@ -132,6 +136,7 @@ onGetAllPlayer(value){
         that.onGetIntoPlayer(players)
         break
       }
+    }
 },
 
   /**查询返回报名用户的信息 */
@@ -191,6 +196,7 @@ onCheckOut:function(e){
     that.updatePlayerList(e.currentTarget.dataset.gameid,obj)
     // that.updateGameplayer(e.currentTarget.dataset.gameid)
     that.onRefresh()
+    that.prePageRef()
 },
 /**报名活动 */
 onCheckIN:function(e){
@@ -201,6 +207,7 @@ onCheckIN:function(e){
   that.updatePlayerList(e.currentTarget.dataset.gameid,obj)
   // that.updateGameplayer(e.currentTarget.dataset.gameid)
   that.onRefresh()
+  that.prePageRef()
 },
 // /**用户数据库更新 */
 // updateGameplayer:function(id){
@@ -228,17 +235,19 @@ updatePlayerList:function(id,obj){
 
 onRefresh:function(){
   var that = this;
+  console.log(that.pageData.indexId,app.userInfo._openid)
   setTimeout(() => {
     that.getData(that.pageData.indexId,app.userInfo._openid)
   }, 1000);
   },
+/**触底刷新 */
 onReachBottom:function(){
   var that = this;
   setTimeout(() => {
     that.getData(that.pageData.indexId,app.userInfo._openid)
   }, 1000);
-  },/**触底刷新 */
-   /**下拉刷新 */
+  },
+/**下拉刷新 */
 onPullDownRefresh: function(){
     var that = this;
     setTimeout(() => {
@@ -257,6 +266,14 @@ openMap:function(e){
       fail: ()=>{},
       complete: ()=>{}
     });
+},
+/**刷新list页面数据 */
+prePageRef:function(){
+  var curPages =  getCurrentPages();
+  if(curPages.length >1){
+      var prePage = curPages[curPages.length -2];
+      prePage.onShow()
+  }
 }
 // onGetUserInfo(){
 //   var that = this;

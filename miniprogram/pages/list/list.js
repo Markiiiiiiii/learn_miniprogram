@@ -40,7 +40,9 @@ Page({
     }
     that.getData();
   },
-
+onShow:function(){
+  this.onLoad()
+},
   getData: function(callback){
         var that = this;
         let signedPlayer = 0;
@@ -71,8 +73,6 @@ Page({
 
 toInfopage:function(options){
   var that = this;
-  console.log(app.userInfo)
-  
    wx.navigateTo({
     url: "../info/info?id="+options.currentTarget.dataset.id,
     success: (result)=>{
@@ -91,7 +91,6 @@ bindGetUserInfo:function(e){
     })
 },
 goAddPage:function(options){
-  // console.log(options)
     wx.redirectTo({
       url:"../add/add"
     })
@@ -140,7 +139,6 @@ updatePlayer:function(id,value){
 /**添加用户信息，tips：不能在添加语句中使用_openid字段，_openid必须由系统自动添加，用户添加则会出现执行错误。 */
 onAddPlayer: function(value){
   var that = this;
-  // console.log(value._nickName);
   db.collection('gamesPlayer').add({
           data:{
             nickName:value.nickName,
