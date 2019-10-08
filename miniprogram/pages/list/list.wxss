@@ -12,6 +12,7 @@
     color: white;
     padding: 10rpx;
     font-size: 34rpx;
+    text-align: center;
     /* text-align: center; */
     }
     

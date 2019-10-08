@@ -203,7 +203,7 @@ setValue(values, key, mode) {
     that.setData({
         [`value${key}`]: values.value,
         [`displayValue${key}`]: values.label,
-        [`displayValue${key}`]: values.displayValue.join(' '),
+        // [`displayValue${key}`]: values.displayValue.join(' '),
     })
 },
 /**时间选择器 */

@@ -12,7 +12,6 @@
         <wux-cell title="费用：" extra="{{gameInfoItem.cost}}"/>
         <wux-cell title="场地名称：" extra="{{gameInfoItem.fieldname}}"/>
         <wux-cell title="场地地址：" extra="查看地图" data-latitude="{{gameInfoItem.fieldgeoinfo.latitude}}" data-longitude="{{gameInfoItem.fieldgeoinfo.longitude}}" bind:click="openMap"/>
-        <wux-cell  extra="{{gameInfoItem.fieldaddress}}"/>
          <wux-cell title="已报名：" extra="">
        <block wx:for="{{playernames}}" wx:for-item="playerInfoItem" wx:key="{{playerInfoItem.id}}}">
                <wux-avatar size="default" shape="circle" src="{{playerInfoItem.avatarUrl}}"></wux-avatar>

@@ -4,3 +4,37 @@
     flex-direction: column-reverse;
     align-items: center;
 }
+.card{
+    width: 600rpx;
+    box-shadow: 04rpx 8rpx 0 rgba(0, 0, 0, 0.2), 06rpx 20rpx 0 rgba(0, 0, 0, 0.19);
+    display: -ms-flexbox;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    align-content: space-between;
+    margin: 20rpx;
+}
+.cardheader {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10rpx;
+    font-size: 34rpx;
+    /* text-align: center; */
+    }
+    
+.cardinfo {
+        padding: 16rpx;
+        background-color: #fff;
+        }
+.infolist{
+    font-size: 28rpx;
+    color: #666;
+    overflow:hidden;
+    white-space: nowrap;
+}
+.cardcontainer {
+    padding: 10rpx;
+    background-color: #9DC45F;
+    color:#fff;
+    text-align: center;
+    height: 50rpx;
+    }
