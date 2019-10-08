@@ -13,17 +13,19 @@ Page({
       value1:[],
       value2:[],
       value3:[],
-      value4:[],
+      value4:['AA','免费','自付'],
       value5:true,
       displayValue1:'请选择比赛开始时间',
       displayValue2:'请选择比赛结束时间',
       displayValue3:'请选择报名截止时间',
       displayValue4:'请选择费用类型',
-      payOption:['免费','AA','自付'],
+      payOption:['AA','免费','自付'],
       lang:'zh_CN',
       endTimeStart:null,
       nowTime:null,
-      footballFileAddress:null
+      footballFileAddress:null,
+      index:0,
+      array:['AA','免费','自付'],/**修改使用原生picker单选框 */
   },
   pageData:{
       _fieldGeoInfo:{},
@@ -100,6 +102,7 @@ onAddPlayer: function(value){
 },
 /**存储到数据库 */
 onSubmit: function(e){  
+  console.log(e)
     let that = this;
     let costValue = e.detail.value.paytype[0]
     let tmp = {};
@@ -239,10 +242,6 @@ onVisibleChange(e) {
   var that = this;
     that.setData({ visible: e.detail.visible })
 },
-onClick() {
-  var that = this;
-    that.setData({ visible: true })
-},
 
 /**选择地理位置 */
 chooseLocation: function(e){
@@ -273,15 +272,20 @@ onPayValueChange(e){
 onPayConfirm(e) {
   var that = this;
   const { index } = e.currentTarget.dataset
-  // console.log(index);
   that.setPayValue(e.detail, index)
-  // console.log(`onConfirm${index}`, e.detail)
+ 
 },
 setPayValue(values, key) {
   var that = this;
   that.setData({
     [`value${key}`]: values.value,
     [`displayValue${key}`]: values.label,
+  })
+},
+bindPickerChange:function(e){
+  var that = this;
+  that.setData({
+    index:e.detail.value
   })
 }
 
