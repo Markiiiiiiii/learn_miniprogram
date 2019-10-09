@@ -6,6 +6,28 @@ const db = wx.cloud.database({
   env:'biggoose-d92594'
 });
 const _ = db.command;
+  /**自定义多选日期组件构建数组 */
+const mDate = new Date();
+const mYears = mDate.getFullYear();
+const mMonday=[];
+const mHours = [];
+const mMintes = [];
+/**月份-日期-星期步进 --30天内  */
+for(let i=0 ;i<=30 ;i++){
+  var tmpdate =new Date(mDate);
+  tmpdate.setDate(tmpdate.getDate()+i);
+  var md = (tmpdate.getMonth()+1)+"月-"+tmpdate.getDate()+"日 星期"+"日一二三四五六".charAt(tmpdate.getDay())
+  mMonday.push(md);
+}
+/**小时步进 --24小时*/
+for (var i =0;i<24;i++){
+  mHours.push(i);
+}
+/**分钟步进 --15分钟*/
+for(var i =0;i<60 ;i+=15){
+  mMintes.push(i)
+}
+
 
 Page({
   data: {
@@ -13,19 +35,19 @@ Page({
       value1:[],
       value2:[],
       value3:[],
-      value4:['AA','免费','自付'],
       value5:true,
-      displayValue1:'请选择比赛开始时间',
-      displayValue2:'请选择比赛结束时间',
-      displayValue3:'请选择报名截止时间',
-      displayValue4:'请选择费用类型',
-      payOption:['AA','免费','自付'],
+      displayValue1:'去设置',
+      displayValue2:'去设置',
+      displayValue3:'去设置',
+      displayValue4:'去设置',
       lang:'zh_CN',
       endTimeStart:null,
       nowTime:null,
       footballFileAddress:null,
       index:0,
       array:['AA','免费','自付'],/**修改使用原生picker单选框 */
+      multiArray:[mMonday,mHours,mMintes],
+      multiIndex:[0,0,0]
   },
   pageData:{
       _fieldGeoInfo:{},
@@ -42,8 +64,6 @@ Page({
 
   onLoad: function (options) {
     var that = this;
-    // console.log(app.userInfo)
-
     let _tmp = new Date();
     var time = util.formatTime(new Date());  
     that.setData({
@@ -287,8 +307,26 @@ bindPickerChange:function(e){
   that.setData({
     index:e.detail.value
   })
-}
+},
+bindMultiPickerChange: function (e) {
 
-
+  this.setData({
+    multiIndex: e.detail.value
+  })
+},
+/**设置自定义的日期格式选择器 */
+bindMultiPickerColumnChange: function (e) {
+    /**自定义多选日期组件构建数组 */
+    var data = {
+      multiArray: this.data.multiArray,
+      multiIndex: this.data.multiIndex
+    };
+    data.multiIndex[e.detail.column] = e.detail.value;
+    // data.multiArray[0]= mMonday;
+    // data.multiArray[1]=mHours;
+    // data.multiArray[2]=mMintes;
+    this.setData(data)
+    console.log(data.multiIndex)
+  }
 /**wux-from组件可以实现对form表格的重置操作，但原生的form表格不支持wux的重置 */
 })
