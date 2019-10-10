@@ -17,26 +17,16 @@
                         <wux-input label="*活动场地：" placeholder="必填" type="text" />
                     </wux-field>
             </wux-cell>
-                    <wux-field name="starttime">
-                        <wux-date-picker minDate="{{ nowTime }}" mode="datetime" value="{{ value1 }}" lang="{{ lang }}" data-index="1" data-mode="datetime" bind:confirm="onConfirmStart">
-                          <wux-cell title="*活动开始时间：" is-link extra="{{ displayValue1 }}"></wux-cell>
-                         </wux-date-picker>
-                    </wux-field>
-                      <wux-field name="endtime">
-                        <wux-date-picker minDate="{{ endTimeStart }}" mode="datetime" value="{{ value2 }}" lang="{{ lang }}" data-index="2" data-mode="datetime" bind:confirm="onConfirmEnd">
-                          <wux-cell title="*结束时间：" is-link extra="{{ displayValue2}}"></wux-cell>
-                         </wux-date-picker>
-                    </wux-field>
+                    <picker mode="multiSelector" name="starttime"  bindchange="bindMultiPickerChange" bindcolumnchange="bindMultiPickerColumnChange" value="{{multiIndex}}" range="{{multiArray}}">
+                        <wux-cell title="*活动开始时间：" is-link extra="{{dateString}}"></wux-cell>
+                    </picker>
                      <wux-field name="cutofftime">
                         <wux-date-picker minDate="{{ nowTime }}" maxDate="{{ endTimeStart }}" mode="datetime" value="{{ value3 }}" lang="{{ lang }}" data-index="3" data-mode="datetime" bind:confirm="onConfirmCutOff">
                           <wux-cell title="*报名截止时间：" is-link extra="{{ displayValue3 }}"></wux-cell>
                      </wux-date-picker>
                     </wux-field>
-                    <picker mode="multiSelector" name="endTime" bindchange="bindMultiPickerChange" bindcolumnchange="bindMultiPickerColumnChange" value="{{multiIndex}}" range="{{multiArray}}">
-                        <wux-cell title="*报名截止时间：" is-link extra="{{ displayValue3 }}"></wux-cell>
-                    </picker>
                     <picker name="paytype" mode="selector" bindchange="bindPickerChange" value="{{index}}" range="{{array}}">
-                             <wux-cell title="费用：" is-link  extra="{{ array[index] }}"></wux-cell>
+                        <wux-cell title="费用：" is-link  extra="{{ array[index] }}"></wux-cell>
                      </picker>
                     <wux-field name="uid">
                         <wux-cell title="您是否参加：">

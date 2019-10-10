@@ -16,17 +16,46 @@ const mMintes = [];
 for(let i=0 ;i<=30 ;i++){
   var tmpdate =new Date(mDate);
   tmpdate.setDate(tmpdate.getDate()+i);
-  var md = (tmpdate.getMonth()+1)+"月-"+tmpdate.getDate()+"日 星期"+"日一二三四五六".charAt(tmpdate.getDay())
+  var md = (tmpdate.getMonth()+1)+"月"+tmpdate.getDate()+"日 周"+"日一二三四五六".charAt(tmpdate.getDay())
   mMonday.push(md);
 }
-/**小时步进 --24小时*/
-for (var i =0;i<24;i++){
-  mHours.push(i);
+/**判断当前时间, picker中小时和分钟选项从当前时间显示 */
+var currentHours = mDate.getHours();
+var currentMintes = mDate.getMinutes();
+// console.log (currentHours,currentMintes)
+var minutesIndex ;
+if(currentMintes>0 && currentMintes<=10){
+  minutesIndex=10;
+}else if(currentMintes>10 && currentMintes<=20){
+  minutesIndex=20;
+}else if(currentMintes>20 && currentMintes<=30){
+  minutesIndex=30;
+}else if(currentMintes>30 && currentMintes<=40){
+  minutesIndex=40;
+}else if(currentMintes>40 && currentMintes<=50){
+  minutesIndex=50;
+}else{
+  minutesIndex=60;
 }
-/**分钟步进 --15分钟*/
-for(var i =0;i<60 ;i+=15){
-  mMintes.push(i)
+/**判断当前分钟数是否满足小时进步 */
+if (minutesIndex == 60){
+  /**小时步进 --24小时*/
+  for (var i =currentHours+1 ;i<24;i++){
+    mHours.push(i);
+  }
+  /**分钟步进 --15分钟*/
+  for (var i=0 ; i<60; i+=10){
+    mMintes.push(i);
+  }
+}else{
+  for(var i=currentHours;i<24;i++){
+    mHours.push(i)
+  }
+  for(var i=0;i<60;i+=10){
+    mMintes.push(i);
+  }
 }
+
 
 
 Page({
@@ -40,6 +69,7 @@ Page({
       displayValue2:'去设置',
       displayValue3:'去设置',
       displayValue4:'去设置',
+      dateString:'去设置',
       lang:'zh_CN',
       endTimeStart:null,
       nowTime:null,
@@ -127,7 +157,7 @@ onSubmit: function(e){
     let costValue = e.detail.value.paytype[0]
     let tmp = {};
     tmp[app.userInfo.nickName] = app.userInfo._openid
-    if(!e.detail.value.title || !e.detail.value.maxnum || !e.detail.value.footballfield || !e.detail.value.starttime || !e.detail.value.endtime || !e.detail.value.cutofftime)
+    if(!e.detail.value.title || !e.detail.value.maxnum || !e.detail.value.footballfield || !e.detail.value.starttime || !e.detail.value.cutofftime)
     {
       wx.showModal({
         title: '提示',
@@ -145,8 +175,7 @@ onSubmit: function(e){
           title:e.detail.value.title,
           maxnum:e.detail.value.maxnum,
           footballfield:e.detail.value.footballfield,
-          starttime:that.pageData._startt,
-          endtime:that.pageData._endt,
+          starttime:e.detail.value.starttime,
           cutofftime:that.pageData._cutofft,
           cost:costValue,
           tips:e.detail.value.footballtext,
@@ -171,8 +200,7 @@ onSubmit: function(e){
           title:e.detail.value.title,
           maxnum:e.detail.value.maxnum,
           footballfield:e.detail.value.footballfield,
-          starttime:that.pageData._startt,
-          endtime:that.pageData._endt,
+          starttime:e.detail.value.starttime,
           cutofftime:that.pageData._cutofft,
           cost:costValue,
           tips:e.detail.value.footballtext,
@@ -309,24 +337,45 @@ bindPickerChange:function(e){
   })
 },
 bindMultiPickerChange: function (e) {
-
-  this.setData({
-    multiIndex: e.detail.value
-  })
+  var that = this;
+  var mArray = that.data.multiArray;
+  var mIndex = that.data.multiIndex;
+  var dateString = mArray[0][mIndex[0]]+mArray[1][mIndex[1]]+":"+mArray[2][mIndex[2]]
+  that.setData({
+    dateString: dateString
+  });
+  /**重新构建日期型字符串 */
+  var reMonday= mArray[0][mIndex[0]].match(/\d+/g)
+    if(reMonday[0]<10){
+      reMonday[0] = "0"+reMonday[0]
+    }
+    if(reMonday[1]<10){
+      reMonday[1] = "0"+reMonday[1]
+    }
+    var reDate =mYears+"-"+reMonday[0]+"-"+reMonday[1]+" "+mArray[1][mIndex[1]]+":"+mArray[2][mIndex[2]]
+    var reStampe=new Date(reDate).valueOf()/**生成时间戳 */
+   that.setData({
+    multiIndex:reStampe
+   })
 },
 /**设置自定义的日期格式选择器 */
 bindMultiPickerColumnChange: function (e) {
+  var that = this;
     /**自定义多选日期组件构建数组 */
     var data = {
-      multiArray: this.data.multiArray,
-      multiIndex: this.data.multiIndex
+      multiArray: that.data.multiArray,
+      multiIndex: that.data.multiIndex
     };
     data.multiIndex[e.detail.column] = e.detail.value;
     // data.multiArray[0]= mMonday;
     // data.multiArray[1]=mHours;
     // data.multiArray[2]=mMintes;
-    this.setData(data)
-    console.log(data.multiIndex)
-  }
+    that.setData(data)
+  },
+  
+
+
+
+  
 /**wux-from组件可以实现对form表格的重置操作，但原生的form表格不支持wux的重置 */
 })
