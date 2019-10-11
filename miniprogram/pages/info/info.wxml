@@ -8,7 +8,6 @@
         <wux-cell title="限定人数" extra="{{gameInfoItem.maxnum}}" />
         <wux-cell title="报名截止：" extra="{{timejs.format(gameInfoItem.cutofftime)}}" />
         <wux-cell title="开始时间：" extra="{{timejs.format(gameInfoItem.starttime)}}"/>
-        <wux-cell title="结束时间：" extra="{{timejs.format(gameInfoItem.endtime)}}"/>
         <wux-cell title="费用：" extra="{{gameInfoItem.cost}}"/>
         <wux-cell title="场地名称：" extra="{{gameInfoItem.fieldname}}"/>
         <wux-cell title="场地地址：" extra="查看地图" data-latitude="{{gameInfoItem.fieldgeoinfo.latitude}}" data-longitude="{{gameInfoItem.fieldgeoinfo.longitude}}" bind:click="openMap"/>

@@ -6,89 +6,30 @@ const db = wx.cloud.database({
   env:'biggoose-d92594'
 });
 const _ = db.command;
-  /**自定义多选日期组件构建数组 */
-const mDate = new Date();
-const mYears = mDate.getFullYear();
-const mMonday=[];
-const mHours = [];
-const mMintes = [];
-/**月份-日期-星期步进 --30天内  */
-for(let i=0 ;i<=30 ;i++){
-  var tmpdate =new Date(mDate);
-  tmpdate.setDate(tmpdate.getDate()+i);
-  var md = (tmpdate.getMonth()+1)+"月"+tmpdate.getDate()+"日 周"+"日一二三四五六".charAt(tmpdate.getDay())
-  mMonday.push(md);
-}
-/**判断当前时间, picker中小时和分钟选项从当前时间显示 */
-var currentHours = mDate.getHours();
-var currentMintes = mDate.getMinutes();
-// console.log (currentHours,currentMintes)
-var minutesIndex ;
-if(currentMintes>0 && currentMintes<=10){
-  minutesIndex=10;
-}else if(currentMintes>10 && currentMintes<=20){
-  minutesIndex=20;
-}else if(currentMintes>20 && currentMintes<=30){
-  minutesIndex=30;
-}else if(currentMintes>30 && currentMintes<=40){
-  minutesIndex=40;
-}else if(currentMintes>40 && currentMintes<=50){
-  minutesIndex=50;
-}else{
-  minutesIndex=60;
-}
-/**判断当前分钟数是否满足小时进步 */
-if (minutesIndex == 60){
-  /**小时步进 --24小时*/
-  for (var i =currentHours+1 ;i<24;i++){
-    mHours.push(i);
-  }
-  /**分钟步进 --15分钟*/
-  for (var i=0 ; i<60; i+=10){
-    mMintes.push(i);
-  }
-}else{
-  for(var i=currentHours;i<24;i++){
-    mHours.push(i)
-  }
-  for(var i=0;i<60;i+=10){
-    mMintes.push(i);
-  }
-}
-
-
+const mYears = new Date().getFullYear();
 
 Page({
   data: {
       thumb: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAC4AAAAuCAMAAABgZ9sFAAAAVFBMVEXx8fHMzMzr6+vn5+fv7+/t7e3d3d2+vr7W1tbHx8eysrKdnZ3p6enk5OTR0dG7u7u3t7ejo6PY2Njh4eHf39/T09PExMSvr6+goKCqqqqnp6e4uLgcLY/OAAAAnklEQVRIx+3RSRLDIAxE0QYhAbGZPNu5/z0zrXHiqiz5W72FqhqtVuuXAl3iOV7iPV/iSsAqZa9BS7YOmMXnNNX4TWGxRMn3R6SxRNgy0bzXOW8EBO8SAClsPdB3psqlvG+Lw7ONXg/pTld52BjgSSkA3PV2OOemjIDcZQWgVvONw60q7sIpR38EnHPSMDQ4MjDjLPozhAkGrVbr/z0ANjAF4AcbXmYAAAAASUVORK5CYII=',
-      value1:[],
-      value2:[],
-      value3:[],
       value5:true,
-      displayValue1:'去设置',
-      displayValue2:'去设置',
-      displayValue3:'去设置',
-      displayValue4:'去设置',
       dateString:'去设置',
+      dateString1:'*与开始时间一致',
       lang:'zh_CN',
       endTimeStart:null,
       nowTime:null,
       footballFileAddress:null,
       index:0,
       array:['AA','免费','自付'],/**修改使用原生picker单选框 */
-      multiArray:[mMonday,mHours,mMintes],
-      multiIndex:[0,0,0]
+      multiArray:[['今天','明天'],['0','1','2','3','4','5','6'],['0','10','20','30']],
+      multiIndex:[0,0,0],
+      multiArray1:[['今天','明天'],['0','1','2','3','4','5','6'],['0','10','20','30']],
+      multiIndex1:[0,0,0]
   },
   pageData:{
       _fieldGeoInfo:{},
       _fieldName:null,
       _fieldAddress:null,/**地理位置对象，保存地图选择后的值 */
-      _startt:null,
-      _endt:null,
-      _cutofft:null,/**构建三个变量存储格式化后的时间 */
       _userInfo:{},
-      _userid:[]
-
   },
 
 
@@ -152,12 +93,17 @@ onAddPlayer: function(value){
 },
 /**存储到数据库 */
 onSubmit: function(e){  
-  console.log(e)
+  /**判断是否选择报名截止时间，如果没有则与开始时间一致 */
     let that = this;
-    let costValue = e.detail.value.paytype[0]
+    if(typeof(e.detail.value.cutofftime) == "object"){
+        var cutofftime = e.detail.value.starttime
+    }else{
+        cutofftime = e.detail.value.cutofftime
+    }
+    let costValue = that.data.array[that.data.index]
     let tmp = {};
     tmp[app.userInfo.nickName] = app.userInfo._openid
-    if(!e.detail.value.title || !e.detail.value.maxnum || !e.detail.value.footballfield || !e.detail.value.starttime || !e.detail.value.cutofftime)
+    if(!e.detail.value.title || !e.detail.value.maxnum || !e.detail.value.footballfield || !e.detail.value.starttime)
     {
       wx.showModal({
         title: '提示',
@@ -176,7 +122,7 @@ onSubmit: function(e){
           maxnum:e.detail.value.maxnum,
           footballfield:e.detail.value.footballfield,
           starttime:e.detail.value.starttime,
-          cutofftime:that.pageData._cutofft,
+          cutofftime:cutofftime,
           cost:costValue,
           tips:e.detail.value.footballtext,
           fieldgeoinfo:that.pageData._fieldGeoInfo,
@@ -201,7 +147,7 @@ onSubmit: function(e){
           maxnum:e.detail.value.maxnum,
           footballfield:e.detail.value.footballfield,
           starttime:e.detail.value.starttime,
-          cutofftime:that.pageData._cutofft,
+          cutofftime:cutofftime,
           cost:costValue,
           tips:e.detail.value.footballtext,
           fieldgeoinfo:that.pageData._fieldGeoInfo,
@@ -224,71 +170,9 @@ onSubmit: function(e){
   
   },
 
-
-/**时间选择 */
-onChange(e) {
-  var that = this;
-    // console.log(e)
-    const { key, values } = e.detail
-    const lang = values[key]
-
-    that.setData({
-        lang,
-    })
-},
-onSwitchChange(field, e) {
-  var that = this;
-  that.setData({
-      [field]: e.detail.value
-  })
-//  console.log('radio发生change事件，携带value值为：', e.detail.value)
-},
-
 onChangeSwitch:function(e){
   var that = this;
   that.onSwitchChange('value5',e)
-},
-
-setValue(values, key, mode) {
-  var that = this;
-    that.setData({
-        [`value${key}`]: values.value,
-        [`displayValue${key}`]: values.label,
-        // [`displayValue${key}`]: values.displayValue.join(' '),
-    })
-},
-/**时间选择器 */
-onConfirmStart(e) {
-  var that = this;
-    const { index, mode } = e.currentTarget.dataset
-    that.setValue(e.detail, index, mode),
-    that.setData({
-      endTimeStart: e.detail.label
-    });/**显示出选择后的时间 */
-    that.pageData._startt = e.detail.date/**将选择后的时间传递给页面变量 */
-},
-onConfirmEnd(e) {
-  var that = this;
-  const { index, mode } = e.currentTarget.dataset 
-  that.setValue(e.detail, index, mode);
-  that.pageData._endt = e.detail.date
-},
-onConfirmCutOff(e) {
-  var that = this;
-  const { index, mode } = e.currentTarget.dataset 
-  that.setValue(e.detail, index, mode);
-  that.pageData._cutofft = e.detail.date
-},
-onConfirm(e) {
-  var that = this;
-  const { index, mode } = e.currentTarget.dataset 
-  that.setValue(e.detail, index, mode)
-  // console.log(`onConfirm${index}`, e.detail.label)
-},
-/**时间戳的连选 */
-onVisibleChange(e) {
-  var that = this;
-    that.setData({ visible: e.detail.visible })
 },
 
 /**选择地理位置 */
@@ -312,24 +196,6 @@ chooseLocation: function(e){
       
 },
 
-onPayValueChange(e){
-  var that = this;
-  const { index } = e.currentTarget.dataset
-  // console.log('onValueChanges', e.detail)
-},
-onPayConfirm(e) {
-  var that = this;
-  const { index } = e.currentTarget.dataset
-  that.setPayValue(e.detail, index)
- 
-},
-setPayValue(values, key) {
-  var that = this;
-  that.setData({
-    [`value${key}`]: values.value,
-    [`displayValue${key}`]: values.label,
-  })
-},
 bindPickerChange:function(e){
   var that = this;
   that.setData({
@@ -358,24 +224,148 @@ bindMultiPickerChange: function (e) {
     multiIndex:reStampe
    })
 },
+bindMultiPickerChange1: function (e) {
+  var that = this;
+  var mArray = that.data.multiArray1;
+  var mIndex = that.data.multiIndex1;
+  var dateString = mArray[0][mIndex[0]]+mArray[1][mIndex[1]]+":"+mArray[2][mIndex[2]]
+  that.setData({
+    dateString1: dateString
+  });
+  /**重新构建日期型字符串 */
+  var reMonday= mArray[0][mIndex[0]].match(/\d+/g)
+    if(reMonday[0]<10){
+      reMonday[0] = "0"+reMonday[0]
+    }
+    if(reMonday[1]<10){
+      reMonday[1] = "0"+reMonday[1]
+    }
+    var reDate =mYears+"-"+reMonday[0]+"-"+reMonday[1]+" "+mArray[1][mIndex[1]]+":"+mArray[2][mIndex[2]]
+    var reStampe1=new Date(reDate).valueOf()/**生成时间戳 */
+   that.setData({
+    multiIndex1:reStampe1
+   })
+},
 /**设置自定义的日期格式选择器 */
 bindMultiPickerColumnChange: function (e) {
   var that = this;
+    /**自定义多选日期组件构建数组 */
+  var mDate = new Date();
+  var mMonday=[];
+  var mHours = [];
+  var mMintes = [];
+  /**月份-日期-星期步进 --30天内  */
+  for(let i=0 ;i<=30 ;i++){
+    var tmpdate =new Date(mDate);
+    tmpdate.setDate(tmpdate.getDate()+i);
+    var md = (tmpdate.getMonth()+1)+"月"+tmpdate.getDate()+"日 周"+"日一二三四五六".charAt(tmpdate.getDay())
+    mMonday.push(md);
+  }
     /**自定义多选日期组件构建数组 */
     var data = {
       multiArray: that.data.multiArray,
       multiIndex: that.data.multiIndex
     };
     data.multiIndex[e.detail.column] = e.detail.value;
-    // data.multiArray[0]= mMonday;
-    // data.multiArray[1]=mHours;
-    // data.multiArray[2]=mMintes;
+/**判断第1列的值，改变第二列的小时选项 */
+    if(e.detail.column === 0 ){/**判断是否在第一列 */
+        if(e.detail.value ===0){/**判断是否在第一列0位 */
+     that.onLoadNowTimes(mHours,mMintes);/**以当前的时间和分钟显示第二、三列 */
+    }else{
+      that.onLoadAllTimes(mHours,mMintes);/**移动出第一列0位后使用24小时和全分钟显示第二、三列 */
+    }
+    }else{
+      that.onLoadAllTimes(mHours,mMintes);
+    }
+    data.multiArray[0]= mMonday;
+    data.multiArray[1]=mHours;
+    data.multiArray[2]=mMintes;
     that.setData(data)
   },
-  
+  bindMultiPickerColumnChange1: function (e) {
+    var that = this;
+      /**自定义多选日期组件构建数组 */
+    var mDate = new Date();
+    var mMonday=[];
+    var mHours = [];
+    var mMintes = [];
+    /**月份-日期-星期步进 --30天内  */
+    for(let i=0 ;i<=30 ;i++){
+      var tmpdate =new Date(mDate);
+      tmpdate.setDate(tmpdate.getDate()+i);
+      var md = (tmpdate.getMonth()+1)+"月"+tmpdate.getDate()+"日 周"+"日一二三四五六".charAt(tmpdate.getDay())
+      mMonday.push(md);
+    }
+      /**自定义多选日期组件构建数组 */
+      var data = {
+        multiArray1: that.data.multiArray1,
+        multiIndex1: that.data.multiIndex1
+      };
+      data.multiIndex1[e.detail.column] = e.detail.value;
+  /**判断第1列的值，改变第二列的小时选项 */
+      if(e.detail.column === 0 ){/**判断是否在第一列 */
+          if(e.detail.value ===0){/**判断是否在第一列0位 */
+       that.onLoadNowTimes(mHours,mMintes);/**以当前的时间和分钟显示第二、三列 */
+      }else{
+        that.onLoadAllTimes(mHours,mMintes);/**移动出第一列0位后使用24小时和全分钟显示第二、三列 */
+      }
+      }else{
+        that.onLoadAllTimes(mHours,mMintes);
+      }
+      data.multiArray1[0]= mMonday;
+      data.multiArray1[1]=mHours;
+      data.multiArray1[2]=mMintes;
+      that.setData(data)
+    },
 
-
-
-  
-/**wux-from组件可以实现对form表格的重置操作，但原生的form表格不支持wux的重置 */
+  onLoadNowTimes:function(hours,mintes){
+    var mDate = new Date();
+  /**判断当前时间, picker中小时和分钟选项从当前时间显示 */
+    var currentHours = mDate.getHours();
+    var currentMintes = mDate.getMinutes();
+    // console.log (currentHours,currentMintes)
+    var minutesIndex ;
+    if(currentMintes>0 && currentMintes<=10){
+      minutesIndex=10;
+    }else if(currentMintes>10 && currentMintes<=20){
+      minutesIndex=20;
+    }else if(currentMintes>20 && currentMintes<=30){
+      minutesIndex=30;
+    }else if(currentMintes>30 && currentMintes<=40){
+      minutesIndex=40;
+    }else if(currentMintes>40 && currentMintes<=50){
+      minutesIndex=50;
+    }else{
+      minutesIndex=60;
+    }
+    /**判断当前分钟数是否满足小时进步 */
+    if (minutesIndex == 60){
+      /**小时步进 --24小时*/
+      for (var i =currentHours+1 ;i<24;i++){
+        hours.push(i);
+      }
+      /**分钟步进 --15分钟*/
+      for (var i=0 ; i<60; i+=10){
+        mintes.push(i);
+      }
+    }else{
+      for(var i=currentHours;i<24;i++){
+        hours.push(i);
+      }
+      for(var i=0;i<60;i+=10){
+        mintes.push(i);
+      }
+    }
+    return hours,mintes
+  },
+onLoadAllTimes:function(hours,mintes){
+  /**显示所有的小时和分钟picker */
+    for(var i =0 ; i <24;i++){
+      hours.push(i);
+    }
+    for(var i=0;i<60;i+=10){
+      mintes.push(i);
+    }
+    return hours,mintes
+}
 })
