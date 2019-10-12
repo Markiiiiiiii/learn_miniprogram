@@ -20,6 +20,32 @@ function formatNumber(n) {
     n = n.toString()
     return n[1] ? n : '0' + n
 }
+/**时间戳转化为 月 日 星期几 时 分 */
+function formatTimeWeek(stamp){
+    var date = new Date(stamp);
+    var month = date.getMonth()+1;
+    var day = date.getDate();
+    var week = date.getDay();
+    var hour = date.getHours();
+    var minute = date.getMinutes();
+    if (month <10){
+        month ="0"+month
+    }
+    if(day <10){
+        day = "0"+day
+    }
+    if(hour<10){
+        hour= "0"+hour
+    }
+    if (minute < 10){
+        minute = "0"+minute
+    }
+    var md = month+"月"+day+"日 周"+"日一二三四五六".charAt(week)+" "+hour+":"+minute;
+
+    return md;
+}
+
+
 
 /** 
  * 时间戳转化为年 月 日 时 分 秒 
@@ -48,5 +74,6 @@ function formatTimeTwo(number, format) {
 
 module.exports = {
     formatTime: formatTime,
-    formatTimeTwo: formatTimeTwo  
+    formatTimeTwo: formatTimeTwo,  
+    formatTimeWeek:formatTimeWeek
 }

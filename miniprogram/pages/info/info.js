@@ -5,6 +5,7 @@ const db = wx.cloud.database({
     env:'biggoose-d92594'
 });
 const _ = db.command;
+const canvas = wx.createCanvasContext('shareCard', this);
 
 /**为数组增加自删功能 */
 Array.prototype.indexOf = function (val){
@@ -51,8 +52,41 @@ onLoad: function (options) {
   // that.onGetUserInfo();
   that.pageData.indexId = options.id
   that.getData(options.id ,app.userInfo._openid)    
+    // wx.downloadFile({
+    //   url: '',
+    //   success: (result)=>{
+    //     let imageFilePath = result.tempFilePath;
+    //     ctx.drawImage(imageFilePath, 0, 0, 840, 0,0,442,420);
+    //     ctx.draw(true);
+    //   },
+    //   fail: ()=>{},
+    //   complete: ()=>{}
+    // });
   },
-
+/**绘制分享图片 */
+test:function(){
+  this.getShareCard()
+},
+getShareCard:function(){
+  var that = this;
+  let timestr = util.formatTimeWeek(that.data.playInfo[0].starttime);
+  let ctx=wx.createCanvasContext('shareCard',that)
+      ctx.drawImage('../../images/share.png', 0, 0, 200, 150);
+      ctx.setFillStyle('#fff');
+      ctx.setFontSize(15);
+      ctx.fillText(that.data.playInfo[0].title,25,20);
+      ctx.setFontSize(10);
+      ctx.fillText(timestr,25,40);
+      ctx.fillText(that.data.playInfo[0].footballfield,25,50);
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(45,130,15,0,2*Math.PI,false);
+      ctx.clip();
+      ctx.drawImage(that.data.playernames[0].avatarUrl,37.5,122.5,15,15);/**错误点 */
+      ctx.fill();
+      ctx.draw(true);
+      ctx.restore();
+},
 /**数据获取函数 */
 getData: function(iid,uid){
   var that = this;
@@ -231,6 +265,17 @@ updatePlayerList:function(id,obj){
         console.log(res)
       }
     })
+},
+/**分享按钮 */
+onShareAppMessage:function(res){
+  var that = this;
+  var lastnum= parseInt(that.data.playInfo[0].maxnum)- Object.getOwnPropertyNames(that.data.playInfo[0].playerlist).length
+  var shareObj={
+    title: '还有'+lastnum+'个名额！',
+    path:'/pages/info/info?id='+that.pageData.indexId,
+    imageUrl:''/**canvas绘图后分享 */
+  }
+  return shareObj
 },
 
 onRefresh:function(){

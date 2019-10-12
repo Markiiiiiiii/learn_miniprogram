@@ -36,5 +36,12 @@
   <wux-icon type="ios-log-in" size="16" />\t报名活动
   </wux-button>
   </block>
+  <wux-button size="small" openType="share" block disable type="royal" bind:click="onShare">
+  <wux-icon type="ios-share" size="16" />\t分享活动
+  </wux-button>
  </view>
 </view>
+<button bindtap="test">测试</button>
+<!-- <view style="display:none"> -->
+  <canvas canvas-id="shareCard"/>
+<!-- </view> -->
