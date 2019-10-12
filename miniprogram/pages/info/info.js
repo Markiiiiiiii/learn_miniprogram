@@ -82,8 +82,8 @@ getShareCard:function(){
       ctx.beginPath();
       ctx.arc(45,130,15,0,2*Math.PI,false);
       ctx.clip();
-      ctx.drawImage(that.data.playernames[0].avatarUrl,37.5,122.5,15,15);/**错误点 */
-      ctx.fill();
+      ctx.drawImage(that.data.playernames[0].avatarUrl,28,113,35,35);/**待完成 ：循环输出 */
+      // ctx.fill();
       ctx.draw(true);
       ctx.restore();
 },
