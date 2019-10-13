@@ -67,23 +67,45 @@ onLoad: function (options) {
 test:function(){
   this.getShareCard()
 },
+
 getShareCard:function(){
   var that = this;
+  console.log(that.data)
   let timestr = util.formatTimeWeek(that.data.playInfo[0].starttime);
   let ctx=wx.createCanvasContext('shareCard',that)
-      ctx.drawImage('../../images/share.png', 0, 0, 200, 150);
+      ctx.drawImage('../../images/sharecard.png', 0, 0, 200, 150);
       ctx.setFillStyle('#fff');
-      ctx.setFontSize(15);
-      ctx.fillText(that.data.playInfo[0].title,25,20);
+      ctx.setFontSize(20);
+      ctx.fillText(that.data.playInfo[0].title,50,30);
       ctx.setFontSize(10);
-      ctx.fillText(timestr,25,40);
-      ctx.fillText(that.data.playInfo[0].footballfield,25,50);
+      ctx.fillText(timestr,58,76);
+      ctx.fillText(that.data.playInfo[0].footballfield,58,100);
       ctx.save();
       ctx.beginPath();
-      ctx.arc(45,130,15,0,2*Math.PI,false);
+      ctx.arc(67,128,10,0,2*Math.PI,false);
+      ctx.arc(87,128,10,0,2*Math.PI,false);
+      ctx.arc(107,128,10,0,2*Math.PI,false);
+      ctx.arc(127,128,10,0,2*Math.PI,false);
+      ctx.arc(147,128,10,0,2*Math.PI,false);
+      ctx.arc(167,128,10,0,2*Math.PI,false);
+      ctx.arc(187,128,10,0,2*Math.PI,false);
       ctx.clip();
-      ctx.drawImage(that.data.playernames[0].avatarUrl,28,113,35,35);/**待完成 ：循环输出 */
-      // ctx.fill();
+      // for(var i=0;i<7;i++){
+      //   ctx.drawImage(avatarUrlPath[i],(54+20*i),117,23,23);
+      // }
+     /**待完成 ：循环输出 */
+     var xWitdh = 54;
+     for(var i=0 ;i<that.data.playernames.length;i++){
+      xWitdh = (i*20)+54;
+       wx.getImageInfo({
+         src:that.data.playernames[i].avatarUrl,
+         success:(res)=>{
+          ctx.drawImage(res.path,xWitdh,117,23,23);/**获取的本地图片绘制不入绘图 */
+         }
+       })
+     }
+      // ctx.drawImage(avatarUrlPath[0],74,117,23,23);
+      //  ctx.fill();
       ctx.draw(true);
       ctx.restore();
 },
