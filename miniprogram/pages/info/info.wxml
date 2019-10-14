@@ -42,4 +42,6 @@
  </view>
 </view>
 
+<view style="position:fixed;top:9999999rpx;">
 <canvas canvas-id="shareCard"/>
+</view>

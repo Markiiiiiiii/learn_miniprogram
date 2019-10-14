@@ -70,6 +70,7 @@ getPlayerAvatraPath:function(value){
         })
     }
 },
+/**生成分享卡临时路径 */
 getShareCardPath:function(){
   var that= this;
   wx.canvasToTempFilePath({
@@ -89,7 +90,7 @@ getShareCardPath:function(){
 onShareAppMessage:function(res){
   var that = this;
   that.drawShareCard();
-  that.getShareCardPath();
+  setTimeout(()=>{that.getShareCardPath()},2000);
   var lastnum= parseInt(that.data.playInfo[0].maxnum)- Object.getOwnPropertyNames(that.data.playInfo[0].playerlist).length
   var shareObj={
     title: '还有'+lastnum+'个名额！',
@@ -122,12 +123,19 @@ drawShareCard:function(){
       ctx.arc(187,128,10,0,2*Math.PI,false);
       ctx.clip();
       var xWitdh = 54;
+      if(that.pageData.avatarUrlPath.length<=7){
       for(var i=0 ;i<that.pageData.avatarUrlPath.length;i++){
         xWitdh = (i*20)+54;
         ctx.drawImage(that.pageData.avatarUrlPath[i],xWitdh,117,23,23);/**获取的本地图片绘制不入绘图 */
         }
-      ctx.draw(true);
+      }else{
+        for(var i=0 ;i<8;i++){
+          xWitdh = (i*20)+54;
+          ctx.drawImage(that.pageData.avatarUrlPath[i],xWitdh,117,23,23);/**获取的本地图片绘制不入绘图 */
+          }
+      }
       ctx.restore();
+      ctx.draw(true);
 },
 /**数据获取函数 */
 getData: function(iid,uid){
