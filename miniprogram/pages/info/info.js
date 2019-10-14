@@ -35,12 +35,15 @@ Page({
       playernames:null,
       uopenid:null,
       gameid:null
+
   },
   pageData:{
       indexId:null,
       playerArray:[],
       userObj:{},
-      nName: null
+      nName: null,
+      avatarUrlPath:[],
+      shareCardPath:null
   },
   userData:{
       _openid:[],
@@ -51,26 +54,54 @@ onLoad: function (options) {
   var that = this;
   // that.onGetUserInfo();
   that.pageData.indexId = options.id
-  that.getData(options.id ,app.userInfo._openid)    
-    // wx.downloadFile({
-    //   url: '',
-    //   success: (result)=>{
-    //     let imageFilePath = result.tempFilePath;
-    //     ctx.drawImage(imageFilePath, 0, 0, 840, 0,0,442,420);
-    //     ctx.draw(true);
-    //   },
-    //   fail: ()=>{},
-    //   complete: ()=>{}
-    // });
+  that.getData(options.id ,app.userInfo._openid) 
+ 
   },
-/**绘制分享图片 */
-test:function(){
-  this.getShareCard()
+
+ /**获取用户头像存储本地path */ 
+getPlayerAvatraPath:function(value){
+  var that =this;
+    for(var i=0; i<value.length;i++){
+        wx.getImageInfo({
+          src:value[i].avatarUrl,
+          success:(res)=>{
+            that.pageData.avatarUrlPath.push(res.path)
+          }
+        })
+    }
+},
+getShareCardPath:function(){
+  var that= this;
+  wx.canvasToTempFilePath({
+    width:'200',
+    height:'150',
+    canvasId: 'shareCard',
+    fileType: 'jpg',
+    quality: 1.0,
+    success: (result)=>{
+      that.pageData.shareCardPath=result.tempFilePath
+        },
+    fail: ()=>{},
+    complete: ()=>{}
+  }, that);
+},
+/**分享按钮 */
+onShareAppMessage:function(res){
+  var that = this;
+  that.drawShareCard();
+  that.getShareCardPath();
+  var lastnum= parseInt(that.data.playInfo[0].maxnum)- Object.getOwnPropertyNames(that.data.playInfo[0].playerlist).length
+  var shareObj={
+    title: '还有'+lastnum+'个名额！',
+    path:'/pages/info/info?id='+that.pageData.indexId,
+    imageUrl:that.pageData.shareCardPath/**canvas绘图后分享 */
+  }
+  return shareObj
 },
 
-getShareCard:function(){
+/**绘制分享图片 */
+drawShareCard:function(){
   var that = this;
-  console.log(that.data)
   let timestr = util.formatTimeWeek(that.data.playInfo[0].starttime);
   let ctx=wx.createCanvasContext('shareCard',that)
       ctx.drawImage('../../images/sharecard.png', 0, 0, 200, 150);
@@ -90,22 +121,11 @@ getShareCard:function(){
       ctx.arc(167,128,10,0,2*Math.PI,false);
       ctx.arc(187,128,10,0,2*Math.PI,false);
       ctx.clip();
-      // for(var i=0;i<7;i++){
-      //   ctx.drawImage(avatarUrlPath[i],(54+20*i),117,23,23);
-      // }
-     /**待完成 ：循环输出 */
-     var xWitdh = 54;
-     for(var i=0 ;i<that.data.playernames.length;i++){
-      xWitdh = (i*20)+54;
-       wx.getImageInfo({
-         src:that.data.playernames[i].avatarUrl,
-         success:(res)=>{
-          ctx.drawImage(res.path,xWitdh,117,23,23);/**获取的本地图片绘制不入绘图 */
-         }
-       })
-     }
-      // ctx.drawImage(avatarUrlPath[0],74,117,23,23);
-      //  ctx.fill();
+      var xWitdh = 54;
+      for(var i=0 ;i<that.pageData.avatarUrlPath.length;i++){
+        xWitdh = (i*20)+54;
+        ctx.drawImage(that.pageData.avatarUrlPath[i],xWitdh,117,23,23);/**获取的本地图片绘制不入绘图 */
+        }
       ctx.draw(true);
       ctx.restore();
 },
@@ -207,6 +227,7 @@ onGetAllPlayer(value){
               that.setData({
                 playernames:res.data
               })
+              that.getPlayerAvatraPath(res.data)
             },
             fail(){
               wx.showToast({
@@ -288,18 +309,6 @@ updatePlayerList:function(id,obj){
       }
     })
 },
-/**分享按钮 */
-onShareAppMessage:function(res){
-  var that = this;
-  var lastnum= parseInt(that.data.playInfo[0].maxnum)- Object.getOwnPropertyNames(that.data.playInfo[0].playerlist).length
-  var shareObj={
-    title: '还有'+lastnum+'个名额！',
-    path:'/pages/info/info?id='+that.pageData.indexId,
-    imageUrl:''/**canvas绘图后分享 */
-  }
-  return shareObj
-},
-
 onRefresh:function(){
   var that = this;
   console.log(that.pageData.indexId,app.userInfo._openid)
@@ -342,20 +351,4 @@ prePageRef:function(){
       prePage.onShow()
   }
 }
-// onGetUserInfo(){
-//   var that = this;
-//     wx.getSetting({
-//       success: (result)=>{
-//         if (result.authSetting['scope.userInfo']){
-//           wx.getUserInfo({
-//             withCredentials: 'false',
-//             lang: 'zh_CN',
-//             timeout:10000,
-//             success: (result)=>{
-//               that.pageData.nName =result.userInfo.nickName/**获取用户名用于判断是否授权 */
-//             }
-//         })
-//       }}
-//     })
-//   },
 })

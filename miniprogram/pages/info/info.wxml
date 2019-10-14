@@ -41,7 +41,5 @@
   </wux-button>
  </view>
 </view>
-<button bindtap="test">测试</button>
-<!-- <view style="display:none"> -->
-  <canvas canvas-id="shareCard"/>
-<!-- </view> -->
+
+<canvas canvas-id="shareCard"/>
