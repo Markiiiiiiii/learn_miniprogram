@@ -55,9 +55,7 @@ onLoad: function (options) {
   // that.onGetUserInfo();
   that.pageData.indexId = options.id
   that.getData(options.id ,app.userInfo._openid) 
- 
   },
-
  /**获取用户头像存储本地path */ 
 getPlayerAvatraPath:function(value){
   var that =this;
@@ -70,27 +68,12 @@ getPlayerAvatraPath:function(value){
         })
     }
 },
-/**生成分享卡临时路径 */
-getShareCardPath:function(){
-  var that= this;
-  wx.canvasToTempFilePath({
-    width:'200',
-    height:'150',
-    canvasId: 'shareCard',
-    fileType: 'jpg',
-    quality: 1.0,
-    success: (result)=>{
-      that.pageData.shareCardPath=result.tempFilePath
-        },
-    fail: ()=>{},
-    complete: ()=>{}
-  }, that);
-},
+
 /**分享按钮 */
 onShareAppMessage:function(res){
   var that = this;
   that.drawShareCard();
-  setTimeout(()=>{that.getShareCardPath()},2000);
+  // setTimeout(()=>{that.getShareCardPath()},2000);
   var lastnum= parseInt(that.data.playInfo[0].maxnum)- Object.getOwnPropertyNames(that.data.playInfo[0].playerlist).length
   var shareObj={
     title: '还有'+lastnum+'个名额！',
@@ -135,7 +118,22 @@ drawShareCard:function(){
           }
       }
       ctx.restore();
-      ctx.draw(true);
+      /**draw的回调函数中生成临时地址 */
+      ctx.draw(true,function () {
+        /**生成分享卡临时路径 */
+        setTimeout(() => {
+          wx.canvasToTempFilePath({
+            width:'200',
+            height:'150',
+            canvasId: 'shareCard',
+            fileType: 'jpg',
+            quality: 1.0,
+            success: (result)=>{
+              that.pageData.shareCardPath=result.tempFilePath
+                }
+          }, that);
+        }, 700);
+        });
 },
 /**数据获取函数 */
 getData: function(iid,uid){
