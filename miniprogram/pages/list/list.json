@@ -5,6 +5,8 @@
     "wux-card":"../../miniprogram_npm/wux-weapp/card/index",
     "wux-tag":"../../miniprogram_npm/wux-weapp/tag/index",
     "wux-icon":"../../miniprogram_npm/wux-weapp/icon/index",
-    "wux-badge":"../../miniprogram_npm/wux-weapp/badge/index"
+    "wux-badge":"../../miniprogram_npm/wux-weapp/badge/index",
+    "wux-timeline": "../../miniprogram_npm/wux-weapp/timeline/index",
+    "wux-timeline-item": "../../miniprogram_npm/wux-weapp/timeline-item/index"
   }
 }

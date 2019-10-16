@@ -1,5 +1,11 @@
 <wxs src="../../common.wxs" module="timejs" />
 <view  class="container">
+  <block wx:if="{{showButton == -1}}">
+  <button class="addsubmit" wx:if="{{canIUse}}" open-type="getUserInfo" bindgetuserinfo="bindGetUserInfo">授权报名</button>
+  </block>
+  <block wx:if="{{showButton == 1}}">
+  <button class="addredsubmit" bindtap="goAddPage">发起活动</button>
+  </block>
   <block wx:for="{{gamelists}}" wx:key="key">
     <block wx:if="{{item.effect=='true'}}">
     <view class="card">
@@ -13,23 +19,21 @@
  <view class="cardcontainer" bindtap="toInfopage" data-id="{{item._id}}"> 查看详情</view>
  </view>
  </block>
+ 
  <block wx:elif="{{item.effect=='false'}}">
-     <view class="card">
-    <view class="cardheader" ><wux-tag style="" color="cyan"  hover-class="none">已过期</wux-tag>{{item.title}}</view>
-    <view class="cardinfo" >
+ <wux-timeline position="left" pending>
+    <wux-timeline-item dotStyle="border-color: #ef473a; color: #ef473a" content=""><view class="timelinefont">{{timejs.format(item.starttime)}}</view></wux-timeline-item>
+ 
+     <!-- <view class="card">
+    <view class="cardheadergray" ><wux-tag style="" color="#888"  hover-class="none">已过期</wux-tag>{{item.title}}</view>
+    <view class="cardinfogray" >
     <view class="infolist"><wux-icon type="ios-time" size="16" />\n活动开始时间：{{timejs.format(item.starttime)}}\n</view>
     <view class="infolist"><wux-icon type="ios-home" size="16" />\n场地名称：{{item.fieldname}}\n</view>
     <view class="infolist"><wux-icon type="ios-pin" size="16" />\n活动地点：{{item.fieldaddress}}</view>
-    <view class="infolist"><wux-icon type="ios-person-add" size="16" />\n报名人数：{{item.playernumb}}\n/\n{{item.maxnum}}</view>
+    <view class="infolist"><wux-icon type="ios-person-add" size="16" />\n参加人数：{{item.playernumb}}</view>
     </view>
- </view>
- 
+ </view> -->
+ </wux-timeline>
  </block>
-  </block>
-  <block wx:if="{{showButton == -1}}">
-  <button class="addsubmit" wx:if="{{canIUse}}" open-type="getUserInfo" bindgetuserinfo="bindGetUserInfo">授权报名</button>
-  </block>
-  <block wx:if="{{showButton == 1}}">
-  <button class="addredsubmit" bindtap="goAddPage">发起活动</button>
-  </block>
+</block>
 </view>

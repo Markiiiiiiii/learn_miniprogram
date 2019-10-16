@@ -13,18 +13,32 @@
     padding: 10rpx;
     font-size: 34rpx;
     text-align: left;
-    
     }
+.cardheadergray{
+    background-color: #666;
+    color: white;
+    padding: 10rpx;
+    font-size: 34rpx;
+    text-align: left;
+}
     
 .cardinfo {
         padding: 16rpx;
         background-color: #fff;
         }
+.cardinfogray {
+            padding: 16rpx;
+            background-color: #ccc;
+            }
 .infolist{
     font-size: 28rpx;
     color: #666;
     overflow:hidden;
     white-space: nowrap;
+}
+.timelinefont{
+    font-size: 28rpx;
+    color:#fff;
 }
 .cardcontainer {
     padding: 10rpx;
