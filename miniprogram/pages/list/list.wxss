@@ -37,7 +37,7 @@
     white-space: nowrap;
 }
 .timelinefont{
-    font-size: 28rpx;
+    font-size: 20rpx;
     color:#fff;
 }
 .cardcontainer {

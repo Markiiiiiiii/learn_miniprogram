@@ -6,7 +6,8 @@ Page({
   data: {
       gamelists:null,
       showButton:-1,
-      canIUse: wx.canIUse('button.open-type.getUserInfo')
+      canIUse: wx.canIUse('button.open-type.getUserInfo'),
+      visible:false
   },
 
 
@@ -56,7 +57,7 @@ getData: function(callback){
         // .where({effect:"true"})
           .orderBy(
           'creattime','desc'
-          ).get()
+          ).limit(12).get()
         .then(res => { /**then是在执行完前面get()之后执行then之内的语句 */
               for(var i=0;i<Object.keys(res.data).length;i++){
                   res.data[i].playernumb = Object.getOwnPropertyNames(res.data[i].playerlist).length
@@ -147,5 +148,14 @@ onAddPlayer: function(value){
           }
         }).then(console.log)
 },
-
+hide(){
+  this.setData({
+    visible:false,
+  })
+},
+onChange(e){
+  this.setData({
+    visible:e.detail.visible,
+  })
+}
 })
