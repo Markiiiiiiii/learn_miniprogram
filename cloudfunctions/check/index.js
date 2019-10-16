@@ -20,7 +20,8 @@ exports.main = async (event, context) => {
             db.collection('gamesSignUp').where({_id:res.data[i]._id}).update({
               data:{
                 effect:"false"
-              }
+              },
+              success:console.log
             })
             }
           }
