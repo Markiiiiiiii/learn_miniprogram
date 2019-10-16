@@ -5,6 +5,9 @@
 - ~~增加分享按钮将info和list页面都可以到微信~~
 ***
 ## Fixed
+#### 10-16
+- 修复iOS对日期格式YY-MM-DD的不支持，将创建活动的日期格式改为YY/MM/DD
+- 增加云函数check每分钟检查活动数据库是否存在超时活动，超时后将effect字段标为false
 #### 10-11
 - add页面去除wux的datepicker组件，使用原生picker，构建xx月xx日 周x xx-xx格式选择
 ***

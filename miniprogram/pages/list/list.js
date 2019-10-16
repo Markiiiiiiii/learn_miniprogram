@@ -43,7 +43,7 @@ Page({
 onShow:function(){
   this.onLoad()
 },
-  getData: function(callback){
+getData: function(callback){
         var that = this;
         let signedPlayer = 0;
         if(!callback){
@@ -58,6 +58,7 @@ onShow:function(){
           'creattime','desc'
           ).get()
         .then(res => { /**then是在执行完前面get()之后执行then之内的语句 */
+          console.log(res)
               for(var i=0;i<Object.keys(res.data).length;i++){
                   res.data[i].playernumb = Object.getOwnPropertyNames(res.data[i].playerlist).length
               }/**计算已报名人数 */

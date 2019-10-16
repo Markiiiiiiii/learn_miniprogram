@@ -20,9 +20,9 @@ Page({
       footballFileAddress:null,
       index:0,
       array:['AA','免费','自付'],/**修改使用原生picker单选框 */
-      multiArray:[['今天','明天'],['0','1','2','3','4','5','6'],['0','10','20','30']],
+      multiArray:[['获取日期'],['0','1','2','3','4','5','6'],['0','10','20','30']],
       multiIndex:[0,0,0],
-      multiArray1:[['今天','明天'],['0','1','2','3','4','5','6'],['0','10','20','30']],
+      multiArray1:[['获取日期'],['0','1','2','3','4','5','6'],['0','10','20','30']],
       multiIndex1:[0,0,0]
   },
   pageData:{
@@ -30,6 +30,8 @@ Page({
       _fieldName:null,
       _fieldAddress:null,/**地理位置对象，保存地图选择后的值 */
       _userInfo:{},
+      _starttime:null,
+      _cutofftime:null
   },
 
 
@@ -95,10 +97,11 @@ onAddPlayer: function(value){
 onSubmit: function(e){  
   /**判断是否选择报名截止时间，如果没有则与开始时间一致 */
     let that = this;
+    console.log(that.pageData)
     if(typeof(e.detail.value.cutofftime) == "object"){
-        var cutofftime = e.detail.value.starttime
+        var cutofftime =  that.pageData._starttime
     }else{
-        cutofftime = e.detail.value.cutofftime
+        cutofftime = that.pageData._cutofftime
     }
     let costValue = that.data.array[that.data.index]
     let tmp = {};
@@ -121,7 +124,7 @@ onSubmit: function(e){
           title:e.detail.value.title,
           maxnum:e.detail.value.maxnum,
           footballfield:e.detail.value.footballfield,
-          starttime:e.detail.value.starttime,
+          starttime:that.pageData._starttime,
           cutofftime:cutofftime,
           cost:costValue,
           tips:e.detail.value.footballtext,
@@ -146,7 +149,7 @@ onSubmit: function(e){
           title:e.detail.value.title,
           maxnum:e.detail.value.maxnum,
           footballfield:e.detail.value.footballfield,
-          starttime:e.detail.value.starttime,
+          starttime:that.pageData._starttime,
           cutofftime:cutofftime,
           cost:costValue,
           tips:e.detail.value.footballtext,
@@ -212,17 +215,26 @@ bindMultiPickerChange: function (e) {
   });
   /**重新构建日期型字符串 */
   var reMonday= mArray[0][mIndex[0]].match(/\d+/g)
+  var reHour = mArray[1][mIndex[1]]
+  var reMintus = mArray[2][mIndex[2]]
     if(reMonday[0]<10){
       reMonday[0] = "0"+reMonday[0]
     }
     if(reMonday[1]<10){
       reMonday[1] = "0"+reMonday[1]
     }
-    var reDate =mYears+"-"+reMonday[0]+"-"+reMonday[1]+" "+mArray[1][mIndex[1]]+":"+mArray[2][mIndex[2]]
-    var reStampe=new Date(reDate).valueOf()/**生成时间戳 */
-   that.setData({
-    multiIndex:reStampe
-   })
+    if(reHour<10){
+      reHour ="0"+reHour
+    }
+    if(reMintus<10){
+      reMintus="0"+reMintus
+    }
+    var reDate =mYears+"/"+reMonday[0]+"/"+reMonday[1]+" "+reHour+":"+reMintus
+   /**生成时间戳 */
+    that.pageData._starttime =  new Date(reDate).valueOf()
+  //  that.setData({
+  //   multiIndex:reStampe
+  //  })
 },
 bindMultiPickerChange1: function (e) {
   var that = this;
@@ -240,11 +252,12 @@ bindMultiPickerChange1: function (e) {
     if(reMonday[1]<10){
       reMonday[1] = "0"+reMonday[1]
     }
-    var reDate =mYears+"-"+reMonday[0]+"-"+reMonday[1]+" "+mArray[1][mIndex[1]]+":"+mArray[2][mIndex[2]]
-    var reStampe1=new Date(reDate).valueOf()/**生成时间戳 */
-   that.setData({
-    multiIndex1:reStampe1
-   })
+    var reDate =mYears+"/"+reMonday[0]+"/"+reMonday[1]+" "+mArray[1][mIndex[1]]+":"+mArray[2][mIndex[2]]
+    /**生成时间戳 */
+    that.pageData._cutofftime =  new Date(reDate).valueOf()
+  //  that.setData({
+  //   multiIndex1:reStampe1
+  //  })
 },
 /**设置自定义的日期格式选择器 */
 bindMultiPickerColumnChange: function (e) {

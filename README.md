@@ -51,3 +51,8 @@ wx.cloud.callFunction({
 - 微信用户头像默认是132x132尺寸
 - 如果将用户头像绘制入画布时必须要将网络头像图片下载到本地存为临时文件
 - wx.getImageInfo()是一个异步函数所以必须要将src放在外部赋值后调用
+
+
+## iOS与Android的时间格式区别
+- 由于iOS在对时间格式中支持 YY/MM/DD HH:MM格式所以使用YY-MM-DD HH:MM向数据库中插入数据时会出现NaN错误。
+必须将其“-”修改为“/”格式。也可string.replace()方法用正则替换，例：date.replace(/-/g,"/")
