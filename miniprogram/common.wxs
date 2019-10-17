@@ -54,7 +54,35 @@ function format(dateStr) {
       
        return Y+'-'+M+'-'+D+' '+H+':'+m
 }
+function format2(dateStr) {
+      var publishTime = parseInt(dateStr),//必须对传入的字符串做格式化，否则getDate将无法转换数据
+            date = getDate(publishTime), //获取dateStr的标准格式 console.log(date) 打印结果  Thu Sep 06 2018 18:47:00 GMT+0800 (中国标准时间)
+            // 获取date 中的 年 月 日 时 分 秒
+            Y = date.getFullYear(),
+            M = date.getMonth() + 1,
+            D = date.getDate(),
+            H = date.getHours(),
+            m = date.getMinutes(),
+            d = date.getDay(),
+            W ='日一二三四五六';
+      // 对 月 日 时 分 秒 小于10时, 加0显示 例如: 09-09 09:01
+      if (M < 10) {
+            M = '0' + M;
+      }
+      if (D < 10) {
+            D = '0' + D;
+      }
+      if (H < 10) {
+            H = '0' + H;
+      }
+      if (m < 10) {
+            m = '0' + m;
+      }
+      W=W.charAt(W)
+       return M+'月'+D+'日 周'+W+' '+H+':'+m
+}
 module.exports = {
       timelog: commentTimeHandle,
-      format:format
+      format:format,
+      format2:format2,
 }

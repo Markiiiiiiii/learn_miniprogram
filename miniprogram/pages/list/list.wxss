@@ -37,8 +37,9 @@
     white-space: nowrap;
 }
 .timelinefont{
-    font-size: 20rpx;
+    font-size: 24rpx;
     color:#fff;
+   
 }
 .cardcontainer {
     padding: 10rpx;
@@ -49,16 +50,27 @@
     }
 
 .addsubmit{
-    width: 200rpx;
-    height: 60rpx;
+    width: 120rpx;
+    height: 120rpx;
     font-size: 24rpx;
     background-color:#3BC65E;
-    color: #ffffff;
+    color: #fff;
+    border-radius: 50%;
+    line-height:120rpx;
+}
+.addsubmit::after{
+    border: none;
 }
 .addredsubmit{
-    width: 200rpx;
-    height: 60rpx;
-    font-size: 24rpx;
+    width: 120rpx;
+    height: 120rpx;
+    font-size:24rpx;
     background-color:#ffc801;
-    color: #ffffff;
+    color: #fff;
+    border-radius: 50%;
+    line-height:120rpx;
+   
+}
+.timelineview{
+    margin-top:20rpx;
 }

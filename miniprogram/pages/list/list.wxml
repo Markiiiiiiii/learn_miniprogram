@@ -1,39 +1,46 @@
 <wxs src="../../common.wxs" module="timejs" />
 <view class="container">
- <scroll-view  scroll-y="true"> 
-  <block wx:if="{{showButton == -1}}">
-  <button class="addsubmit" wx:if="{{canIUse}}" open-type="getUserInfo" bindgetuserinfo="bindGetUserInfo">授权报名</button>
-  </block>
-  <block wx:if="{{showButton == 1}}">
-  <button class="addredsubmit" bindtap="goAddPage">发起活动</button>
-  </block>
-   <wux-timeline position="alternate" pending>
-  <block wx:for="{{gamelists}}" wx:key="key">
-    <block wx:if="{{item.effect=='true'}}">
-
-<wux-timeline-item custom>
-<wux-icon slot="dot" type="ios-time" size="23" />
-   <view class="timelinefont"><text>{{timejs.format(item.starttime)}}\n已报名{{item.playernumb}}/{{item.maxnum}}</text></view>
-</wux-timeline-item>
-</block>
- 
-<block wx:elif="{{item.effect=='false'}}">
-<wux-timeline-item dotStyle="border-color: #ef473a; color: #ef473a" content="">
-   <view class="timelinefont"><text>{{timejs.format(item.starttime)}}\n已结束{{item.playernumb}}人参加</text></view>
-</wux-timeline-item>
- 
-     <!-- <view class="card">
-    <view class="cardheadergray" ><wux-tag style="" color="#888"  hover-class="none">已过期</wux-tag>{{item.title}}</view>
-    <view class="cardinfogray" >
-    <view class="infolist"><wux-icon type="ios-time" size="16" />\n活动开始时间：{{timejs.format(item.starttime)}}\n</view>
-    <view class="infolist"><wux-icon type="ios-home" size="16" />\n场地名称：{{item.fieldname}}\n</view>
-    <view class="infolist"><wux-icon type="ios-pin" size="16" />\n活动地点：{{item.fieldaddress}}</view>
-    <view class="infolist"><wux-icon type="ios-person-add" size="16" />\n参加人数：{{item.playernumb}}</view>
-    </view>
- </view> -->
- 
- </block>
-</block>
-</wux-timeline>
- </scroll-view> 
+   <scroll-view class="timelineview" scroll-y="true" scroll-top="50" style="height:1000rpx">
+      <text class="timelinefont">\n</text>
+      <wux-timeline position="alternate" pending>
+         <block wx:for="{{gamelists}}" wx:key="key">
+            <block wx:if="{{item.effect=='true'}}">
+               <block wx:if="{{showButton == 1}}">
+                  <wux-timeline-item custom>
+                     <wux-icon slot="dot" type="ios-time" size="23" />
+                     <view bindtap="toInfopage" data-id="{{item._id}}">
+                        <text class="timelinefont">{{timejs.format2(item.starttime)}}\n{{item.title}}\n已报名{{item.playernumb}}/{{item.maxnum}}\n[\t点击报名\t]</text>
+                     </view>
+                  </wux-timeline-item>
+               </block>
+               <block wx:elif="{{showButton == -1}}">
+                  <wux-timeline-item custom>
+                     <wux-icon slot="dot" type="ios-time" size="23" />
+                     <view>
+                        <text class="timelinefont">有一场新的活动\n点击报名按钮\n即可获取详情</text>
+                     </view>
+                  </wux-timeline-item>
+               </block>
+            </block>
+            <block wx:elif="{{item.effect=='false'}}">
+               <wux-timeline-item dotStyle="border-color: #ef473a; color: #ef473a" content="">
+                  <view class="timelinefont">
+                     <text class="timelinefont">(已结束)\n{{timejs.format2(item.starttime)}}\n{{item.title}}\n\t有{{item.playernumb}}人参加</text>
+                  </view>
+               </wux-timeline-item>
+            </block>
+         </block>
+      </wux-timeline>
+   </scroll-view>
+   <view>
+      <!-- <wux-fab-button theme="energized" position="bottomLeft" direction="horizontal" reverse="ture" buttons="{{buttons}}" spaceBetween="10"/> -->
+      <block wx:if="{{showButton == -1}}">
+         <button class="addsubmit" wx:if="{{canIUse}}" open-type="getUserInfo" bindgetuserinfo="bindGetUserInfo">
+            报名
+         </button>
+      </block>
+      <block wx:if="{{adminButton == 1}}">
+         <button class="addredsubmit" bindtap="goAddPage">创建</button>
+      </block>
+   </view>
 </view>
