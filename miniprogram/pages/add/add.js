@@ -6,7 +6,19 @@ const db = wx.cloud.database({
   env:'biggoose-d92594'
 });
 const _ = db.command;
-const mYears = new Date().getFullYear();
+const tDate = new Date();
+const mYears = tDate.getFullYear();
+const tMonth = tDate.getMonth()+1;
+  if(tMonth < 10){
+    tMonth = "0"+tMonth
+  }
+const tDay = tDate.getDate();
+  if(tDay <10){
+    tDay = "0"+tDay
+  }
+const towDay= tDay+1;
+const tWeek = tDate.getDay();
+const dayStr = [tMonth+"月"+tDay+"日 周"+"日一二三四五六".charAt(tWeek),tMonth+"月"+towDay+"日 周"+"日一二三四五六".charAt(tWeek+1)]
 
 Page({
   data: {
@@ -20,9 +32,9 @@ Page({
       footballFileAddress:null,
       index:0,
       array:['AA','免费','自付'],/**修改使用原生picker单选框 */
-      multiArray:[['获取日期'],['0','1','2','3','4','5','6'],['0','10','20','30']],
+      multiArray:[dayStr,['0','1','2','3','4','5','6'],['0','10','20','30']],
       multiIndex:[0,0,0],
-      multiArray1:[['获取日期'],['0','1','2','3','4','5','6'],['0','10','20','30']],
+      multiArray1:[dayStr,['0','1','2','3','4','5','6'],['0','10','20','30']],
       multiIndex1:[0,0,0]
   },
   pageData:{

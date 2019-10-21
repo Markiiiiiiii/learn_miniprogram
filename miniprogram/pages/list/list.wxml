@@ -9,7 +9,7 @@
                   <wux-timeline-item custom>
                      <wux-icon slot="dot" type="ios-time" size="23" />
                      <view bindtap="toInfopage" data-id="{{item._id}}">
-                        <text class="timelinefont">{{timejs.format2(item.starttime)}}\n{{item.title}}\n已报名{{item.playernumb}}/{{item.maxnum}}\n[\t点击报名\t]</text>
+                        <text class="timelinefont">{{timejs.countDown(item.starttime)}}\n{{item.title}}\n已报名{{item.playernumb}}/{{item.maxnum}}\n[\t点击报名\t]</text>
                      </view>
                   </wux-timeline-item>
                </block>

@@ -43,21 +43,8 @@
 			"list": []
 		},
 		"miniprogram": {
-			"current": 5,
+			"current": 2,
 			"list": [
-				{
-					"id": -1,
-					"name": "db guide",
-					"pathName": "pages/databaseGuide/databaseGuide",
-					"query": ""
-				},
-				{
-					"id": -1,
-					"name": "pages/index/index",
-					"pathName": "pages/index/index",
-					"query": "",
-					"scene": null
-				},
 				{
 					"id": -1,
 					"name": "pages/info/info",
@@ -73,11 +60,11 @@
 					"scene": null
 				},
 				{
-					"id": -1,
+					"id": 2,
 					"name": "pages/list/list",
 					"pathName": "pages/list/list",
 					"query": "",
-					"scene": null
+					"scene": 1001
 				},
 				{
 					"id": 5,
