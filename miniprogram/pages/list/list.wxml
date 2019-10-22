@@ -9,7 +9,7 @@
                   <wux-timeline-item custom>
                      <wux-icon slot="dot" type="ios-time" size="23" />
                      <view bindtap="toInfopage" data-id="{{item._id}}">
-                        <text class="timelinefont">{{timejs.countDown(item.starttime)}}\n{{item.title}}\n已报名{{item.playernumb}}/{{item.maxnum}}\n[\t点击报名\t]</text>
+                        <text class="timelinefont">{{timejs.countDown(item.starttime)}}\n{{item.title}}\n已报名{{item.playernumb}}/{{item.maxnum}}\n</text><wux-tag color="#f50">报名</wux-tag>
                      </view>
                   </wux-timeline-item>
                </block>
@@ -33,8 +33,7 @@
       </wux-timeline>
    </scroll-view>
    <view>
-      <!-- <wux-fab-button theme="energized" position="bottomLeft" direction="horizontal" reverse="ture" buttons="{{buttons}}" spaceBetween="10"/> -->
-      <block wx:if="{{showButton == -1}}">
+   <block wx:if="{{showButton == -1}}">
          <button class="addsubmit" wx:if="{{canIUse}}" open-type="getUserInfo" bindgetuserinfo="bindGetUserInfo">
             报名
          </button>

@@ -11,7 +11,7 @@
         <wux-cell title="费用：" extra="{{gameInfoItem.cost}}"/>
         <wux-cell title="场地名称：" extra="{{gameInfoItem.fieldname}}"/>
         <wux-cell title="场地地址：" extra="查看地图" data-latitude="{{gameInfoItem.fieldgeoinfo.latitude}}" data-longitude="{{gameInfoItem.fieldgeoinfo.longitude}}" bind:click="openMap"/>
-         <wux-cell title="已报名：" extra="">
+         <wux-cell title="已报名：" extra="" bindtap="showListView">
        <block wx:for="{{playernames}}" wx:for-item="playerInfoItem" wx:key="{{playerInfoItem.id}}}">
                <wux-avatar size="default" shape="circle" src="{{playerInfoItem.avatarUrl}}"></wux-avatar>
          </block>
@@ -20,6 +20,7 @@
     </wux-cell-group>
     </view>
  <view >
+
  <block wx:if="{{!nickName}}">
   <wux-button size="small" block disable type="energized" wx:if="{{canIUse}}" openType="getUserInfo" bindgetuserinfo="bindGetUserInfo">
   <wux-icon type="ios-football" size="16" />\t开始报名
@@ -39,6 +40,18 @@
   <wux-button size="small" openType="share" block disable type="royal" bind:click="onShare">
   <wux-icon type="ios-share" size="16" />\t分享活动
   </wux-button>
+  <view hidden="{{flag}}" class="coverover">
+  <scroll-view class="coverlistshow" scroll-y="true" scroll-top="50" style="height:900rpx">
+  <wux-cell-group>
+  <block wx:for="{{playernames}}" wx:for-item="playerInfoItem" wx:key="{{playerInfoItem.id}}}">
+      <wux-cell thumb="{{playerInfoItem.avatarUrl}}" title="{{playerInfoItem.nickName}}"> </wux-cell>
+    </block>
+  </wux-cell-group>
+  </scroll-view>
+  <view class="coverclose">
+   <wux-button block size="default" disable type="assertive" bindtap="closeListView">关闭</wux-button>
+   </view>
+ </view>
  </view>
 </view>
 

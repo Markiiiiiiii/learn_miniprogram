@@ -34,7 +34,8 @@ Page({
       nickName:'nin',
       playernames:null,
       uopenid:null,
-      gameid:null
+      gameid:null,
+      flag:true
 
   },
   pageData:{
@@ -55,6 +56,7 @@ onLoad: function (options) {
   // that.onGetUserInfo();
   that.pageData.indexId = options.id
   that.getData(options.id ,app.userInfo._openid) 
+  console.log(that.data)
   },
  /**获取用户头像存储本地path */ 
 getPlayerAvatraPath:function(value){
@@ -356,5 +358,15 @@ prePageRef:function(){
       var prePage = curPages[curPages.length -2];
       prePage.onShow()
   }
+},
+showListView:function(){
+  this.setData({
+    flag:false
+  })
+},
+closeListView:function(){
+  this.setData({
+    flag:true
+  })
 }
 })

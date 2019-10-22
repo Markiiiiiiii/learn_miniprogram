@@ -35,6 +35,19 @@ function countDown(dateStr) {
       m = date.getMinutes(),
       W ='日一二三四五六',
       W=W.charAt(W)
+      if (M < 10) {
+            M = '0' + M;
+      }
+      if (D < 10) {
+            D = '0' + D;
+      }
+      if (H < 10) {
+            H = '0' + H;
+      }
+      if (m < 10) {
+            m = '0' + m;
+      }
+      
       var nowTime = getDate().getTime(), //获取此时此刻日期的秒数
             diffValue = (gameTime - nowTime) / 1000, // 获取此时 秒数 与 要处理的日期秒数 之间的差值
             diff_days = parseInt(diffValue / 86400), // 一天86400秒 获取相差的天数 取整
