@@ -201,5 +201,30 @@ onLaunch:function(){
     this.setData({
       visible: e.detail.visible,
     })
-  }
+  },
+  /**删除活动 */
+  delplayerinfo:function (e) {
+    var that = this;
+    wx.cloud.callFunction({
+      name: 'delplayinfo',
+      data: {
+        _id:e.currentTarget.dataset.id
+      },
+      success: res => {
+        that.onRefresh()
+      },
+      fail: err => {console.log(err)}
+    });  
+  },
+  /**刷新页面 */
+  onRefresh:function(){
+    var that = this;
+    setTimeout(() => {
+      wx.showLoading({
+        title: '加载中...',
+      });
+      that.getData()
+    }, 700);
+    wx.hideLoading();
+    },
 })

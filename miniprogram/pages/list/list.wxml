@@ -8,8 +8,13 @@
                <block wx:if="{{showButton == 1}}">
                   <wux-timeline-item custom>
                      <wux-icon slot="dot" type="ios-time" size="23" />
-                     <view bindtap="toInfopage" data-id="{{item._id}}">
-                        <text class="timelinefont">{{timejs.countDown(item.starttime)}}\n{{item.title}}\n已报名{{item.playernumb}}/{{item.maxnum}}\n</text><wux-tag color="#f50">报名</wux-tag>
+                     <view>
+                        <text class="timelinefont">{{timejs.countDown(item.starttime)}}\n{{item.title}}\n已报名{{item.playernumb}}/{{item.maxnum}}\n</text>
+                           <block wx:if="{{adminButton == 1}}">
+                                 <wux-tag color="#108ee9" bind:click="delplayerinfo" data-id="{{item._id}}">删</wux-tag>
+                                 <wux-tag color="#fbd433" bind:click="editplayerinfo" data-id="{{item._id}}">改</wux-tag>                       
+                           </block>
+                        <wux-tag color="#f50" bind:click="toInfopage" data-id="{{item._id}}">报名</wux-tag>
                      </view>
                   </wux-timeline-item>
                </block>
