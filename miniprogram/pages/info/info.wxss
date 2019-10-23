@@ -1,4 +1,7 @@
 /* miniprogram/pages/index/index.wxss */
+.infowidth{
+    width:750rpx;
+}
 .reversebutton{
     display: flex;
     flex-direction: column-reverse;
@@ -44,7 +47,7 @@
     position: fixed;
     top:0px;
     left: 0px;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 0.8);
     overflow: hidden;
     text-align: center;
 }
@@ -57,3 +60,23 @@
     display: flex;
     justify-content: center;
 }
+.index {
+    width: 100%;
+    height: auto;
+    position: relative;
+    display: flex;
+    flex-direction:columnl;
+    justify-content: flex-start;
+    padding:0 10rpx;
+    box-sizing: border-box;
+  }
+  .index view .text {
+    display: inline-block;
+    width: 50rpx;
+    height: 50rpx;
+    background: greenyellow;
+    border-radius: 50%;
+  }
+  view .text:first-of-type {
+    transform: translateX(0px);
+  }

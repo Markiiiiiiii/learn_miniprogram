@@ -31,12 +31,13 @@ Page({
   data: {
       playInfo:null,
       canIUse: wx.canIUse('button.open-type.getUserInfo'),
-      nickName:'nin',
+      nickName:'',
       playernames:null,
       uopenid:null,
       gameid:null,
-      flag:true
-
+      flag:true,
+      userInfor:{},
+      getinfo:''
   },
   pageData:{
       indexId:null,
@@ -55,8 +56,18 @@ onLoad: function (options) {
   var that = this;
   // that.onGetUserInfo();
   that.pageData.indexId = options.id
+  console.log(app.userInfo)
+  /**
+   * 判断是否是从分享海报到达的用户
+   * 获取授权和userinfo
+   */
+  if(!app.userInfo._openid){
+    that.setData({
+      getinfo:'out'
+    })
+  }
   that.getData(options.id ,app.userInfo._openid) 
-  console.log(that.data)
+
   },
  /**获取用户头像存储本地path */ 
 getPlayerAvatraPath:function(value){
@@ -168,6 +179,7 @@ getData: function(iid,uid){
   /**判断是否已报名 */
   onCheckInUser(obj,uid,iId){
     var that = this
+    if(uid){
     if(JSON.stringify(obj)=='{}'){
       that.setData({
         nickName:'nin',
@@ -194,6 +206,7 @@ getData: function(iid,uid){
               }
             }
     }}
+  }
   },
 /**获取到所有的用户组 */
 onGetAllPlayer(value){
@@ -232,6 +245,7 @@ onGetAllPlayer(value){
         })
         .get({
             success:function(res){
+              console.log(res.data.length)
               that.setData({
                 playernames:res.data
               })
@@ -279,9 +293,8 @@ onCheckOut:function(e){
       }
     } 
     that.updatePlayerList(e.currentTarget.dataset.gameid,obj)
-    // that.updateGameplayer(e.currentTarget.dataset.gameid)
     that.onRefresh()
-    that.prePageRef()
+    // that.prePageRef()
 },
 /**报名活动 */
 onCheckIN:function(e){
@@ -290,18 +303,92 @@ onCheckIN:function(e){
   // that.onGetUserInfo();
   obj[app.userInfo.nickName]=app.userInfo._openid;
   that.updatePlayerList(e.currentTarget.dataset.gameid,obj)
-  // that.updateGameplayer(e.currentTarget.dataset.gameid)
   that.onRefresh()
-  that.prePageRef()
+  // that.prePageRef()
 },
-// /**用户数据库更新 */
-// updateGameplayer:function(id){
-//   var that = this;
-//   db.collection('gamesPlayer').doc(id).get({
-//     success:function(res){console.log(res)},
-//     fail:function(res){console.log('error')}
-//   })
-// },
+/**获取用户信息 */
+
+bindGetUserInfo:function(){
+  var that =this;
+  wx.cloud.callFunction({
+    name: 'login',
+    data: {},
+    success: res => {
+      app.userInfo._openid = res.result.openid
+    },
+    fail: err => {}
+  });
+  wx.getSetting({
+    success(res) {
+      if (res.authSetting['scope.userInfo']) {
+        // 已经授权，可以直接调用 getUserInfo 获取头像昵称
+        wx.getUserInfo({
+          success: function (res) {
+            app.userInfo.nickName = res.userInfo.nickName;
+            app.userInfo.avatarUrl = res.userInfo.avatarUrl;
+           that.onCheckUser(app.userInfo);
+           that.setData({
+             getinfo:''
+           })
+          }
+        })
+      }
+    }
+  })
+  that.onRefresh()
+},
+ /**用户数据库内容信息检索更新 */
+ onCheckUser: function (value) {
+  var that = this;
+  db.collection('gamesPlayer').where({
+    _openid: value._openid
+  }).get().then(
+    res => {
+      if (res.data.length == 0) {
+        /**判断用户表中是否存在当前用户，没有则添加当前用户 */
+        that.onAddPlayer(value);
+      } else {
+        /**判断用户的nickname和avatarURL是否有变化有的话更新数据库 */
+        if (res.data[0].nickName != value.nickName || res.data[0].avatarUrl != value.avatarUrl) {
+          /**检索用户的nickname和头像是否发生改变，如果发生改变则更新原有的信息*/
+          that.updatePlayer(res.data[0]._id, value)
+          db.collection('gamesPlayer').doc(res.data[0]._id)
+            .update({
+              data: {
+                nickName: _.set(value.nickName),
+                avatarUrl: _.set(value.avatarUrl)
+              }
+            })
+            .then(console.log)
+        }
+      }
+    });
+
+  /**技巧：必须在数据表中设置一个_openid字段，来用于鉴权，如果没有该字段则数据库不执行更新动作 */
+},
+updatePlayer: function (id, value) {
+
+  console.log(value)
+  db.collection('gamesPlayer').doc(id)
+    .update({
+      data: {
+        nickName: _.set(value.nickName),
+        avatarUrl: _.set(value.avatarUrl)
+      }
+    })
+    .then(res => console.log(res))
+},
+/**添加用户信息，tips：不能在添加语句中使用_openid字段，_openid必须由系统自动添加，用户添加则会出现执行错误。 */
+onAddPlayer: function (value) {
+  var that = this;
+  db.collection('gamesPlayer').add({
+    data: {
+      nickName: value.nickName,
+      avatarUrl: value.avatarUrl
+      // _openid:value._openid
+    }
+  }).then(console.log)
+},
 
 /**活动数据库更新 */
 updatePlayerList:function(id,obj){
@@ -319,10 +406,14 @@ updatePlayerList:function(id,obj){
 },
 onRefresh:function(){
   var that = this;
-  console.log(that.pageData.indexId,app.userInfo._openid)
+ 
   setTimeout(() => {
+    wx.showLoading({
+      title: '加载中...',
+    });
     that.getData(that.pageData.indexId,app.userInfo._openid)
-  }, 1000);
+  }, 700);
+  wx.hideLoading();
   },
 /**触底刷新 */
 onReachBottom:function(){
@@ -352,13 +443,13 @@ openMap:function(e){
     });
 },
 /**刷新list页面数据 */
-prePageRef:function(){
-  var curPages =  getCurrentPages();
-  if(curPages.length >1){
-      var prePage = curPages[curPages.length -2];
-      prePage.onShow()
-  }
-},
+// prePageRef:function(){
+//   var curPages =  getCurrentPages();
+//   if(curPages.length >1){
+//       var prePage = curPages[curPages.length -2];
+//       prePage.onShow()
+//   }
+// },
 showListView:function(){
   this.setData({
     flag:false
