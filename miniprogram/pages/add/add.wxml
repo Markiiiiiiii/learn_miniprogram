@@ -2,17 +2,17 @@
     <view style='opacity:0.85'>
         <form bindsubmit="onSubmit" bindreset="formReset">
         <wux-cell-group>
-            <wux-cell hover-class="none">
+            <wux-cell>
                 <wux-field name="title">
-                    <wux-input label="*活动主题：" placeholder="必填" type="text" />
+                    <wux-input label="*活动主题：" placeholder="必填" defaultValue="{{editData.title}}" type="text" />
                 </wux-field>
             </wux-cell>
-            <wux-cell hover-class="none">
+            <wux-cell>
                  <wux-field name="maxnum" >
                      <wux-input label="*限定人数：" placeholder="必填" type="number" />
                 </wux-field>
             </wux-cell>
-             <wux-cell hover-class="none">
+             <wux-cell>
                      <wux-field name="footballfield" >
                         <wux-input label="*活动场地：" placeholder="必填" type="text" />
                     </wux-field>

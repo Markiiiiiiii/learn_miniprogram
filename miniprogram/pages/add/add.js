@@ -35,7 +35,8 @@ Page({
       multiArray:[dayStr,['0','1','2','3','4','5','6'],['0','10','20','30']],
       multiIndex:[0,0,0],
       multiArray1:[dayStr,['0','1','2','3','4','5','6'],['0','10','20','30']],
-      multiIndex1:[0,0,0]
+      multiIndex1:[0,0,0],
+      editData:null
   },
   pageData:{
       _fieldGeoInfo:{},
@@ -48,7 +49,6 @@ Page({
 
 
   onLoad: function (options) {
-    console.log(options.id)
     var that = this;
     /**判断是否是修改活动 */
     if(options){
@@ -58,7 +58,9 @@ Page({
           _id:options.id
         },
         success: res => {
-          console.log(res)
+          that.setData({
+            editData:res.result.data
+          })
         },
         fail: err => {}
       });

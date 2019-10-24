@@ -1,5 +1,7 @@
 {
   "usingComponents": {
+    "wux-cell-group":"../../miniprogram_npm/wux-weapp/cell-group/index",
+    "wux-cell":"../../miniprogram_npm/wux-weapp/cell/index",
     "wux-field":"../../miniprogram_npm/wux-weapp/field/index",
     "wux-input":"../../miniprogram_npm/wux-weapp/input/index",
     "wux-icon":"../../miniprogram_npm/wux-weapp/icon/index",
