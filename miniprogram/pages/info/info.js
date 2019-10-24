@@ -450,11 +450,15 @@ openMap:function(e){
 //       prePage.onShow()
 //   }
 // },
+
+/** 显示参加用户遮罩层*/
 showListView:function(){
   this.setData({
     flag:false
   })
 },
+
+/** 隐藏参加用户遮罩层*/
 closeListView:function(){
   this.setData({
     flag:true

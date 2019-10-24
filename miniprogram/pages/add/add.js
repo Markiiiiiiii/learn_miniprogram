@@ -48,7 +48,21 @@ Page({
 
 
   onLoad: function (options) {
+    console.log(options.id)
     var that = this;
+    /**判断是否是修改活动 */
+    if(options){
+      wx.cloud.callFunction({
+        name: 'getgame',
+        data: {
+          _id:options.id
+        },
+        success: res => {
+          console.log(res)
+        },
+        fail: err => {}
+      });
+    }
     let _tmp = new Date();
     var time = util.formatTime(new Date());  
     that.setData({
@@ -148,7 +162,7 @@ onSubmit: function(e){
         },
         success:function(res){
           wx.redirectTo({
-            url: '../list/list',
+            url: '../list/list?ab=1',
             success: (result)=>{}
           });
         },
@@ -173,7 +187,7 @@ onSubmit: function(e){
         },
         success:function(res){
           wx.redirectTo({
-            url:'../list/list',
+            url:'../list/list?ab=1',
             success:(result)=>{}
           });
         },

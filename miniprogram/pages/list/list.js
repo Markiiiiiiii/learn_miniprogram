@@ -46,6 +46,11 @@ onLaunch:function(){
 },
   onLoad: function (options) {
     var that = this;
+    if(options){
+      that.setData({
+        adminButton:options.ab
+      })
+    }
     /**调用全局userinfo变量 判断是否有获得数据没有就显示授权按钮，有就显示创建活动按钮*/
     wx.cloud.callFunction({
       name: 'login',
@@ -90,7 +95,7 @@ onLaunch:function(){
     db.collection('gamesSignUp')
       // .where({effect:"true"})
       .orderBy(
-        'creattime', 'desc'
+        'starttime', 'desc'
       ).limit(20).get()
       .then(res => {
         /**then是在执行完前面get()之后执行then之内的语句 */
@@ -227,4 +232,11 @@ onLaunch:function(){
     }, 700);
     wx.hideLoading();
     },
+/**修改活动 */
+  editplayerinfo:function(e){
+    var that=this;
+    wx.redirectTo({
+      url: "../add/add?id="+e.currentTarget.dataset.id
+    })
+  }
 })
