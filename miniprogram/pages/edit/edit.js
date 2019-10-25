@@ -50,6 +50,29 @@ Page({
 
   onLoad: function (options) {
     var that = this;
+    /**判断是否是修改活动 */
+    if(options){
+      wx.cloud.callFunction({
+        name: 'getgame',
+        data: {
+          _id:options.id
+        },
+        success: res => {
+          that.setData({
+            editData:res.result.data,
+            dateString:util.formatTimeWeek(res.result.data.starttime),
+            dateString1:util.formatTimeWeek(res.result.data.cutofftime),
+            index:that.data.array.indexOf(res.result.data.cost),
+            switchValue:res.result.data.ifjoin
+          });
+          that.pageData._fieldGeoInfo = res.result.data.fieldgeoinfo;
+          that.pageData._fieldAddress = res.result.data.fieldaddress;
+          that.pageData._fieldName = res.result.data.fieldname;
+          
+        },
+        fail: err => {}
+      });
+    }
     let _tmp = new Date();
     var time = util.formatTime(new Date());  
     that.setData({
@@ -93,6 +116,12 @@ onCheckUser:function(value){
       });
         
 /**技巧：必须在数据表中设置一个_openid字段，来用于鉴权，如果没有该字段则数据库不执行更新动作 */
+},
+
+onSubmitEdit:function(e){
+  var that = this;
+  console.log(that.pageData._fieldAddress)
+    console.log(e)
 },
 /**添加用户信息，tips：不能在添加语句中使用_openid字段，_openid必须由系统自动添加，用户添加则会出现执行错误。 */
 onAddPlayer: function(value){
@@ -145,8 +174,7 @@ onSubmit: function(e){
           fieldname:that.pageData._fieldName,
           fieldaddress:that.pageData._fieldAddress,
           playerlist:{},
-          effect:"true",
-          ifjoin:"false"
+          effect:"true"
         },
         success:function(res){
           wx.redirectTo({
@@ -171,8 +199,7 @@ onSubmit: function(e){
           fieldname:that.pageData._fieldName,
           fieldaddress:that.pageData._fieldAddress,
           playerlist:tmp,/**活动创建者本身也参加活动 */
-          effect:"true",
-          ifjoin:"true"
+          effect:"true"
         },
         success:function(res){
           wx.redirectTo({
@@ -190,9 +217,7 @@ onSubmit: function(e){
 
 onChangeSwitch:function(e){
   var that = this;
-  that.setData({
-    switchValue:e.detail.value
-  })
+  that.onSwitchChange('value5',e)
 },
 
 /**选择地理位置 */
@@ -397,5 +422,11 @@ onLoadAllTimes:function(hours,mintes){
       mintes.push(i);
     }
     return hours,mintes
-}
+},
+onChangeSwitch:function(e){
+  var that = this;
+  that.setData({
+    switchValue:e.detail.value
+  })
+},
 })

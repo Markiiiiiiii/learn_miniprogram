@@ -42,6 +42,10 @@
 		"game": {
 			"list": []
 		},
+		"gamePlugin": {
+			"current": -1,
+			"list": []
+		},
 		"miniprogram": {
 			"current": 2,
 			"list": [
@@ -71,6 +75,13 @@
 					"name": "pages/info/info",
 					"pathName": "pages/info/info",
 					"query": "id=925f44065da7e64506c6f79d14dcf281",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/edit/edit",
+					"pathName": "pages/edit/edit",
+					"query": "id=57964ec45db170c3033a5a63252adcbb",
 					"scene": null
 				}
 			]

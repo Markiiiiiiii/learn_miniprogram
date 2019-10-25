@@ -1,22 +1,25 @@
 
 <view  class="container">
     <view style='opacity:0.85'>
-        <form bindsubmit="onSubmit" bindreset="formReset">
+        <form bindsubmit="onSubmitEdit" bindreset="formReset">
         <wux-cell-group>
             <wux-cell>
-                <wux-field name="title">
+                <label class="labelmid" >*活动主题：</label> <input class="input" placeholder="必填" name="title" type="text" value="{{editData.title}}" />
+                <!-- <wux-field name="title">
                     <wux-input label="*活动主题：" placeholder="必填" value="{{editData.title}}" controlled type="text" />
-                </wux-field>
+                </wux-field> -->
             </wux-cell>
             <wux-cell>
-                 <wux-field name="maxnum" >
+            <label class="labelmid" >*限定人数：</label> <input class="input" placeholder="必填" name="maxnum" type="number" value="{{editData.maxnum}}" />
+                 <!-- <wux-field name="maxnum" >
                      <wux-input label="*限定人数：" placeholder="必填" type="number" />
-                </wux-field>
+                </wux-field> -->
             </wux-cell>
              <wux-cell>
-                     <wux-field name="footballfield" >
+             <label class="labelmid" >*活动场地：</label> <input class="input" placeholder="必填" name="footballfield" type="text" value="{{editData.footballfield}}" />
+                     <!-- <wux-field name="footballfield" >
                         <wux-input label="*活动场地：" placeholder="必填" type="text" />
-                    </wux-field>
+                    </wux-field> -->
             </wux-cell>
                     <picker mode="multiSelector" name="starttime"  bindchange="bindMultiPickerChange" bindcolumnchange="bindMultiPickerColumnChange" value="{{multiIndex}}" range="{{multiArray}}">
                         <wux-cell title="*活动开始时间：" is-link extra="{{dateString}}"></wux-cell>
@@ -24,28 +27,32 @@
                      <picker mode="multiSelector" name="cutofftime"  bindchange="bindMultiPickerChange1" bindcolumnchange="bindMultiPickerColumnChange1" value="{{multiIndex1}}" range="{{multiArray1}}">
                         <wux-cell title="报名截止时间：" is-link extra="{{dateString1}}"></wux-cell>
                     </picker>
-                    <picker name="paytype" mode="selector" bindchange="bindPickerChange" value="{{index}}" range="{{array}}">
+                    <picker name="p aytype" mode="selector" bindchange="bindPickerChange" value="{{index}}" range="{{array}}">
                         <wux-cell title="费用：" is-link  extra="{{ array[index] }}"></wux-cell>
                      </picker>
                     <wux-field name="uid">
                         <wux-cell title="您是否参加：">
-                            <switch name="join" type="checkbox" checked="{{switchValue}}" bindchange="onChangeSwitch" slot="footer"/>
+                          <switch name="join" checked="{{ switchValue }}" bindchange="onChangeSwitch" slot="footer"/>
+                            <!-- <wux-switch name="join" color="balanced" value="{{ value5 }}"  slot="footer" bind:change="onChangeSwitch"/> -->
                         </wux-cell>
-                    </wux-field>
+                        </wux-field>
                         <wux-cell title="地图位置：" hover-class="none">
                         <wux-button size="small" type="balanced" bind:click="chooseLocation"><wux-icon type="ios-pin" size="16" />打开地图</wux-button>
                             <block wx:if="{{footballFileAddress}}">
                                 <text> {{ footballFileAddress }} </text>
                             </block>
                         </wux-cell>
-                    
-                    <wux-field name="footballtext">
+                     <wux-cell title="活动说明："hover-class="none">
+                    <textarea name="footballtext" value="{{editData.tips}}" adjust-position style="width:80%"/>
+                    </wux-cell>
+                    <!-- <wux-field name="footballtext">
                         <wux-cell title="活动说明："hover-class="none">
-                            <wux-textarea hasCount rows="3" cursorSpacing="80" placeholder="备注事项..." />
+                        
+                            <wux-textarea hasCount rows="3" cursorSpacing="80" defaultValue="{{editData.tips}}" placeholder="备注事项..." />
                         </wux-cell>
-                    </wux-field>
+                    </wux-field> -->
          </wux-cell-group>
-        <button class="addsubmit" formType="submit">提交</button>
+        <button class="editsubmit" formType="submit">提交修改</button>
         </form>
      </view>
 </view>

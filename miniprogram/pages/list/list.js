@@ -236,7 +236,7 @@ onLaunch:function(){
   editplayerinfo:function(e){
     var that=this;
     wx.redirectTo({
-      url: "../add/add?id="+e.currentTarget.dataset.id
+      url: "../edit/edit?id="+e.currentTarget.dataset.id
     })
   }
 })

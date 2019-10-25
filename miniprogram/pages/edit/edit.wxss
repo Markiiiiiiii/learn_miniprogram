@@ -1,0 +1,15 @@
+
+.editsubmit{
+    width: 200rpx;
+    height: 60rpx;
+    font-size: 24rpx;
+    background-color:#9777f2;
+    color: #ffffff;
+}
+.input{
+    display: inline-block;
+    vertical-align: middle;
+}
+.labelmid{
+    vertical-align: middle;
+}
