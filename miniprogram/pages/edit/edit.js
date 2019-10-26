@@ -23,6 +23,7 @@ const dayStr = [tMonth+"月"+tDay+"日 周"+"日一二三四五六".charAt(tWeek
 Page({
   data: {
       thumb: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAC4AAAAuCAMAAABgZ9sFAAAAVFBMVEXx8fHMzMzr6+vn5+fv7+/t7e3d3d2+vr7W1tbHx8eysrKdnZ3p6enk5OTR0dG7u7u3t7ejo6PY2Njh4eHf39/T09PExMSvr6+goKCqqqqnp6e4uLgcLY/OAAAAnklEQVRIx+3RSRLDIAxE0QYhAbGZPNu5/z0zrXHiqiz5W72FqhqtVuuXAl3iOV7iPV/iSsAqZa9BS7YOmMXnNNX4TWGxRMn3R6SxRNgy0bzXOW8EBO8SAClsPdB3psqlvG+Lw7ONXg/pTld52BjgSSkA3PV2OOemjIDcZQWgVvONw60q7sIpR38EnHPSMDQ4MjDjLPozhAkGrVbr/z0ANjAF4AcbXmYAAAAASUVORK5CYII=',
+      gameid:null,
       switchValue:true,
       dateString:'去设置',
       dateString1:'*与开始时间一致',
@@ -63,7 +64,8 @@ Page({
             dateString:util.formatTimeWeek(res.result.data.starttime),
             dateString1:util.formatTimeWeek(res.result.data.cutofftime),
             index:that.data.array.indexOf(res.result.data.cost),
-            switchValue:res.result.data.ifjoin
+            switchValue:res.result.data.ifjoin,
+            gameid:options.id
           });
           that.pageData._fieldGeoInfo = res.result.data.fieldgeoinfo;
           that.pageData._fieldAddress = res.result.data.fieldaddress;
@@ -83,6 +85,43 @@ Page({
 onReady:function(){
   var that = this;
   that.onCheckUser(this.pageData._userInfo)  
+},
+
+onSubmitEdit:function(e){
+  
+  var that = this;
+
+    let datas = e.detail.value;
+    if(!that.pageData._starttime){
+      that.pageData._starttime = that.data.editData.starttime
+    }
+    if (!that.pageData._cutofftime){
+      that.pageData._cutofftime = that.data.editData.cutofftime
+    }
+    let costValue = that.data.array[that.data.index]
+  
+    wx.cloud.callFunction({
+      name:'gameupdate',
+      data:{
+        _id:that.data.gameid,
+        title: datas.title,
+        maxnum:datas.maxnum,
+        footballfield:datas.footballfield,
+        starttime:that.pageData._starttime,
+        cutofftime:that.pageData._cutofftime,
+        cost:costValue,
+        tips:datas.footballtext,
+        ifjoin:datas.join,
+        fieldgeoinfo:that.pageData._fieldGeoInfo,
+        fieldname:that.pageData._fieldName,
+        fieldaddress:that.pageData._fieldAddress
+      },
+      success:res=>console.log(res)
+    })
+    wx.redirectTo({
+      url:'../list/list?ab=1',
+      success:(result)=>{}
+    });
 },
 
 /**用户数据库内容信息检索更新 */
@@ -118,11 +157,7 @@ onCheckUser:function(value){
 /**技巧：必须在数据表中设置一个_openid字段，来用于鉴权，如果没有该字段则数据库不执行更新动作 */
 },
 
-onSubmitEdit:function(e){
-  var that = this;
-  console.log(that.pageData._fieldAddress)
-    console.log(e)
-},
+
 /**添加用户信息，tips：不能在添加语句中使用_openid字段，_openid必须由系统自动添加，用户添加则会出现执行错误。 */
 onAddPlayer: function(value){
   var that = this;
@@ -135,85 +170,8 @@ onAddPlayer: function(value){
           }
         }).then(console.log)
 },
-/**存储到数据库 */
-onSubmit: function(e){  
-  /**判断是否选择报名截止时间，如果没有则与开始时间一致 */
-    let that = this;
-    console.log(that.pageData)
-    if(typeof(e.detail.value.cutofftime) == "object"){
-        var cutofftime =  that.pageData._starttime
-    }else{
-        cutofftime = that.pageData._cutofftime
-    }
-    let costValue = that.data.array[that.data.index]
-    let tmp = {};
-    tmp[app.userInfo.nickName] = app.userInfo._openid
-    if(!e.detail.value.title || !e.detail.value.maxnum || !e.detail.value.footballfield || !e.detail.value.starttime)
-    {
-      wx.showModal({
-        title: '提示',
-        content: '请输入*必填内容',
-        success: (result) => {
-          if(result.confirm){
-          }
-        }
-      })
-    }else{
-      if(!e.detail.value.join){
-        db.collection('gamesSignUp').add({
-          data:{
-          creattime: new Date(),
-          title:e.detail.value.title,
-          maxnum:e.detail.value.maxnum,
-          footballfield:e.detail.value.footballfield,
-          starttime:that.pageData._starttime,
-          cutofftime:cutofftime,
-          cost:costValue,
-          tips:e.detail.value.footballtext,
-          fieldgeoinfo:that.pageData._fieldGeoInfo,
-          fieldname:that.pageData._fieldName,
-          fieldaddress:that.pageData._fieldAddress,
-          playerlist:{},
-          effect:"true"
-        },
-        success:function(res){
-          wx.redirectTo({
-            url: '../list/list?ab=1',
-            success: (result)=>{}
-          });
-        },
-        fail:console.error
-        })
-      }else{
-        db.collection('gamesSignUp').add({
-          data:{
-          creattime: new Date(),
-          title:e.detail.value.title,
-          maxnum:e.detail.value.maxnum,
-          footballfield:e.detail.value.footballfield,
-          starttime:that.pageData._starttime,
-          cutofftime:cutofftime,
-          cost:costValue,
-          tips:e.detail.value.footballtext,
-          fieldgeoinfo:that.pageData._fieldGeoInfo,
-          fieldname:that.pageData._fieldName,
-          fieldaddress:that.pageData._fieldAddress,
-          playerlist:tmp,/**活动创建者本身也参加活动 */
-          effect:"true"
-        },
-        success:function(res){
-          wx.redirectTo({
-            url:'../list/list?ab=1',
-            success:(result)=>{}
-          });
-        },
-        fail:console.error
-        })
-      };
-    }
 
-  
-  },
+
 
 onChangeSwitch:function(e){
   var that = this;
@@ -274,6 +232,7 @@ bindMultiPickerChange: function (e) {
     var reDate =mYears+"/"+reMonday[0]+"/"+reMonday[1]+" "+reHour+":"+reMintus
    /**生成时间戳 */
     that.pageData._starttime =  new Date(reDate).valueOf()
+
   //  that.setData({
   //   multiIndex:reStampe
   //  })

@@ -27,7 +27,7 @@
                      <picker mode="multiSelector" name="cutofftime"  bindchange="bindMultiPickerChange1" bindcolumnchange="bindMultiPickerColumnChange1" value="{{multiIndex1}}" range="{{multiArray1}}">
                         <wux-cell title="报名截止时间：" is-link extra="{{dateString1}}"></wux-cell>
                     </picker>
-                    <picker name="p aytype" mode="selector" bindchange="bindPickerChange" value="{{index}}" range="{{array}}">
+                    <picker name="paytype" mode="selector" bindchange="bindPickerChange" value="{{index}}" range="{{array}}">
                         <wux-cell title="费用：" is-link  extra="{{ array[index] }}"></wux-cell>
                      </picker>
                     <wux-field name="uid">

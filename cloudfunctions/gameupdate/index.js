@@ -13,21 +13,20 @@ exports.main = async (event, context) => {
       data:{
         title:_.set(event.title),
         maxnum:_.set(event.maxnum),
-        creattime:_.set(new Date()),
-        footballfield:_.set(footballfield),
-        starttime:_.set(_starttime),
-        cutofftime:_.set(cutofftime),
-        cost:_.set(costValue),
-        tips:_.set(footballtext),
-        fieldgeoinfo:_.set(_fieldGeoInfo),
-        fieldname:_.set(_fieldName),
-        fieldaddress:_.set(_fieldAddress),
-        playerlist:_.set(players),
-        effect:"true"
+        creattime:new Date(),
+        footballfield:_.set(event.footballfield),
+        starttime:_.set(event.starttime),
+        cutofftime:_.set(event.cutofftime),
+        cost:_.set(event.cost),
+        tips:_.set(event.footballtext),
+        ifjoin:_.set(event.ifjoin),
+        fieldgeoinfo:_.set(event.fieldGeoInfo),
+        fieldname:_.set(event.fieldName),
+        fieldaddress:_.set(event.fieldAddress),
+        playerlist:_.set(event.players),
     }
     })
   }catch(err){
     console.error(err)
   }
-}
 }
